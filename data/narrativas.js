@@ -55,7 +55,7 @@ const CR_NARRATIVE_SCENES = {
       caminhos: [
         {
           texto: "Neutralizar com uma base",
-          resultado: "Ação direta! Mas ácidos e bases são conteúdo da Lição 19 — ainda em produção nesta arena (veja abaixo).",
+          resultado: "Ação direta! Ácidos e bases são o coração da Lição 19 — vamos direto ao ponto.",
           destino: "licao-19"
         },
         {
@@ -105,11 +105,10 @@ const CR_REVISAO_RAPIDA = {
 };
 
 // Mapa de rotas reais das lições já publicadas no repositório.
-// Se uma lição ainda não tiver HTML próprio (ex.: Lição 19 — Sprint 3
-// segue em andamento para essa trilha), o valor fica null e o motor
+// Se uma lição ainda não tiver HTML próprio, o valor fica null e o motor
 // nativo mostra um aviso "em produção" em vez de gerar um link quebrado.
 const CR_LESSON_ROUTES = {
   "licao-17": "licao-17.html",
   "licao-18": "licao-18.html",
-  "licao-19": null
+  "licao-19": "licao-19.html"
 };

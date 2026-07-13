@@ -2,19 +2,21 @@
    licoes-engine.js
    Motor genérico de "Course Presentation" caseiro, usado para
    renderizar qualquer lição a partir de um objeto de dados
-   (ver data/licao-17.js, data/licao-18.js). Implementa 5 tipos
-   de recurso H5P:
+   (ver data/licao-17.js, data/licao-18.js, data/licao-19.js).
+   Implementa 6 tipos de recurso H5P:
      - Slide de diálogo com a Líder de Arena (com captura de apelido)
      - Slide de teoria (Course Presentation)
      - Bloco de quiz progressivo (Single Choice Set) — 3 questões
        fácil/médio/difícil, com distratores e feedback
      - Dialog Cards (flashcards de autorregulação — texto ou imagem)
      - Branching Scenario (cenário ramificado em nós de decisão)
+     - Duelo Final / fight-boss (Question Set com barra de vida do
+       chefão — usado só no encerramento da Lição 19)
      - Placar final da lição
    Regra de gamificação: o aluno só avança de slide se concluir
    a interação obrigatória do slide atual (responder o bloco de
-   quiz, completar o cenário ramificado, ou informar o apelido
-   no diálogo inicial).
+   quiz, completar o cenário ramificado, vencer o duelo final, ou
+   informar o apelido no diálogo inicial).
    ============================================================ */
 
 function CRLessonEngine(rootEl, lessonData){
@@ -86,6 +88,7 @@ function CRLessonEngine(rootEl, lessonData){
     else if(slide.type === "dialog-cards") renderDialogCards(slide);
     else if(slide.type === "branching") renderBranching(slide);
     else if(slide.type === "quiz") renderQuiz(slide);
+    else if(slide.type === "boss-fight") renderBossFight(slide);
     else if(slide.type === "final-score") renderFinalScore(slide);
   }
 
@@ -332,6 +335,107 @@ function CRLessonEngine(rootEl, lessonData){
         }
       });
       elContent.querySelector(".quiz-block").appendChild(acao);
+    }
+
+    function rotuloDificuldade(d){
+      return { facil: "Fácil", media: "Médio", dificil: "Difícil" }[d] || d;
+    }
+  }
+
+  /* ---------------- Slide: Duelo Final / fight-boss ----------------
+     Question Set com camada visual de "barra de vida do chefão".
+     Regra confirmada no esboço (docs/esboco-conteudo-licao-19.md):
+     cada questão respondida — certa OU errada — desfere um "golpe"
+     que reduz a barra em 1/N. O objetivo é fechar o arco 17-19 com
+     celebração, não com frustração: nenhuma resposta bloqueia o
+     "golpe" seguinte, e o duelo sempre termina em vitória.
+  -------------------------------------------------------------- */
+  function renderBossFight(slide){
+    let qIndex = 0;
+    const total = slide.questoes.length;
+    setGate(true, "Enfrente " + (slide.chefaoNome || "o chefão") + " para concluir a lição.");
+    renderGolpe();
+
+    function renderGolpe(){
+      const q = slide.questoes[qIndex];
+      const hpAntes = 100 - (qIndex * (100 / total));
+      elContent.innerHTML = `
+        <div class="boss-arena">
+          <div class="boss-arena__header">
+            <span class="boss-arena__nome">☠ ${slide.chefaoNome || "Chefão"}</span>
+            <span class="boss-arena__golpe-label">${q.rotulo || `Golpe ${qIndex + 1} de ${total}`}</span>
+          </div>
+          <div class="boss-hp-bar"><div class="boss-hp-bar__fill" style="width:${hpAntes}%"></div></div>
+
+          <div class="quiz-block mt-24">
+            <span class="quiz-block__tag dificuldade-dificil">${rotuloDificuldade(q.dificuldade || "dificil")}</span>
+            <p class="quiz-block__enunciado">${q.enunciado}</p>
+            <div class="quiz-options">
+              ${q.alternativas.map((alt, i) => `
+                <button type="button" class="quiz-option" data-index="${i}">
+                  <span class="quiz-option__letter">${String.fromCharCode(65 + i)}</span>
+                  <span>${alt}</span>
+                </button>
+              `).join("")}
+            </div>
+            <div class="quiz-feedback" id="boss-feedback"></div>
+          </div>
+        </div>
+      `;
+      elContent.querySelectorAll(".quiz-option").forEach(btn => {
+        btn.addEventListener("click", () => onGolpe(btn, q));
+      });
+    }
+
+    function onGolpe(btnClicado, q){
+      const idx = Number(btnClicado.dataset.index);
+      const correta = idx === q.corretaIndex;
+
+      elContent.querySelectorAll(".quiz-option").forEach(btn => {
+        btn.disabled = true;
+        const i = Number(btn.dataset.index);
+        if(i === q.corretaIndex) btn.classList.add("is-correct");
+        else if(i === idx) btn.classList.add("is-wrong");
+      });
+
+      // Golpes valem mais pontos (é a prova de integração das 3 lições)
+      CRState.registrarResposta(correta, 25);
+
+      const feedback = elContent.querySelector("#boss-feedback");
+      feedback.classList.add("is-visible", correta ? "feedback-correta" : "feedback-errada");
+      feedback.textContent = correta
+        ? `✔ Golpe certeiro! ${q.feedbackCorreta}`
+        : `✘ ${slide.chefaoNome || "O chefão"} resiste ao seu ataque... ${q.feedbackErrada}`;
+
+      // A barra desce 1/N a cada golpe, certo ou errado — o duelo é sobre
+      // completar os 4 confrontos, não sobre acertar todos.
+      const hpDepois = Math.max(0, 100 - ((qIndex + 1) * (100 / total)));
+      const fill = elContent.querySelector(".boss-hp-bar__fill");
+      if(fill) fill.style.width = hpDepois + "%";
+
+      const acao = document.createElement("button");
+      acao.type = "button";
+      acao.className = "btn btn--primary mt-24";
+      const ultimo = qIndex === total - 1;
+      acao.textContent = ultimo ? "Golpe final →" : "Próximo golpe →";
+      acao.addEventListener("click", () => {
+        if(ultimo){ renderVitoria(); }
+        else{ qIndex++; renderGolpe(); }
+      });
+      elContent.querySelector(".quiz-block").appendChild(acao);
+    }
+
+    function renderVitoria(){
+      elContent.innerHTML = `
+        <div class="boss-arena">
+          <div class="boss-hp-bar boss-hp-bar--zero"><div class="boss-hp-bar__fill" style="width:0%"></div></div>
+          <div class="score-panel">
+            <p class="avatar-dialogue__name" style="justify-content:center;">${slide.chefaoNome || "Chefão"} — derrotado(a)</p>
+            <p style="color:var(--text-muted); max-width:48ch; margin:8px auto 0;">${slide.mensagemVitoria}</p>
+          </div>
+        </div>
+      `;
+      setGate(false, "Duelo vencido — pode avançar.");
     }
 
     function rotuloDificuldade(d){
