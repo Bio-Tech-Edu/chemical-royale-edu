@@ -44,13 +44,15 @@ como fechamento narrativo.
 
 Antes de iniciar a jornada, o aluno escolhe uma das 5 mulheres notáveis da história da química para guiar sua estratégia. Cada avatar tem uma habilidade passiva única:
 
-| Avatar | Especialidade | Habilidade no Jogo |
-| :--- | :--- | :--- |
-| <img src="assets/avatares/marie-curie.png" width="50"> **Marie Curie** | Decaimento Alfa | **O Poder do Núcleo:** dano de radiação contínuo aos reatores inimigos. |
-| <img src="assets/avatares/rosalind-franklin.png" width="50"> **Rosalind Franklin** | Análise de Dupla Hélice | **A Visão de Raio-X:** revela cartas do oponente e encontra pontos fracos na defesa. |
-| <img src="assets/avatares/dorothy-hodgkin.png" width="50"> **Dorothy Hodgkin** | Cristalização de Insulina | **A Arquiteta Molecular:** cura e reconstrói estruturas em tempo real. |
-| <img src="assets/avatares/stephanie-kwolek.png" width="50"> **Stephanie Kwolek** | Blindagem de Kevlar | **A Fibra Impenetrável:** escudo de alta resistência para as tropas (−20% de dano). |
-| <img src="assets/avatares/ada-yonath.png" width="50"> **Ada Yonath** | Código Ribossômico | **A Fábrica de Proteínas:** acelera a geração de unidades e reduz o custo de reagentes. |
+| Avatar | Nome da Líder | Especialidade¹ | Habilidade no Jogo |
+| :--- | :--- | :--- | :--- |
+| <img src="assets/avatares/marie-curie.png" width="80"> | **Marie Curie** | Decaimento Alfa | **O Poder do Núcleo:** dano de radiação contínuo aos reatores inimigos. |
+| <img src="assets/avatares/rosalind-franklin.png" width="80"> | **Rosalind Franklin** | Análise de Dupla Hélice | **A Visão de Raio-X:** revela cartas do oponente e encontra pontos fracos na defesa. |
+| <img src="assets/avatares/dorothy-hodgkin.png" width="80"> | **Dorothy Hodgkin** | Cristalização de Insulina | **A Arquiteta Molecular:** cura e reconstrói estruturas em tempo real. |
+| <img src="assets/avatares/stephanie-kwolek.png" width="80"> | **Stephanie Kwolek** | Blindagem de Kevlar | **A Fibra Impenetrável:** escudo de alta resistência para as tropas (−20% de dano). |
+| <img src="assets/avatares/ada-yonath.png" width="80"> | **Ada Yonath** | Código Ribossômico | **A Fábrica de Proteínas:** acelera a geração de unidades e reduz o custo de reagentes. |
+
+> ¹Especialidade relacionada à sua contribuição histórica para conhecimento científico por essas mulheres notáveis.
 
 *(As habilidades passivas ainda são apenas narrativas — a lógica de efeito em batalha está planejada para o Sprint 4.)*
 
