@@ -60,7 +60,7 @@ Para dúvidas pedagógicas e suporte em relação ao conteúdo:
 **Prof.ª Pâmella** - pamella.balcacar@edu.mt.gov.br
 
 <div align="center">
-  <img src="images/logo_bio_tech.png" alt="Logo BIO+TECH EDUDESIGN" width="70"/>
+  <img src="assets/logo/logo_bio_tech.png" alt="Logo BIO+TECH EDUDESIGN" width="70"/>
   <h1>🧪 Chemical Royale: A Arena dos Elementos</h1>
   <p><em>Um produto educacional para o preparação do do ENEM.</em></p>
 </div>
