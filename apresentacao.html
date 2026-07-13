@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alinhamento Pedagógico | Chemical Royale — BIO+TECH EDUDESIGN</title>
+<meta name="description" content="Apresentação inicial da aula de Química e alinhamento com a BNCC, BNCC Computação, SAEB e ENEM/INEP.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <div class="brand">
+      <a href="/" class="brand-logo-link">
+      <img src="assets/logo/chemical_royale_logo.png" alt="Chemical Royale Logo" class="brand-logo">
+    </a>
+    </div>
+    <span class="eyebrow-logo-wrapper">
+      <img src="assets/logo/header_adaptation.png" alt="BIO+TECH EDUDESIGN" class="eyebrow-logo">
+    </span>
+  </div>
+</header>
+
+<nav class="arena-progress" aria-label="Progresso da jornada">
+  <div class="arena-progress__step is-done"></div>
+  <div class="arena-progress__step is-done"></div>
+  <div class="arena-progress__step is-current"></div>
+  <div class="arena-progress__step"></div>
+  <div class="arena-progress__step"></div>
+</nav>
+
+<main class="container stack" style="padding-top: 24px; padding-bottom: 60px;">
+
+  <section class="panel">
+    <p class="panel__eyebrow">Etapa 03 · Alinhamento Pedagógico</p>
+    <h1 class="panel__title">Pré-ENEM Digital de Química</h1>
+    <p class="panel__subtitle">
+      Conduzido pela <strong>Prof.ª Pâmella</strong>, este módulo prepara você para as
+      questões de Química mais recorrentes no ENEM através de uma arena de batalha
+      estratégica. Antes de escolher sua narrativa, veja com o que esta aula dialoga
+      dentro do seu currículo.
+    </p>
+
+    <div class="badge-row" aria-label="Habilidades da BNCC trabalhadas nesta aula">
+      <span class="badge">BNCC · EM13CNT205</span>
+      <span class="badge">BNCC · EM13CNT307</span>
+      <span class="badge">BNCC Computação</span>
+      <span class="badge">Descritores SAEB</span>
+      <span class="badge">ENEM / INEP</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <p class="panel__eyebrow">O que você vai estudar</p>
+    <h2 class="panel__title" style="font-size:1.25rem;">Trilha de conteúdo — 3 lições</h2>
+    <div class="form-grid">
+      <div class="field field--full" style="gap:2px;">
+        <strong>Lição 17 — O átomo e suas partículas</strong>
+        <small class="hint">Modelos atômicos, partículas fundamentais, isótopos/isóbaros, configuração eletrônica.</small>
+      </div>
+      <div class="field field--full" style="gap:2px;">
+        <strong>Lição 18 — Classificação periódica e ligações químicas</strong>
+        <small class="hint">Tabela periódica, propriedades periódicas, geometria e polaridade molecular, forças intermoleculares.</small>
+      </div>
+      <div class="field field--full" style="gap:2px;">
+        <strong>Lição 19 — Funções inorgânicas</strong>
+        <small class="hint">Ácidos, bases, sais, óxidos — conceitos, classificação, nomenclatura e solubilidade.</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <p class="panel__eyebrow">Como funciona a arena</p>
+    <p class="panel__subtitle" style="margin-bottom:0;">
+      Cada lição libera um bloco de 3 questões no padrão oficial ENEM, em dificuldade
+      progressiva (fácil → médio → difícil). Sua Líder de Arena ativa uma habilidade
+      passiva a cada resposta, e o placar final gera seu relatório de desempenho.
+    </p>
+  </section>
+
+  <div class="form-actions">
+    <a href="avatares.html" class="btn btn--ghost">← Voltar</a>
+    <a href="narrativa.html" class="btn btn--primary" id="btn-ir-narrativa">Escolher minha narrativa →</a>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  Chemical Royale: A Arena dos Elementos · BIO+TECH EDUDESIGN · Pré-ENEM Digital
+</footer>
+
+<script src="js/state.js"></script>
+<script>
+  // Garante que o aluno já passou pelas etapas anteriores
+  CRState.requireStudent("index.html");
+  CRState.requireAvatar("avatares.html");
+</script>
+</body>
+</html>

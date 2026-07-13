@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escolha sua Narrativa | Chemical Royale — BIO+TECH EDUDESIGN</title>
+<meta name="description" content="Escolha entre 3 vertentes de storytelling para iniciar sua jornada na Arena dos Elementos.">
+<link rel="stylesheet" href="css/style.css">
+<!-- h5p-standalone (opcional): o CSS/JS do player só é carregado
+     dinamicamente pelo js/narrativa.js, e só quando um pacote .h5p
+     real é encontrado em /h5p/branching-narrativa/<narrativa>/.
+     Sem isso instalado, a tela usa o motor nativo (ver README §6). -->
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <div class="brand">
+      <a href="/" class="brand-logo-link">
+      <img src="assets/logo/chemical_royale_logo.png" alt="Chemical Royale Logo" class="brand-logo">
+    </a>
+    </div>
+    <span class="eyebrow-logo-wrapper">
+      <img src="assets/logo/header_adaptation.png" alt="BIO+TECH EDUDESIGN" class="eyebrow-logo">
+    </span>
+  </div>
+</header>
+
+<nav class="arena-progress" aria-label="Progresso da jornada">
+  <div class="arena-progress__step is-done"></div>
+  <div class="arena-progress__step is-done"></div>
+  <div class="arena-progress__step is-done"></div>
+  <div class="arena-progress__step is-current"></div>
+  <div class="arena-progress__step"></div>
+</nav>
+
+<main class="container stack" style="padding-top: 24px; padding-bottom: 60px;">
+
+  <section class="panel" id="narrative-selection-panel">
+    <p class="panel__eyebrow">Etapa 04 · Vertente Narrativa</p>
+    <h1 class="panel__title">Como você quer entrar na Arena?</h1>
+    <p class="panel__subtitle">
+      As 3 versões abaixo contam a mesma jornada de formas diferentes. Escolha o tom
+      que mais te motiva — o conteúdo de Química é o mesmo nas três.
+    </p>
+
+    <div class="narrative-grid" id="narrative-grid" role="list">
+      <!-- Cartas de narrativa geradas via JS a partir de CR_NARRATIVES (js/state.js) -->
+    </div>
+
+    <div class="form-actions">
+      <a href="apresentacao.html" class="btn btn--ghost">← Voltar</a>
+      <button type="button" class="btn btn--primary" id="btn-confirmar-narrativa" disabled>
+        Iniciar minha jornada →
+      </button>
+    </div>
+  </section>
+
+  <!--
+    Contêiner onde o Cenário de Abertura é montado após a confirmação
+    da narrativa. js/narrativa.js tenta primeiro o H5P Branching
+    Scenario "de verdade" (h5p-standalone) e, se ele não estiver
+    instalado/autorado, cai automaticamente para o motor nativo em
+    JavaScript puro (mesmo padrão já usado na Lição 18), usando os
+    textos de data/narrativas.js — espelho de
+    h5p/branching-narrativa/content-skeleton.json.
+  -->
+  <section class="panel" id="h5p-branching-wrapper" style="display:none;">
+    <p class="panel__eyebrow">Sua jornada começa</p>
+    <div id="h5p-branching-container"></div>
+    <div class="form-actions">
+      <button type="button" class="btn btn--ghost" id="btn-trocar-narrativa">← Escolher outra narrativa</button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  Chemical Royale: A Arena dos Elementos · BIO+TECH EDUDESIGN · Pré-ENEM Digital
+</footer>
+
+<script src="js/state.js"></script>
+<script src="data/narrativas.js"></script>
+<script src="js/narrativa.js"></script>
+</body>
+</html>

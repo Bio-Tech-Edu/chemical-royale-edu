@@ -1,0 +1,765 @@
+/* ============================================================
+   CHEMICAL ROYALE: A ARENA DOS ELEMENTOS
+   BIO+TECH EDUDESIGN — Design System
+   Direção: "Elemento de Arena" — cada Avatar é lido como uma
+   casela real da Tabela Periódica (número de custo = nº atômico
+   estilizado, símbolo, habilidade passiva no verso da carta).
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
+
+:root{
+  /* --- Cor: Laboratório noturno + glow de reação --- */
+  --bg-void:      #0A0E16;   /* fundo geral, "vácuo" do reator */
+  --bg-panel:     #121A29;   /* painéis / seções */
+  --bg-card:      #182236;   /* cartas de elemento */
+  --bg-card-hover:#1E2C46;
+
+  --accent-plasma:  #45E0C8; /* teal — energia, progresso, acerto */
+  --accent-ion:     #FF7A50; /* coral — alerta, reator, dano */
+  --accent-quantum: #A78BFA; /* violeta — narrativa / ramificação */
+  --accent-gold:    #F4C15C; /* dourado — pontuação / conquista */
+
+  --text-primary: #EDF2F7;
+  --text-muted:   #8B96AE;
+  --text-faint:   #5C6884;
+
+  --border-hairline: #263248;
+  --border-active:    var(--accent-plasma);
+
+  --radius-card: 14px;
+  --radius-sm: 8px;
+
+  --font-display: 'Chakra Petch', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --shadow-glow-plasma: 0 0 0 1px rgba(69,224,200,0.35), 0 8px 30px rgba(69,224,200,0.12);
+  --shadow-glow-ion: 0 0 0 1px rgba(255,122,80,0.35), 0 8px 30px rgba(255,122,80,0.12);
+  --shadow-panel: 0 12px 40px rgba(0,0,0,0.45);
+
+  --transition-fast: 160ms ease;
+  --transition-med: 320ms cubic-bezier(.2,.7,.3,1);
+}
+
+/* Respeita usuários com preferência por menos movimento */
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+
+*{ box-sizing: border-box; margin: 0; padding: 0; }
+
+html{ scroll-behavior: smooth; }
+
+body{
+  background: var(--bg-void);
+  background-image:
+    radial-gradient(circle at 15% 0%, rgba(167,139,250,0.08), transparent 45%),
+    radial-gradient(circle at 85% 100%, rgba(69,224,200,0.08), transparent 45%);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+a{ color: inherit; text-decoration: none; }
+img{ max-width: 100%; display: block; }
+button{ font-family: inherit; cursor: pointer; }
+
+/* Foco visível — acessibilidade (não sacrificamos em favor do "tema escuro") */
+:focus-visible{
+  outline: 2px solid var(--accent-plasma);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.container{
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* ---------------- Header / Marca BIO+TECH EDUDESIGN ---------------- */
+.site-header{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(10,14,22,0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-hairline);
+}
+.site-header__inner{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+}
+.brand{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  font-size: 1rem;
+}
+.brand__mark{
+  width: 45px; height: 45px;
+  border-radius: 8px;
+  background: conic-gradient(from 210deg, var(--accent-quantum), var(--accent-plasma) 50%, var(--accent-ion));
+  display: grid;
+  place-items: center;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.7rem;
+  color: #08101c;
+}
+.brand__name{ color: var(--text-primary); }
+.brand__name span{ color: var(--accent-plasma); }
+.eyebrow{
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+.brand-logo-link {
+  display: block;
+}
+
+.brand-logo {
+  height: auto; /* Deixe o CSS definir o tamanho ideal */
+  max-height: 45px; /* Exemplo: limite a altura */
+}
+
+.eyebrow-logo-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.eyebrow-logo {
+  height: auto;
+  max-height: 30px; /* Exemplo: limite a altura */
+}
+
+/* ---------------- Progresso da Arena (indicador de etapas) ---------------- */
+.arena-progress{
+  display: flex;
+  gap: 6px;
+  padding: 10px 20px;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.arena-progress__step{
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border-hairline);
+  overflow: hidden;
+}
+.arena-progress__step.is-done{ background: var(--accent-plasma); }
+.arena-progress__step.is-current{
+  background: linear-gradient(90deg, var(--accent-plasma), var(--border-hairline) 60%);
+}
+
+/* ---------------- Hero / Painéis genéricos ---------------- */
+.panel{
+  background: var(--bg-panel);
+  border: 1px solid var(--border-hairline);
+  border-radius: 18px;
+  padding: 32px 28px;
+  box-shadow: var(--shadow-panel);
+}
+
+.panel__eyebrow{
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-plasma);
+  margin-bottom: 10px;
+}
+
+h1.panel__title{
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4.5vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+
+.panel__subtitle{
+  color: var(--text-muted);
+  max-width: 60ch;
+  margin-bottom: 22px;
+}
+
+/* ---------------- Formulário: Painel de Identificação ---------------- */
+.form-grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 640px){
+  .form-grid{ grid-template-columns: 1fr 1fr; }
+  .form-grid .field--full{ grid-column: 1 / -1; }
+}
+
+.field{ display: flex; flex-direction: column; gap: 6px; }
+.field label{
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.field label .required{ color: var(--accent-ion); }
+
+.field input, .field select{
+  background: var(--bg-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.field input::placeholder{ color: var(--text-faint); }
+.field input:focus, .field select:focus{
+  border-color: var(--accent-plasma);
+  box-shadow: 0 0 0 3px rgba(69,224,200,0.15);
+  outline: none;
+}
+.field small.hint{ font-size: 0.75rem; color: var(--text-faint); }
+.field.has-error input{ border-color: var(--accent-ion); }
+.field small.error-msg{
+  font-size: 0.75rem;
+  color: var(--accent-ion);
+  display: none;
+}
+.field.has-error small.error-msg{ display: block; }
+
+/* ---------------- Botões ---------------- */
+.btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  font-size: 0.95rem;
+  padding: 13px 26px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+}
+.btn:active{ transform: scale(0.98); }
+
+.btn--primary{
+  background: var(--accent-plasma);
+  color: #06120F;
+  box-shadow: var(--shadow-glow-plasma);
+}
+.btn--primary:hover{ background: #5CEBD6; }
+.btn--primary:disabled{
+  background: var(--bg-card);
+  color: var(--text-faint);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.btn--ghost{
+  background: transparent;
+  border-color: var(--border-hairline);
+  color: var(--text-muted);
+}
+.btn--ghost:hover{ border-color: var(--text-muted); color: var(--text-primary); }
+
+.form-actions{
+  margin-top: 26px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ---------------- Galeria de Avatares — "Cartas de Elemento" ---------------- */
+.avatar-grid{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 6px;
+}
+@media (min-width: 640px){
+  .avatar-grid{ grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 900px){
+  .avatar-grid{ grid-template-columns: repeat(5, 1fr); }
+}
+
+.element-card{
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-card);
+  padding: 14px 12px 16px;
+  cursor: pointer;
+  text-align: left;
+  transition: transform var(--transition-med), border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+  perspective: 800px;
+}
+.element-card:hover{
+  transform: translateY(-4px);
+  background: var(--bg-card-hover);
+  border-color: var(--accent-quantum);
+}
+.element-card.is-selected{
+  border-color: var(--accent-plasma);
+  box-shadow: var(--shadow-glow-plasma);
+}
+.element-card.is-selected::after{
+  content: "✓ SELECIONADA";
+  position: absolute;
+  top: -10px; right: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  background: var(--accent-plasma);
+  color: #06120F;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.element-card__top{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-family: var(--font-mono);
+}
+.element-card__cost{
+  font-size: 0.75rem;
+  color: var(--accent-gold);
+  border: 1px solid rgba(244,193,92,0.4);
+  border-radius: 6px;
+  padding: 1px 6px;
+}
+.element-card__symbol{
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 10px 0 2px;
+}
+.element-card__photo{
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #1E2C46, #101828);
+  margin: 8px 0;
+  display: grid;
+  place-items: center;
+}
+.element-card__photo img{ width: 100%; height: 100%; object-fit: cover; }
+.element-card__photo .placeholder-icon{ font-size: 1.6rem; opacity: 0.35; }
+
+.element-card__name{
+  font-weight: 700;
+  font-size: 0.88rem;
+  line-height: 1.2;
+}
+.element-card__role{
+  font-size: 0.72rem;
+  color: var(--accent-quantum);
+  margin-top: 2px;
+  margin-bottom: 8px;
+}
+.element-card__ability{
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.avatar-detail{
+  margin-top: 22px;
+  padding: 18px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  border: 1px dashed var(--border-hairline);
+  display: none;
+}
+.avatar-detail.is-visible{ display: block; }
+.avatar-detail__title{ font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 4px; }
+.avatar-detail__passive{ color: var(--accent-plasma); font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+.avatar-detail__text{ color: var(--text-muted); font-size: 0.9rem; }
+
+/* ---------------- Narrativa (Branching Scenario) — Sprint 2 ---------------- */
+.narrative-grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 6px;
+}
+@media (min-width: 760px){
+  .narrative-grid{ grid-template-columns: repeat(3, 1fr); }
+}
+.narrative-card{
+  background: var(--bg-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), transform var(--transition-med);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.narrative-card:hover{ transform: translateY(-3px); border-color: var(--accent-quantum); }
+.narrative-card.is-selected{ border-color: var(--accent-quantum); box-shadow: 0 0 0 1px rgba(167,139,250,0.35), 0 8px 30px rgba(167,139,250,0.14); }
+.narrative-card__image{
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #1E2C46, #101828);
+  display: grid;
+  place-items: center;
+  font-size: 1.8rem;
+}
+.narrative-card__image img{ width: 100%; height: 100%; object-fit: cover; }
+.narrative-card__icon{ font-size: 1.6rem; }
+.narrative-card__title{ font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
+.narrative-card__focus{ font-size: 0.72rem; color: var(--accent-quantum); text-transform: uppercase; letter-spacing: 0.06em; }
+.narrative-card__desc{ font-size: 0.86rem; color: var(--text-muted); flex: 1; }
+
+/* ---------------- BNCC / badges pedagógicos ---------------- */
+.badge-row{ display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.badge{
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(69,224,200,0.08);
+  border: 1px solid rgba(69,224,200,0.3);
+  color: var(--accent-plasma);
+}
+
+/* ---------------- Estados utilitários ---------------- */
+.stack{ display: flex; flex-direction: column; gap: 20px; }
+.mt-24{ margin-top: 24px; }
+.text-center{ text-align: center; }
+.visually-hidden{
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+footer.site-footer{
+  text-align: center;
+  padding: 30px 20px 50px;
+  color: var(--text-faint);
+  font-size: 0.8rem;
+}
+
+/* ============================================================
+   MOTOR DE LIÇÕES (Sprint 3)
+   "Course Presentation" caseiro + Dialog Cards + Single Choice Set
+   ============================================================ */
+
+/* ---------------- Slide shell / navegação ---------------- */
+.lesson-shell{
+  background: var(--bg-panel);
+  border: 1px solid var(--border-hairline);
+  border-radius: 18px;
+  box-shadow: var(--shadow-panel);
+  overflow: hidden;
+}
+.lesson-shell__progress{
+  display: flex;
+  gap: 4px;
+  padding: 14px 20px 0;
+}
+.lesson-shell__progress .step{
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border-hairline);
+}
+.lesson-shell__progress .step.is-done{ background: var(--accent-plasma); }
+.lesson-shell__progress .step.is-current{ background: var(--accent-quantum); }
+
+.lesson-shell__meta{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 20px 0;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-faint);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.lesson-slide{
+  padding: 28px 24px 24px;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lesson-nav{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px 22px;
+  border-top: 1px solid var(--border-hairline);
+}
+.lesson-nav__hint{ font-size: 0.78rem; color: var(--text-faint); }
+
+/* ---------------- Slide: diálogo com a Líder de Arena ---------------- */
+.avatar-dialogue{
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.avatar-dialogue__portrait{
+  width: 56px; height: 56px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  background: linear-gradient(160deg, #1E2C46, #101828);
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--accent-plasma);
+  overflow: hidden;
+}
+.avatar-dialogue__portrait img{ width: 100%; height: 100%; object-fit: cover; }
+.avatar-dialogue__bubble{
+  background: var(--bg-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: 14px;
+  border-top-left-radius: 4px;
+  padding: 14px 16px;
+  font-size: 0.94rem;
+  color: var(--text-primary);
+  flex: 1;
+}
+.avatar-dialogue__name{
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--accent-quantum);
+  margin-bottom: 4px;
+}
+.apelido-field{
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.apelido-field input{
+  flex: 1;
+  min-width: 180px;
+  background: var(--bg-void);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--text-primary);
+}
+.apelido-field input:focus{ border-color: var(--accent-plasma); outline: none; }
+
+/* ---------------- Slide: teoria ---------------- */
+.theory-block h2{
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  margin-bottom: 6px;
+}
+.theory-block p{ color: var(--text-muted); font-size: 0.92rem; margin-bottom: 10px; }
+.theory-block .theory-figure{
+  border: 1px solid var(--border-hairline);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-card);
+  margin: 6px 0 12px;
+}
+.theory-block .theory-figure img{ width: 100%; display: block; }
+.theory-block .theory-figure figcaption{
+  font-size: 0.7rem;
+  color: var(--text-faint);
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+}
+.theory-block .theory-figure-grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 6px 0 12px;
+}
+@media (min-width: 560px){
+  .theory-block .theory-figure-grid{ grid-template-columns: 1fr 1fr; }
+}
+.theory-block .theory-figure-grid .theory-figure{ margin: 0; }
+.theory-block .key-term{
+  color: var(--accent-plasma);
+  font-weight: 600;
+}
+
+/* ---------------- Dialog Cards ---------------- */
+.dialog-cards{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+@media (min-width: 640px){ .dialog-cards{ grid-template-columns: repeat(3, 1fr); } }
+
+.dialog-card{
+  perspective: 1000px;
+  height: 150px;
+}
+.dialog-card__inner{
+  position: relative;
+  width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform var(--transition-med);
+}
+.dialog-card.is-flipped .dialog-card__inner{ transform: rotateY(180deg); }
+.dialog-card__face{
+  position: absolute; inset: 0;
+  backface-visibility: hidden;
+  border-radius: 12px;
+  border: 1px solid var(--border-hairline);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  cursor: pointer;
+}
+.dialog-card__face--front{ background: var(--bg-card); font-family: var(--font-display); font-size: 0.95rem; }
+.dialog-card__face--back{
+  background: var(--bg-card-hover);
+  transform: rotateY(180deg);
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  overflow-y: auto;
+}
+.dialog-card__self-check{
+  display: flex; gap: 6px; margin-top: 6px;
+}
+.dialog-card__self-check button{
+  font-size: 0.68rem;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border-hairline);
+  background: transparent;
+  color: var(--text-muted);
+}
+.dialog-card__self-check button[data-result="acertei"]:hover{ border-color: var(--accent-plasma); color: var(--accent-plasma); }
+.dialog-card__self-check button[data-result="errei"]:hover{ border-color: var(--accent-ion); color: var(--accent-ion); }
+
+/* Dialog Cards ilustradas (imagem própria de frente/verso, ex.: Forças Intermoleculares) */
+.dialog-cards--large{ grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 640px){ .dialog-cards--large{ grid-template-columns: repeat(3, 1fr); } }
+.dialog-card--large{ height: 280px; }
+.dialog-card__face--media{ padding: 0; overflow: hidden; }
+.dialog-card__face--media img{ width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+
+/* Tag de cenário (Branching Scenario) — reaproveita .quiz-block__tag com cor "quantum" */
+.quiz-block__tag.tag-cenario{ background: rgba(167,139,250,0.12); color: var(--accent-quantum); }
+
+/* ---------------- Single Choice Set / Question Set ---------------- */
+.quiz-block{
+  background: var(--bg-card);
+  border: 1px solid var(--border-hairline);
+  border-radius: 14px;
+  padding: 18px;
+}
+.quiz-block__tag{
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+.quiz-block__tag.dificuldade-facil{ background: rgba(69,224,200,0.12); color: var(--accent-plasma); }
+.quiz-block__tag.dificuldade-media{ background: rgba(244,193,92,0.12); color: var(--accent-gold); }
+.quiz-block__tag.dificuldade-dificil{ background: rgba(255,122,80,0.12); color: var(--accent-ion); }
+
+.quiz-block__enunciado{ font-size: 0.94rem; margin-bottom: 14px; line-height: 1.5; }
+
+.quiz-options{ display: flex; flex-direction: column; gap: 8px; }
+.quiz-option{
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  text-align: left;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-hairline);
+  border-radius: 10px;
+  padding: 11px 13px;
+  font-size: 0.86rem;
+  color: var(--text-primary);
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+.quiz-option:hover:not(:disabled){ border-color: var(--accent-quantum); }
+.quiz-option__letter{
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-faint);
+  flex-shrink: 0;
+}
+.quiz-option.is-correct{ border-color: var(--accent-plasma); background: rgba(69,224,200,0.08); }
+.quiz-option.is-correct .quiz-option__letter{ color: var(--accent-plasma); }
+.quiz-option.is-wrong{ border-color: var(--accent-ion); background: rgba(255,122,80,0.08); }
+.quiz-option.is-wrong .quiz-option__letter{ color: var(--accent-ion); }
+.quiz-option:disabled{ cursor: default; }
+
+.quiz-feedback{
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  display: none;
+}
+.quiz-feedback.is-visible{ display: block; }
+.quiz-feedback.feedback-correta{ background: rgba(69,224,200,0.1); border: 1px solid rgba(69,224,200,0.3); color: var(--text-primary); }
+.quiz-feedback.feedback-errada{ background: rgba(255,122,80,0.1); border: 1px solid rgba(255,122,80,0.3); color: var(--text-primary); }
+
+.quiz-progress-dots{ display: flex; gap: 6px; margin-bottom: 12px; }
+.quiz-progress-dots span{
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--border-hairline);
+}
+.quiz-progress-dots span.is-done{ background: var(--accent-plasma); }
+.quiz-progress-dots span.is-current{ background: var(--accent-quantum); }
+
+/* ---------------- Placar final da lição ---------------- */
+.score-panel{
+  text-align: center;
+  padding: 20px 0;
+}
+.score-panel__value{
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+.score-panel__label{ color: var(--text-muted); font-size: 0.85rem; margin-top: 4px; }
+.score-panel__breakdown{
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+.score-panel__breakdown .ok{ color: var(--accent-plasma); }
+.score-panel__breakdown .fail{ color: var(--accent-ion); }

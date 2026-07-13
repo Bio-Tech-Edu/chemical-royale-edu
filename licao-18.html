@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lição 18 — Classificação periódica e ligações químicas | Chemical Royale</title>
+<meta name="description" content="Lição 18 do Pré-ENEM Digital de Química: tabela periódica, propriedades periódicas, ligações químicas, geometria molecular e forças intermoleculares, com quizzes padrão ENEM.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <div class="brand">
+      <a href="/" class="brand-logo-link">
+      <img src="assets/logo/chemical_royale_logo.png" alt="Chemical Royale Logo" class="brand-logo">
+    </a>
+    </div>
+    <span class="eyebrow-logo-wrapper">
+      <img src="assets/logo/header_adaptation.png" alt="BIO+TECH EDUDESIGN" class="eyebrow-logo">
+    </span>
+  </div>
+</header>
+
+<nav class="arena-progress" aria-label="Progresso da jornada">
+  <div class="arena-progress__step is-done"></div>
+  <div class="arena-progress__step is-done"></div>
+  <div class="arena-progress__step is-done"></div>
+  <div class="arena-progress__step is-done"></div>
+  <div class="arena-progress__step is-current"></div>
+</nav>
+
+<main class="container stack" style="padding-top: 24px; padding-bottom: 60px;">
+  <div id="lesson-root"></div>
+</main>
+
+<footer class="site-footer">
+  Chemical Royale: A Arena dos Elementos · BIO+TECH EDUDESIGN · Pré-ENEM Digital
+</footer>
+
+<script src="js/state.js"></script>
+<script src="js/licoes-engine.js"></script>
+<script src="data/licao-18.js"></script>
+<script>
+  // Exige que o aluno tenha concluído a identificação, o avatar e a narrativa
+  CRState.requireStudent("index.html");
+  CRState.requireAvatar("avatares.html");
+  if(!CRState.getNarrative()){ window.location.href = "narrativa.html"; }
+
+  new CRLessonEngine(document.getElementById("lesson-root"), LICAO_18);
+</script>
+</body>
+</html>

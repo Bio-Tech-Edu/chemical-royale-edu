@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escolha sua Líder de Arena | Chemical Royale — BIO+TECH EDUDESIGN</title>
+<meta name="description" content="Selecione uma das 5 cientistas históricas como sua Líder de Arena e ative sua habilidade passiva.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <div class="brand">
+      <a href="/" class="brand-logo-link">
+      <img src="assets/logo/chemical_royale_logo.png" alt="Chemical Royale Logo" class="brand-logo">
+    </a>
+    </div>
+    <span class="eyebrow-logo-wrapper">
+      <img src="assets/logo/header_adaptation.png" alt="BIO+TECH EDUDESIGN" class="eyebrow-logo">
+    </span>
+  </div>
+</header>
+
+<nav class="arena-progress" aria-label="Progresso da jornada">
+  <div class="arena-progress__step is-done"></div>
+  <div class="arena-progress__step is-current"></div>
+  <div class="arena-progress__step"></div>
+  <div class="arena-progress__step"></div>
+  <div class="arena-progress__step"></div>
+</nav>
+
+<main class="container stack" style="padding-top: 24px; padding-bottom: 60px;">
+
+  <section class="panel">
+    <p class="panel__eyebrow">Etapa 02 · Líderes de Arena</p>
+    <h1 class="panel__title">Escolha quem guiará sua estratégia</h1>
+    <p class="panel__subtitle">
+      Cada Líder é lida como uma casela real da tabela periódica: toque em uma carta para
+      revelar sua habilidade passiva. Sua escolha influencia como você joga — mas não
+      muda o conteúdo de Química que você vai estudar.
+    </p>
+
+    <div class="avatar-grid" id="avatar-grid" role="list">
+      <!-- Cartas de elemento geradas via JS a partir de CR_AVATARS (js/state.js) -->
+    </div>
+
+    <div class="avatar-detail" id="avatar-detail" aria-live="polite">
+      <p class="avatar-detail__title" id="avatar-detail-title"></p>
+      <p class="avatar-detail__passive" id="avatar-detail-role"></p>
+      <p class="avatar-detail__text" id="avatar-detail-text"></p>
+    </div>
+
+    <div class="form-actions">
+      <a href="index.html" class="btn btn--ghost">← Voltar</a>
+      <button type="button" class="btn btn--primary" id="btn-confirmar-avatar" disabled>
+        Confirmar Líder →
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  Chemical Royale: A Arena dos Elementos · BIO+TECH EDUDESIGN · Pré-ENEM Digital
+</footer>
+
+<script src="js/state.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
