@@ -6,6 +6,8 @@
    "save file" do jogador conforme ele avança nas etapas.
    Sprint 1: Identificação + Avatar.
    Sprint 2: acrescenta a Narrativa escolhida.
+   Sprint 4: acrescenta PEQ (Pontos de Energia Química), a moeda
+   interna do jogo, e o suporte a habilidades passivas dos avatares.
    ============================================================ */
 
 const CR_STORAGE_KEY = "chemicalRoyale.playerState.v1";
@@ -18,6 +20,7 @@ const CR_STORAGE_KEY = "chemicalRoyale.playerState.v1";
  *   avatarId: "marie-curie" | "rosalind-franklin" | ...,
  *   narrativeId: "jornada-heroi" | "in-media-res" | "investigativo",
  *   score: { pontos, acertos, erros },
+ *   peq: number,  // Pontos de Energia Química — moeda interna (Sprint 4)
  *   licoesConcluidas: { licao17: bool, licao18: bool, licao19: bool },
  *   updatedAt: ISOString
  * }
@@ -89,16 +92,40 @@ const CRState = {
    * Registra a resposta de UMA questão (Dialog Cards / Single Choice Set / Question Set).
    * @param {boolean} correta
    * @param {number} pontosBase - pontos concedidos se a resposta estiver correta (varia por dificuldade)
+   * @param {string|null} [dificuldade] - "facil" | "media" | "dificil" — usado para calcular o ganho de PEQ
+   * @param {boolean} [contarComoErro=true] - false quando uma habilidade passiva (ex.: escudo da
+   *        Stephanie Kwolek) absorve o erro; nesse caso o erro não entra na estatística do placar.
    */
-  registrarResposta(correta, pontosBase = 10){
+  registrarResposta(correta, pontosBase = 10, dificuldade = null, contarComoErro = true){
     const score = this.getScore();
     if(correta){
       score.pontos += pontosBase;
       score.acertos += 1;
-    }else{
+
+      // PEQ (Pontos de Energia Química) — moeda interna do jogo (Sprint 4).
+      // Ganho proporcional à dificuldade: fácil = 1, média = 2, difícil = 3.
+      const peqPorDificuldade = { facil: 1, media: 2, dificil: 3 };
+      if(dificuldade && peqPorDificuldade[dificuldade]){
+        this.atualizarPEQ(peqPorDificuldade[dificuldade]);
+      }
+    }else if(contarComoErro){
       score.erros += 1;
     }
     return this._write({ score });
+  },
+
+  // ---------- PEQ — Pontos de Energia Química (Sprint 4) ----------
+  getPEQ(){
+    return this._read().peq || 0;
+  },
+  /**
+   * Soma (ou subtrai, se negativo) PEQ ao saldo do jogador. O saldo nunca fica negativo.
+   * @param {number} quantidade
+   */
+  atualizarPEQ(quantidade){
+    const novo = Math.max(0, this.getPEQ() + quantidade);
+    this._write({ peq: novo });
+    return novo;
   },
 
   // ---------- Progresso das lições ----------

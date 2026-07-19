@@ -38,7 +38,7 @@ const LICAO_17 = {
         "<span class='key-term'>Rutherford (1911)</span>, bombardeando uma fina folha de ouro com partículas alfa, percebeu que a maior parte do átomo é espaço vazio, com um núcleo pequeno, denso e positivo. <span class='key-term'>Bohr (1913)</span> completou o modelo dizendo que os elétrons giram em órbitas (níveis) com energia definida ao redor desse núcleo."
       ],
       figura: {
-        src: "https://commons.wikimedia.org/wiki/Special:FilePath/Bohr-atom-PAR.svg",
+        src: "https://commons.wikimedia.org/wiki/Special:FilePath/Bohr-atom-PAR.svg" width="200",
         alt: "Diagrama do modelo atômico de Bohr, com elétrons em órbitas ao redor do núcleo",
         caption: "Modelo atômico de Bohr — imagem: Wikimedia Commons, licença Creative Commons (CC BY-SA)."
       }

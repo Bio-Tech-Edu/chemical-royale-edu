@@ -17,6 +17,16 @@
    a interação obrigatória do slide atual (responder o bloco de
    quiz, completar o cenário ramificado, vencer o duelo final, ou
    informar o apelido no diálogo inicial).
+
+   Sprint 4 — Mecânicas de Jogo e Economia Química:
+     - HUD fixo (#arena-hud) exibindo o placar e o saldo de PEQ
+       (Pontos de Energia Química) em tempo real, sincronizado com
+       CRState a cada resposta — "Painel de Pontuação" do projeto.
+     - Habilidades passivas REAIS das 5 Líderes de Arena, aplicadas
+       durante os blocos de quiz e no Duelo Final (ver função
+       aplicarHabilidadeNaResposta e o bloco "Visão de Raio-X" em
+       renderQuiz/renderBossFight). Cada efeito está documentado
+       inline, junto ao trecho de código que o implementa.
    ============================================================ */
 
 function CRLessonEngine(rootEl, lessonData){
@@ -26,8 +36,33 @@ function CRLessonEngine(rootEl, lessonData){
   const avatarId = CRState.getAvatar();
   const avatar = CR_AVATARS.find(a => a.id === avatarId) || CR_AVATARS[0];
 
+  // ---------- Sprint 4: estado das habilidades passivas ----------
+  // Dura a lição inteira (reseta a cada `new CRLessonEngine(...)`, ou seja,
+  // a cada carregamento de página de lição — é o equivalente a "por lição").
+  const habilidadePassiva = {
+    raioXUsadoNaLicao: false, // Rosalind Franklin: 1 alternativa errada eliminada, 1x por lição
+    streakCurie: 0            // Marie Curie: sequência de acertos consecutivos (dano contínuo)
+  };
+
   rootEl.innerHTML = `
     <div class="lesson-shell">
+      <div class="arena-hud" id="arena-hud">
+        <div class="arena-hud__avatar">
+          <img src="${avatar.foto}" alt="${avatar.nome}" onerror="this.style.display='none'">
+          <div class="arena-hud__avatar-info">
+            <span class="arena-hud__avatar-nome">${avatar.nome}</span>
+            <span class="arena-hud__avatar-papel">${avatar.papel}</span>
+          </div>
+        </div>
+        <div class="arena-hud__stats">
+          <span class="arena-hud__stat" title="Pontos de Energia Química">
+            <span class="arena-hud__icon">⚡</span><span class="arena-hud__peq">0 PEQ</span>
+          </span>
+          <span class="arena-hud__stat" title="Pontuação acumulada">
+            <span class="arena-hud__icon">🏆</span><span class="arena-hud__pontos">0 pts</span>
+          </span>
+        </div>
+      </div>
       <div class="lesson-shell__meta">
         <span>${lessonData.titulo}</span>
         <span>Apostila pág. ${lessonData.paginaApostila}</span>
@@ -48,6 +83,7 @@ function CRLessonEngine(rootEl, lessonData){
   const btnPrev = rootEl.querySelector("#lesson-btn-prev");
   const btnNext = rootEl.querySelector("#lesson-btn-next");
 
+  atualizarHUD();
   renderProgress();
   renderSlide();
 
@@ -76,6 +112,80 @@ function CRLessonEngine(rootEl, lessonData){
     canAdvance = !locked;
     btnNext.disabled = locked;
     elHint.textContent = hintText || "";
+  }
+
+  /* ---------------- Sprint 4: HUD (Painel de Pontuação) ---------------- */
+  function atualizarHUD(){
+    const hud = rootEl.querySelector("#arena-hud");
+    if(!hud) return;
+    const score = CRState.getScore();
+    hud.querySelector(".arena-hud__peq").textContent = CRState.getPEQ() + " PEQ";
+    hud.querySelector(".arena-hud__pontos").textContent = score.pontos + " pts";
+  }
+
+  /* ---------------- Sprint 4: Habilidades Passivas das Líderes de Arena ----------------
+     Cada avatar concede um efeito FUNCIONAL durante os quizzes (não é só narrativa),
+     conforme docs do Sprint 4 / plano v3. Dividido em duas partes:
+
+     1) aplicarRaioXSeDisponivel(q) — chamada ao RENDERIZAR uma pergunta. Só a Rosalind
+        Franklin usa este gancho: elimina 1 alternativa errada, uma única vez por lição.
+
+     2) aplicarHabilidadeNaResposta(...) — chamada ao RESOLVER uma resposta (correta ou
+        errada). Usada pelas outras 4 avatares:
+          - Marie Curie: acertos consecutivos ("dano contínuo") rendem +1 PEQ extra
+            a partir do 2º acerto seguido; qualquer erro reinicia a sequência.
+          - Stephanie Kwolek: o primeiro erro de cada bloco de quiz é absorvido por um
+            escudo — não entra na contagem de erros do placar.
+          - Dorothy Hodgkin: todo erro ainda regenera +1 PEQ de consolação.
+          - Ada Yonath: acerto respondido em até 10s dobra a pontuação daquela questão.
+     Ambas retornam/alteram apenas o necessário — quem chama decide como exibir o feedback.
+  -------------------------------------------------------------------------------------- */
+  function aplicarRaioXSeDisponivel(q){
+    if(avatarId !== "rosalind-franklin" || habilidadePassiva.raioXUsadoNaLicao) return null;
+    const idxErradas = q.alternativas.map((_, i) => i).filter(i => i !== q.corretaIndex);
+    const eliminarIdx = idxErradas[Math.floor(Math.random() * idxErradas.length)];
+    habilidadePassiva.raioXUsadoNaLicao = true;
+    return eliminarIdx;
+  }
+
+  function aplicarHabilidadeNaResposta({ correta, dificuldade, tempoRespostaMs, escudoRef }){
+    const pontosPorDificuldade = { facil: 10, media: 15, dificil: 20 };
+    let pontosBase = pontosPorDificuldade[dificuldade] || 10;
+    let contarComoErro = true;
+    let nota = "";
+
+    if(correta){
+      // Marie Curie — "O Poder do Núcleo": dano contínuo em sequência de acertos
+      if(avatarId === "marie-curie"){
+        habilidadePassiva.streakCurie++;
+        if(habilidadePassiva.streakCurie >= 2){
+          CRState.atualizarPEQ(1);
+          nota = ` ⚛️ Faísca radioativa! +1 PEQ extra (sequência de ${habilidadePassiva.streakCurie} acertos).`;
+        }
+      }
+      // Ada Yonath — "A Fábrica de Proteínas": multiplicador por resposta rápida
+      if(avatarId === "ada-yonath" && tempoRespostaMs != null && tempoRespostaMs <= 10000){
+        pontosBase *= 2;
+        nota = ` 🦠 Multiplicação rápida! Pontuação em dobro (respondeu em ${(tempoRespostaMs / 1000).toFixed(1)}s).`;
+      }
+    }else{
+      if(avatarId === "marie-curie") habilidadePassiva.streakCurie = 0;
+
+      // Stephanie Kwolek — "A Fibra Impenetrável": escudo absorve o 1º erro do bloco
+      if(avatarId === "stephanie-kwolek" && escudoRef && escudoRef.disponivel){
+        escudoRef.disponivel = false;
+        contarComoErro = false;
+        nota = " 🛡 Escudo de Kevlar absorveu o impacto — este erro não contou contra você!";
+      }
+
+      // Dorothy Hodgkin — "A Arquiteta Molecular": regeneração mesmo no erro
+      if(avatarId === "dorothy-hodgkin"){
+        CRState.atualizarPEQ(1);
+        nota += " 🧪 Arquiteta Molecular: regenerou +1 PEQ mesmo no erro.";
+      }
+    }
+
+    return { pontosBase, contarComoErro, nota: nota.trim() };
   }
 
   function renderSlide(){
@@ -267,19 +377,24 @@ function CRLessonEngine(rootEl, lessonData){
   /* ---------------- Slide: quiz progressivo (Single Choice Set) ---------------- */
   function renderQuiz(slide){
     let qIndex = 0;
+    let inicioPerguntaMs = null;
     const respondidas = new Array(slide.questoes.length).fill(false);
+    const escudoRef = { disponivel: true }; // Stephanie Kwolek: 1 escudo por bloco de quiz
     setGate(true, "Responda as questões abaixo para avançar.");
     renderPergunta();
 
     function renderPergunta(){
       const q = slide.questoes[qIndex];
+      inicioPerguntaMs = Date.now(); // Ada Yonath: marca o início para medir resposta rápida
       elContent.innerHTML = `
         <div class="quiz-block">
           <div class="quiz-progress-dots">
             ${slide.questoes.map((_, i) => `<span class="${i < qIndex ? "is-done" : (i === qIndex ? "is-current" : "")}"></span>`).join("")}
           </div>
           <span class="quiz-block__tag dificuldade-${q.dificuldade}">${rotuloDificuldade(q.dificuldade)}</span>
+          ${badgeHabilidadeAtiva()}
           <p class="quiz-block__enunciado">${q.enunciado}</p>
+          <p class="habilidade-aviso" id="habilidade-aviso"></p>
           <div class="quiz-options">
             ${q.alternativas.map((alt, i) => `
               <button type="button" class="quiz-option" data-index="${i}">
@@ -292,6 +407,17 @@ function CRLessonEngine(rootEl, lessonData){
         </div>
       `;
 
+      // Rosalind Franklin — Visão de Raio-X: elimina 1 alternativa errada (1x por lição)
+      const elimIdx = aplicarRaioXSeDisponivel(q);
+      if(elimIdx !== null){
+        const elErrada = elContent.querySelector(`.quiz-option[data-index="${elimIdx}"]`);
+        if(elErrada){
+          elErrada.disabled = true;
+          elErrada.classList.add("is-eliminated");
+        }
+        elContent.querySelector("#habilidade-aviso").textContent = "🧬 Visão de Raio-X: uma alternativa errada foi eliminada!";
+      }
+
       elContent.querySelectorAll(".quiz-option").forEach(btn => {
         btn.addEventListener("click", () => onResponder(btn, q));
       });
@@ -300,7 +426,7 @@ function CRLessonEngine(rootEl, lessonData){
     function onResponder(btnClicado, q){
       const idx = Number(btnClicado.dataset.index);
       const correta = idx === q.corretaIndex;
-      const pontosPorDificuldade = { facil: 10, media: 15, dificil: 20 };
+      const tempoRespostaMs = inicioPerguntaMs ? Date.now() - inicioPerguntaMs : null;
 
       elContent.querySelectorAll(".quiz-option").forEach(btn => {
         btn.disabled = true;
@@ -309,13 +435,17 @@ function CRLessonEngine(rootEl, lessonData){
         else if(i === idx) btn.classList.add("is-wrong");
       });
 
-      CRState.registrarResposta(correta, pontosPorDificuldade[q.dificuldade] || 10);
+      const { pontosBase, contarComoErro, nota } = aplicarHabilidadeNaResposta({
+        correta, dificuldade: q.dificuldade, tempoRespostaMs, escudoRef
+      });
+
+      CRState.registrarResposta(correta, pontosBase, q.dificuldade, contarComoErro);
+      atualizarHUD();
 
       const feedback = elContent.querySelector("#quiz-feedback");
-      feedback.classList.add("is-visible", correta ? "feedback-correta" : "feedback-errada");
-      feedback.textContent = correta
-        ? `✔ Correto! ${q.feedbackCorreta}`
-        : `✘ ${q.feedbackErrada}`;
+      const classeFeedback = correta ? "feedback-correta" : (contarComoErro ? "feedback-errada" : "feedback-escudo");
+      feedback.classList.add("is-visible", classeFeedback);
+      feedback.textContent = (correta ? `✔ Correto! ${q.feedbackCorreta}` : `✘ ${q.feedbackErrada}`) + (nota ? ` ${nota}` : "");
 
       respondidas[qIndex] = true;
 
@@ -337,6 +467,22 @@ function CRLessonEngine(rootEl, lessonData){
       elContent.querySelector(".quiz-block").appendChild(acao);
     }
 
+    // Badge ambiente: avisa o estado da habilidade passiva ANTES de responder
+    // (a Rosalind é automática e avisa só depois de eliminar; as demais
+    // avisam aqui porque dependem da ação do jogador — velocidade, escudo etc.)
+    function badgeHabilidadeAtiva(){
+      if(avatarId === "stephanie-kwolek" && escudoRef.disponivel){
+        return `<span class="badge badge--habilidade">🛡 Escudo de Kevlar pronto neste bloco</span>`;
+      }
+      if(avatarId === "ada-yonath"){
+        return `<span class="badge badge--habilidade">⏱ Responda em até 10s para pontuação em dobro</span>`;
+      }
+      if(avatarId === "marie-curie" && habilidadePassiva.streakCurie >= 1){
+        return `<span class="badge badge--habilidade">⚛️ Sequência atual: ${habilidadePassiva.streakCurie} acerto(s)</span>`;
+      }
+      return "";
+    }
+
     function rotuloDificuldade(d){
       return { facil: "Fácil", media: "Médio", dificil: "Difícil" }[d] || d;
     }
@@ -352,13 +498,16 @@ function CRLessonEngine(rootEl, lessonData){
   -------------------------------------------------------------- */
   function renderBossFight(slide){
     let qIndex = 0;
+    let inicioGolpeMs = null;
     const total = slide.questoes.length;
+    const escudoRef = { disponivel: true }; // Stephanie Kwolek: 1 escudo para o duelo inteiro
     setGate(true, "Enfrente " + (slide.chefaoNome || "o chefão") + " para concluir a lição.");
     renderGolpe();
 
     function renderGolpe(){
       const q = slide.questoes[qIndex];
       const hpAntes = 100 - (qIndex * (100 / total));
+      inicioGolpeMs = Date.now();
       elContent.innerHTML = `
         <div class="boss-arena">
           <div class="boss-arena__header">
@@ -370,6 +519,7 @@ function CRLessonEngine(rootEl, lessonData){
           <div class="quiz-block mt-24">
             <span class="quiz-block__tag dificuldade-dificil">${rotuloDificuldade(q.dificuldade || "dificil")}</span>
             <p class="quiz-block__enunciado">${q.enunciado}</p>
+            <p class="habilidade-aviso" id="habilidade-aviso"></p>
             <div class="quiz-options">
               ${q.alternativas.map((alt, i) => `
                 <button type="button" class="quiz-option" data-index="${i}">
@@ -382,6 +532,18 @@ function CRLessonEngine(rootEl, lessonData){
           </div>
         </div>
       `;
+
+      // Rosalind Franklin — Visão de Raio-X também vale no duelo final, se ainda não usada na lição
+      const elimIdx = aplicarRaioXSeDisponivel(q);
+      if(elimIdx !== null){
+        const elErrada = elContent.querySelector(`.quiz-option[data-index="${elimIdx}"]`);
+        if(elErrada){
+          elErrada.disabled = true;
+          elErrada.classList.add("is-eliminated");
+        }
+        elContent.querySelector("#habilidade-aviso").textContent = "🧬 Visão de Raio-X: uma alternativa errada foi eliminada!";
+      }
+
       elContent.querySelectorAll(".quiz-option").forEach(btn => {
         btn.addEventListener("click", () => onGolpe(btn, q));
       });
@@ -390,6 +552,7 @@ function CRLessonEngine(rootEl, lessonData){
     function onGolpe(btnClicado, q){
       const idx = Number(btnClicado.dataset.index);
       const correta = idx === q.corretaIndex;
+      const tempoRespostaMs = inicioGolpeMs ? Date.now() - inicioGolpeMs : null;
 
       elContent.querySelectorAll(".quiz-option").forEach(btn => {
         btn.disabled = true;
@@ -398,14 +561,22 @@ function CRLessonEngine(rootEl, lessonData){
         else if(i === idx) btn.classList.add("is-wrong");
       });
 
-      // Golpes valem mais pontos (é a prova de integração das 3 lições)
-      CRState.registrarResposta(correta, 25);
+      // Golpes valem mais pontos (é a prova de integração das 3 lições) — a
+      // habilidade passiva ainda pode dobrar (Ada) ou perdoar o erro (Kwolek).
+      const { pontosBase, contarComoErro, nota } = aplicarHabilidadeNaResposta({
+        correta, dificuldade: "dificil", tempoRespostaMs, escudoRef
+      });
+      const pontosGolpe = Math.max(pontosBase, 25); // golpe nunca vale menos que o valor-base do duelo
+
+      CRState.registrarResposta(correta, pontosGolpe, "dificil", contarComoErro);
+      atualizarHUD();
 
       const feedback = elContent.querySelector("#boss-feedback");
-      feedback.classList.add("is-visible", correta ? "feedback-correta" : "feedback-errada");
-      feedback.textContent = correta
+      const classeFeedback = correta ? "feedback-correta" : (contarComoErro ? "feedback-errada" : "feedback-escudo");
+      feedback.classList.add("is-visible", classeFeedback);
+      feedback.textContent = (correta
         ? `✔ Golpe certeiro! ${q.feedbackCorreta}`
-        : `✘ ${slide.chefaoNome || "O chefão"} resiste ao seu ataque... ${q.feedbackErrada}`;
+        : `✘ ${slide.chefaoNome || "O chefão"} resiste ao seu ataque... ${q.feedbackErrada}`) + (nota ? ` ${nota}` : "");
 
       // A barra desce 1/N a cada golpe, certo ou errado — o duelo é sobre
       // completar os 4 confrontos, não sobre acertar todos.
@@ -446,6 +617,7 @@ function CRLessonEngine(rootEl, lessonData){
   /* ---------------- Slide: placar final ---------------- */
   function renderFinalScore(slide){
     const score = CRState.getScore();
+    const peq = CRState.getPEQ();
     CRState.marcarLicaoConcluida(lessonData.id);
 
     elContent.innerHTML = `
@@ -457,6 +629,7 @@ function CRLessonEngine(rootEl, lessonData){
         <div class="score-panel__breakdown">
           <span class="ok">✔ ${score.acertos} acertos</span>
           <span class="fail">✘ ${score.erros} erros</span>
+          <span class="peq">⚡ ${peq} PEQ</span>
         </div>
       </div>
     `;
