@@ -48,11 +48,11 @@ const LICAO_17 = {
       titulo: "Recapitulando: um cartão para cada modelo",
       instrucao: "Toque em cada carta para revirar e conferir a ideia central de cada cientista.",
       cards: [
-        { frente: "⚫ Dalton (1803)", verso: "Átomo = esfera maciça, indivisível e indestrutível. Ainda não se conhecia próton, nêutron ou elétron." },
-        { frente: "🍇 Thomson (1897)", verso: "Modelo \"pudim de passas\": massa positiva com elétrons (negativos) distribuídos dentro dela. Primeira partícula subatômica identificada." },
-        { frente: "☄️ Rutherford (1911)", verso: "Núcleo pequeno, denso e positivo; eletrosfera é, em sua maior parte, espaço vazio. Descoberto pelo experimento da folha de ouro." },
-        { frente: "🪐 Bohr (1913)", verso: "Elétrons giram em órbitas (níveis de energia) definidas ao redor do núcleo, sem perder energia enquanto permanecem nelas." },
-        { frente: "☁️ Modelo atual", verso: "Modelo quântico (orbital): a posição do elétron é descrita por uma região de probabilidade — a \"nuvem eletrônica\" — e não por uma órbita fixa." }
+        { frente: "assets/moleculas/card-mod-dalton.png", verso: "Átomo = esfera maciça, indivisível e indestrutível. Ainda não se conhecia próton, nêutron ou elétron." },
+        { frente: "assets/moleculas/card-mod-thomson.png", verso: "Modelo \"pudim de passas\": massa positiva com elétrons (negativos) distribuídos dentro dela. Primeira partícula subatômica identificada." },
+        { frente: "assets/moleculas/card-mod-rutherford.png", verso: "Núcleo pequeno, denso e positivo; eletrosfera é, em sua maior parte, espaço vazio. Descoberto pelo experimento da folha de ouro." },
+        { frente: "assets/moleculas/card-mod-bohr.png", verso: "Elétrons giram em órbitas (níveis de energia) definidas ao redor do núcleo, sem perder energia enquanto permanecem nelas." },
+        { frente: "assets/moleculas/card-mod-atual.png", verso: "Modelo quântico (orbital): a posição do elétron é descrita por uma região de probabilidade — a \"nuvem eletrônica\" — e não por uma órbita fixa." }
       ]
     },
     {
