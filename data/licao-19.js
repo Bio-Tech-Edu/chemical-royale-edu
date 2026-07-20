@@ -46,11 +46,11 @@ const LICAO_19 = {
       titulo: "Ácidos comuns no dia a dia",
       instrucao: "Toque em cada carta para conferir onde esse ácido aparece fora do laboratório.",
       cards: [
-        { frente: "assets/moleculas/card-acido-hcl.png", verso: "Ácido clorídrico — presente no suco gástrico, auxilia a digestão." },
-        { frente: "assets/moleculas/card-acido-h2so4.png", verso: "Ácido sulfúrico — usado em baterias automotivas; altamente corrosivo." },
-        { frente: "assets/moleculas/card-acido-c6h8o6.png", verso: "Ácido ascórbico (vitamina C) — presente em frutas cítricas." },
-        { frente: "assets/moleculas/card-acido-ch3cooh.png", verso: "Ácido acético — o principal componente do vinagre." },
-        { frente: "assets/moleculas/card-acido-h3po4.png", verso: "Ácido fosfórico — usado como acidulante em refrigerantes tipo cola." }
+        { frente: "assets/moleculas/card-acido-um.png", verso: "Ácido clorídrico — presente no suco gástrico, auxilia a digestão." },
+        { frente: "assets/moleculas/card-acido-dois.png", verso: "Ácido sulfúrico — usado em baterias automotivas; altamente corrosivo." },
+        { frente: "assets/moleculas/card-acido-tres.png", verso: "Ácido ascórbico (vitamina C) — presente em frutas cítricas." },
+        { frente: "assets/moleculas/card-acido-quarto.png", verso: "Ácido acético — o principal componente do vinagre." },
+        { frente: "assets/moleculas/card-acido-cinco.png", verso: "Ácido fosfórico — usado como acidulante em refrigerantes tipo cola." }
       ]
     },
     {
