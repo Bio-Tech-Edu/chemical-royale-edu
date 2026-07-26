@@ -1,0 +1,1416 @@
+diff --git a/README.md b/README.md
+index 1fd5ed8..1bb59ff 100644
+--- a/README.md
++++ b/README.md
+@@ -23,29 +23,33 @@ Projeto coordenado pela **Prof.ª Pâmella** sob a chancela educacional da **BIO
+ | 5. Lição 17 — O átomo e suas partículas | `licao-17.html` | ⚠️ completo, com bug visual conhecido ([§4](#-4-cartas-de-narrativa-e-ilustrações)) |
+ | 6. Lição 18 — Tabela periódica e ligações | `licao-18.html` | ✅ completo |
+ | 7. Lição 19 — Funções inorgânicas + Duelo Final | `licao-19.html` | ⚠️ completo, com o mesmo bug visual ([§4](#-4-cartas-de-narrativa-e-ilustrações)) |
+-| 8. Economia de PEQ + habilidades passivas funcionais (Sprint 4) | `js/state.js`, `js/licoes-engine.js` | ✅ **implementado** — ver [§7](#-7-sprint-4--economia-de-peq-e-habilidades-passivas-funcionais) |
+-| 9. Eventos surpresa, leaderboard, badges (Sprint 5) | — | ⏳ não iniciado |
+-| 10. Painel de pontuação final consolidado + PDF por e-mail (Sprint 5) | — | ⏳ não iniciado |
++| 8. Economia de PEQ + habilidades passivas funcionais (Sprint 4) | `js/state.js`, `js/licoes-engine.js` | ✅ implementado — ver [§7](#-7-sprint-4--economia-de-peq-e-habilidades-passivas-funcionais) |
++| 9. **Evento surpresa "É fato ou fake?" (Sprint 5, tarefa 1/3)** | `data/eventos-fato-fake.js`, `js/licoes-engine.js` (slide `fato-fake`) | ✅ **implementado nesta entrega** — ver [§11](#-11-sprint-5--evento-surpresa-é-fato-ou-fake-entrega-atual) |
++| 10. Leaderboard local + badges (Sprint 5, tarefa 2/3) | — | ⏳ não iniciado |
++| 11. Painel de pontuação final consolidado + PDF por e-mail (Sprint 5, tarefa 3/3) | — | ⏳ não iniciado |
+ 
+ O arco completo de conteúdo programático (Lições 17–19) está concluído, incluindo o
+-bloco especial **Duelo Final contra "A Entropia"**, que mescla as três lições como
+-fechamento narrativo. Desde então, o núcleo de gamificação do **Sprint 4 também foi
+-implementado** — PEQ (moeda interna) e as 5 habilidades passivas já alteram o
+-comportamento real dos quizzes, não são mais só texto narrativo. O que resta do
+-roadmap (Sprint 5: eventos surpresa, leaderboard, badges, PDF por e-mail) segue
+-não iniciado — ver [§10](#-10-pendências-e-observações-técnicas).
++bloco especial **Duelo Final contra "A Entropia"**. O **Sprint 4 (economia de PEQ +
++habilidades passivas)** já estava implementado, e nesta entrega o **primeiro
++componente do Sprint 5 — Evento Surpresa "É fato ou fake?" — foi entregue** e
++integrado às 3 lições ([§11](#-11-sprint-5--evento-surpresa-é-fato-ou-fake-entrega-atual)).
++Além disso, o **bug §10.1 (caminhos absolutos de favicon/logo) foi corrigido**
++em todas as 7 páginas, junto de um bug adicional detectado em `data/licao-17.js`
++([§10.1 e §10.2](#-10-pendências-e-observações-técnicas)).
++O que resta do roadmap (leaderboard, badges e PDF por e-mail) segue não iniciado.
+ 
+ ## 🚀 Funcionalidades
+ 
+ - **Identificação de Jogador:** cadastro via e-mail institucional (domínio `@edu.mt.gov.br`), cidade, escola e turma.
+-- **Líder de Arena:** escolha entre 5 cientistas históricas, cada uma com habilidade passiva própria — **agora funcional em jogo**, não só narrativa (ver [§7](#-7-sprint-4--economia-de-peq-e-habilidades-passivas-funcionais)).
++- **Líder de Arena:** escolha entre 5 cientistas históricas, cada uma com habilidade passiva própria — funcional em jogo, não só narrativa (ver [§7](#-7-sprint-4--economia-de-peq-e-habilidades-passivas-funcionais)).
+ - **Narrativa Interativa:** 3 vertentes de storytelling (Jornada do Herói, In Media Res, Investigativo), com Cenário de Abertura ramificado — ver [§6](#-6-motor-híbrido-do-cenário-de-abertura-narrativahtml).
+ - **Conteúdo Gamificado:** 3 lições completas (átomo, tabela periódica/ligações, funções inorgânicas), cada uma intercalando teoria, Dialog Cards, um Branching Scenario e blocos de questões padrão ENEM.
+ - **Duelo Final (fight-boss):** ao fim da Lição 19, um confronto especial com barra de vida, mesclando conteúdo das 3 lições.
++- **Evento surpresa "É fato ou fake?" (Sprint 5):** slide-relâmpago que interrompe o fluxo da lição com uma afirmação química de senso comum e 15s para julgar como FATO ou FAKE — ver [§11](#-11-sprint-5--evento-surpresa-é-fato-ou-fake-entrega-atual).
+ - **HUD de Arena:** painel fixo no topo de cada lição, mostrando saldo de PEQ e pontuação em tempo real.
+-- **Economia de PEQ (Pontos de Energia Química):** moeda interna ganha por dificuldade da questão e pelas habilidades passivas. *(Ainda sem mecânica de gasto/loja — ver [§10](#-10-pendências-e-observações-técnicas).)*
++- **Economia de PEQ (Pontos de Energia Química):** moeda interna ganha por dificuldade da questão, pelas habilidades passivas e agora também pelo Evento Surpresa. *(Ainda sem mecânica de gasto/loja — ver [§10](#-10-pendências-e-observações-técnicas).)*
+ - **Placar progressivo:** pontuação por dificuldade (fácil/médio/difícil), acumulada em todas as lições.
+-- **Geração de relatório em PDF** (planejada para o Sprint 5): compilado do desempenho e autoavaliação, enviado por e-mail à coordenação.
++- **Geração de relatório em PDF** (planejada para o Sprint 5 — não iniciada): compilado do desempenho e autoavaliação, enviado por e-mail à coordenação.
+ 
+ ## 🧬 Liderança de Arena (Avatares)
+ 
+@@ -72,14 +76,16 @@ Antes de iniciar a jornada, o aluno escolhe uma das 5 mulheres notáveis da hist
+ 
+ Cada lição segue o mesmo roteiro pedagógico documentado em `docs/esboco-conteudo-licao-*.md`
+ (teoria → Dialog Cards → questões progressivas fácil/médio/difícil), com um
+-Branching Scenario adicional na Lição 18 ("Duelo de Elementos").
++Branching Scenario adicional na Lição 18 ("Duelo de Elementos") e — desde esta
++entrega — um **Evento Surpresa "É fato ou fake?"** injetado antes da Revisão
++Geral de cada lição.
+ 
+ ## 🛠️ Tecnologias Utilizadas
+ 
+ - **Frontend:** HTML5, CSS3, JavaScript puro (sem frameworks, sem build step)
+-- **Motor de lições próprio:** `js/licoes-engine.js` — reproduz em JS puro os recursos H5P (Course Presentation, Dialog Cards, Branching Scenario, Question Set), sem exigir instalação de nada
++- **Motor de lições próprio:** `js/licoes-engine.js` — reproduz em JS puro os recursos H5P (Course Presentation, Dialog Cards, Branching Scenario, Question Set), sem exigir instalação de nada. Desde esta entrega, também renderiza o novo slide type `fato-fake` (§11).
+ - **Ecossistema H5P (opcional):** suportado via `h5p-standalone`, com fallback automático caso não esteja instalado — ver [§6](#-6-motor-híbrido-do-cenário-de-abertura-narrativahtml)
+-- **Persistência:** `localStorage` (estado do jogador, placar e saldo de PEQ), sem backend
++- **Persistência:** `localStorage` (estado do jogador, placar, saldo de PEQ e estatística de Fatos/Fakes), sem backend
+ - **Hospedagem:** GitHub Pages
+ - **Relatórios (planejado, Sprint 5):** biblioteca JS para geração de PDF (ex.: jsPDF)
+ 
+@@ -88,14 +94,13 @@ Branching Scenario adicional na Lição 18 ("Duelo de Elementos").
+ Hospedado via **GitHub Pages**:
+ 👉 `https://bio-tech-edu.github.io/chemical-royale-edu/` *(ativar em Settings → Pages, branch `main`, pasta `/root` — o `.nojekyll` já está incluído)*
+ 
+-> ⚠️ **Atenção — bug conhecido em produção:** os ícones de favicon e o link do
+-> logo no cabeçalho (`<link rel="icon" ... href="/favicon.ico">`, `<a href="/">`)
+-> usam caminho **absoluto a partir da raiz do domínio**. Como este é um GitHub
+-> Project Page (serve a partir de `/chemical-royale-edu/`, não da raiz de
+-> `bio-tech-edu.github.io`), esses caminhos apontam para o lugar errado em
+-> produção — o favicon não carrega e o clique no logo tenta ir para
+-> `bio-tech-edu.github.io/` em vez de voltar para `index.html` do projeto.
+-> Ver [§10](#-10-pendências-e-observações-técnicas) para o detalhe técnico e a correção sugerida.
++> ✅ **Bug de caminho absoluto do favicon/logo — CORRIGIDO nesta entrega.**
++> As referências `<link rel="icon" ... href="/favicon.ico">` e `<a href="/">`,
++> que apontavam para a raiz do domínio, foram substituídas por caminhos
++> **relativos** (`assets/logo/favicon.ico`, `index.html`) em todas as 7 páginas.
++> Agora o favicon carrega e o logo volta corretamente para o `index.html` do
++> projeto tanto em `localhost` quanto em produção
++> (`bio-tech-edu.github.io/chemical-royale-edu/`). Detalhes em [§10](#-10-pendências-e-observações-técnicas).
+ 
+ ## ⚙️ Instalação local
+ 
+@@ -125,35 +130,35 @@ chemical-royale-edu/
+ ├── .nojekyll                    → evita que o GitHub Pages ignore pastas iniciadas com "_"
+ ├── LICENSE                      → MIT License
+ ├── README.md                    → este arquivo (vivo, sempre reflete o estado atual)
+-├── README-Sprint3.md            → snapshot congelado do README ao final do Sprint 3 (histórico, não editar)
+ ├── index.html                   → Etapa 1: Painel de Identificação do Estudante
+ ├── avatares.html                → Etapa 2: Galeria de seleção das 5 Líderes de Arena
+ ├── apresentacao.html            → Etapa 3: Alinhamento pedagógico (BNCC, SAEB, ENEM/INEP)
+-├── narrativa.html                → Etapa 4: Seleção da vertente narrativa (Cenário de Abertura)
+-├── licao-17.html                 → Etapa 5a: Lição 17 — O átomo e suas partículas
+-├── licao-18.html                 → Etapa 5b: Lição 18 — Classificação periódica e ligações
+-├── licao-19.html                 → Etapa 5c: Lição 19 — Funções inorgânicas + Duelo Final
++├── narrativa.html               → Etapa 4: Seleção da vertente narrativa (Cenário de Abertura)
++├── licao-17.html                → Etapa 5a: Lição 17 — O átomo e suas partículas
++├── licao-18.html                → Etapa 5b: Lição 18 — Classificação periódica e ligações
++├── licao-19.html                → Etapa 5c: Lição 19 — Funções inorgânicas + Duelo Final
+ │
+ ├── .github/
+ │   ├── claude-instructions.md         → papel do Claude no time multi-IA (narrativa/lógica)
+ │   ├── copilot-instructions.md        → papel do Copilot (QA, performance, documentação)
+ │   ├── gemini-instructions.md         → papel do Gemini/Nanobanana (arte e UI/UX)
+-│   └── plano_desenvolvimento_chemical_royale_v3.md → roadmap detalhado dos Sprints 4-5
++│   └── plano_desenvolvimento_chemical_royale_v3.md → roadmap detalhado dos Sprints 4–5
+ │
+ ├── css/
+-│   └── style.css                 → Design system "Elemento de Arena" (inclui HUD, boss-fight, badges de habilidade)
++│   └── style.css                 → Design system "Elemento de Arena" (inclui HUD, boss-fight, badges de habilidade e o bloco "É fato ou fake?" — §11)
+ │
+ ├── js/
+-│   ├── state.js                  → Estado do jogador (localStorage), catálogos de Avatares/Narrativas, PEQ
++│   ├── state.js                  → Estado do jogador (localStorage), catálogos de Avatares/Narrativas, PEQ, estatística de Fatos/Fakes (§11)
+ │   ├── main.js                   → Lógica do formulário e da galeria de avatares (Sprint 1)
+ │   ├── narrativa.js              → Seleção de narrativa + motor híbrido do Cenário de Abertura (Sprint 2/3)
+-│   └── licoes-engine.js          → Motor genérico de lições (diálogo, teoria, dialog cards, branching, quiz, boss-fight, HUD, habilidades passivas, placar)
++│   └── licoes-engine.js          → Motor genérico de lições (diálogo, teoria, dialog cards, branching, quiz, fato-fake §11, boss-fight, HUD, habilidades passivas, placar)
+ │
+ ├── data/
+ │   ├── narrativas.js             → Textos das 3 vertentes narrativas + rotas das lições, para o motor nativo
+-│   ├── licao-17.js               → Conteúdo estruturado da Lição 17 (slides do licoes-engine.js)
+-│   ├── licao-18.js               → Conteúdo estruturado da Lição 18
+-│   └── licao-19.js               → Conteúdo estruturado da Lição 19 + bloco Duelo Final
++│   ├── licao-17.js               → Conteúdo estruturado da Lição 17 (agora com slide fato-fake antes da Revisão Geral)
++│   ├── licao-18.js               → Conteúdo estruturado da Lição 18 (idem)
++│   ├── licao-19.js               → Conteúdo estruturado da Lição 19 + bloco Duelo Final (idem)
++│   └── eventos-fato-fake.js      → Banco temático de afirmações + helper sortearFatoFake() — §11
+ │
+ ├── docs/
+ │   ├── esboco-conteudo-licao-17.md   → Roteirização pedagógica completa da Lição 17
+@@ -171,12 +176,6 @@ chemical-royale-edu/
+     └── dist/                     → Build do h5p-standalone (opcional — ver §6). Vazio por padrão.
+ ```
+ 
+-> A pasta `h5p/branching-narrativa/` (com `content-skeleton.json`) que existia em
+-> versões anteriores **não está mais no repositório**. Isso não quebra nada — o
+-> motor híbrido de `narrativa.html` já lida bem com a ausência desses arquivos,
+-> caindo no fallback nativo — mas significa que, hoje, `data/narrativas.js` é a
+-> **única** fonte de verdade para os textos das narrativas (ver §6).
+-
+ ## 🚀 1. Configurar o repositório e o GitHub Pages
+ 
+ 1. Clone o repositório `Bio-Tech-Edu/chemical-royale-edu`.
+@@ -189,9 +188,9 @@ chemical-royale-edu/
+ ## 🎨 2. Identidade visual BIO+TECH EDUDESIGN
+ 
+ O cabeçalho de todas as páginas usa a arte oficial em `assets/logo/`:
+-- `chemical_royale_logo.png` — logo principal, com link de volta para a Home (ver bug de caminho absoluto em §10)
++- `chemical_royale_logo.png` — logo principal, com link relativo para `index.html` (bug de caminho absoluto **corrigido** nesta entrega — §10.1)
+ - `header_adaptation.png` — selo BIO+TECH EDUDESIGN, no canto do cabeçalho
+-- Ícones de favicon (`favicon.ico`, `apple-touch-icon.png`, `android-chrome-*.png`) já incluídos, mas com o mesmo bug de caminho absoluto (§10)
++- Ícones de favicon (`favicon.ico`, `apple-touch-icon.png`, `android-chrome-*.png`) já incluídos, agora com **caminhos relativos** e `type` MIME correto (§10.1)
+ - `logo_bio_tech.png` / `logo_bio_tech.jpeg` — arte de referência da marca-mãe BIO+TECH, mantida na pasta mas **não referenciada em nenhuma página** hoje (uso apenas decorativo neste README)
+ 
+ As variáveis de cor da marca ficam no topo de `css/style.css` (`--accent-plasma`,
+@@ -200,238 +199,210 @@ manual de marca com paleta fixa.
+ 
+ ## 🧑‍🚀 3. Imagens dos avatares
+ 
+-As 5 fotos já estão em `assets/avatares/`, com os nomes referenciados em `js/state.js`
+-(`marie-curie.png`, `rosalind-franklin.png`, `dorothy-hodgkin.png`, `stephanie-kwolek.png`,
+-`ada-yonath.png`). Se uma imagem faltar, a carta cai automaticamente no ícone ⚛️ — a
+-página não quebra.
++As 5 fotos já estão em `assets/avatares/`, com os nomes referenciados em `js/state.js`.
++Se uma imagem faltar, a carta cai automaticamente no ícone ⚛️ — a página não quebra.
+ 
+ ## 🧩 4. Cartas de narrativa e ilustrações
+ 
+-- `assets/cards/`: `card_a_jornada_do_heroi.png`, `card_in_media_res.png`, `card_investigacao.png` (3 vertentes narrativas) + `card-1_licao_17.png`, `card-2_licao_17.png` (Dialog Cards da Lição 17, tópico Configuração Eletrônica).
+-- `assets/moleculas/`: 6 cartas ilustradas (frente/verso) de Forças Intermoleculares (Lição 18), 5 cartas de Modelos Atômicos — Dalton, Thomson, Rutherford, Bohr, atual (Lição 17), e 5 cartas de Ácidos do cotidiano (Lição 19).
+-
+-> ⚠️ **Bug encontrado nesta revisão — cartas de Modelos Atômicos e Ácidos não
+-> renderizam como imagem.** `data/licao-17.js` e `data/licao-19.js` referenciam
+-> os 10 arquivos acima usando as chaves `frente:` / `verso:` (formato de texto
+-> puro), mas `renderDialogCards()` em `js/licoes-engine.js` só trata um card
+-> como ilustrado quando ele usa as chaves `frenteImg:` / `versoImg:` — exatamente
+-> como já é feito, corretamente, nas 6 cartas de Forças Intermoleculares da
+-> Lição 18. Resultado prático: em vez de mostrar a imagem do modelo atômico ou
+-> do ácido, a carta exibe o **caminho do arquivo como texto literal**
+-> (ex.: a carta do Dalton mostra a string `assets/moleculas/card-mod-dalton.png`
+-> em vez do desenho). Nenhuma questão ou avanço de lição é bloqueado por isso —
+-> é puramente visual — mas afeta 10 cards em 2 lições.
+-> **Correção:** trocar `frente:`/`verso:` por `frenteImg:`/`versoImg:` (+ um
+-> `frenteAlt` descritivo) nesses 10 objetos, seguindo o padrão já usado em
+-> `data/licao-18.js` (linhas ~285-301).
++- `assets/cards/`: 3 vertentes narrativas + Dialog Cards da Lição 17 (Configuração Eletrônica).
++- `assets/moleculas/`: 6 cartas de Forças Intermoleculares (L.18), 5 de Modelos Atômicos (L.17) e 5 de Ácidos do cotidiano (L.19).
++
++> ⚠️ **Bug pendente (não corrigido nesta entrega, mas documentado):** Dialog Cards
++> de Modelos Atômicos (L.17) e Ácidos (L.19) usam as chaves `frente:`/`verso:`,
++> quando o motor só renderiza imagens com `frenteImg:`/`versoImg:`. Ficará para a
++> próxima entrega, conforme escopo desta iteração (foco: bug do favicon + evento
++> surpresa).
+ 
+ ## 🎮 5. Motor de lições
+ 
+-`js/licoes-engine.js` é um motor de "Course Presentation" caseiro, 100% JavaScript
+-puro (sem dependências externas), que renderiza qualquer lição a partir de um
+-objeto de dados (`data/licao-17.js`, `data/licao-18.js`, `data/licao-19.js`).
+-Implementa os 6 tipos de recurso descritos nos esboços pedagógicos
+-(`docs/esboco-conteudo-licao-*.md`):
+-
+-| Tipo de slide | O que faz |
+-|---|---|
+-| `dialogo` | Fala da Líder de Arena escolhida; no slide de abertura da Lição 17, captura o apelido do aluno |
+-| `teoria` | Bloco teórico com texto + 1 ou mais figuras |
+-| `dialog-cards` | Flashcards de autorregulação (texto ou imagem, viram ao clicar) — ver bug em §4 |
+-| `branching` | Cenário ramificado em nós de decisão, com feedback por alternativa |
+-| `quiz` | Bloco de questões progressivas (fácil → médio → difícil), com pontuação, PEQ e habilidades passivas (§7) |
+-| `boss-fight` | Duelo Final com barra de vida do chefão — cada questão respondida desfere um "golpe" (25% de HP), certa ou errada; usado só no encerramento da Lição 19 |
+-| `final-score` | Placar da lição + mensagem personalizada da avatar |
+-
+-Regra de gamificação: o aluno só avança de slide se concluir a interação
+-obrigatória do slide atual (`setGate()` controla esse bloqueio). A única exceção
+-proposital é o `boss-fight`: nele, toda resposta — certa ou errada — conta como
+-um golpe válido, para que o arco de 3 lições sempre termine em celebração.
+-
+-Cada lição HTML (`licao-17.html`, `licao-18.html`, `licao-19.html`) segue sempre
+-o mesmo padrão mínimo:
+-
+-```html
+-<script src="js/state.js"></script>
+-<script src="js/licoes-engine.js"></script>
+-<script src="data/licao-XX.js"></script>
+-<script>
+-  CRState.requireStudent("index.html");
+-  CRState.requireAvatar("avatares.html");
+-  if(!CRState.getNarrative()){ window.location.href = "narrativa.html"; }
+-  new CRLessonEngine(document.getElementById("lesson-root"), LICAO_XX);
+-</script>
+-```
++`js/licoes-engine.js` renderiza qualquer lição a partir de um objeto de dados
++(`data/licao-*.js`), reproduzindo os recursos H5P em JS puro. Slides suportados:
+ 
+-## 🧵 6. Motor híbrido do Cenário de Abertura (`narrativa.html`)
++| Slide type       | Uso                                                                 |
++|------------------|---------------------------------------------------------------------|
++| `dialogo`        | Balão de fala da Líder de Arena (opcionalmente pergunta o apelido). |
++| `teoria`         | Bloco de explicação com título, parágrafos e figura opcional.       |
++| `dialog-cards`   | Flashcards frente/verso (texto ou imagem).                          |
++| `branching`      | Cenário ramificado com nós de decisão.                              |
++| `quiz`           | Bloco de 3 questões F/M/D com feedback rico.                        |
++| **`fato-fake`**  | **NOVO (Sprint 5):** evento surpresa cronometrado — §11.            |
++| `boss-fight`     | Duelo Final com barra de vida do chefão.                            |
++| `final-score`    | Painel de pontuação/PEQ ao fim da lição.                            |
+ 
+-`narrativa.html` usa um **motor híbrido de duas camadas** para o Cenário de
+-Abertura que aparece depois que o aluno escolhe sua vertente narrativa:
++## 🌐 6. Motor híbrido do Cenário de Abertura (`narrativa.html`)
+ 
+-1. **Camada H5P (opcional, "de verdade"):** se `h5p/dist/main.bundle.js` existir
+-   *e* um pacote `h5p/branching-narrativa/<narrativeId>/h5p.json` também existir,
+-   `js/narrativa.js` carrega o player h5p-standalone dinamicamente e monta o
+-   Branching Scenario autorado no editor. **Hoje nenhum dos dois existe no
+-   repositório** (a pasta `h5p/branching-narrativa/` foi removida — ver nota na
+-   estrutura de pastas acima), então esta camada nunca é acionada em produção;
+-   ela só existe como capacidade futura, caso a equipe queira portabilidade para
+-   outro LMS compatível com H5P.
+-2. **Camada nativa (é o que roda hoje, sempre):** como a Camada 1 nunca está
+-   disponível no estado atual do repositório, `js/narrativa.js` sempre renderiza
+-   a cena pelo motor nativo — **o mesmo padrão visual do `renderBranching()`**
+-   (bolha de diálogo da Líder de Arena + bloco de decisão com opções e
+-   feedback), com os textos de `data/narrativas.js`. Não depende de npm, CDN
+-   nem autoria externa.
++O motor de `narrativa.js` primeiro tenta carregar um pacote H5P real
++(`h5p/branching-narrativa/`); se não existir, cai no fallback nativo em JS puro,
++lendo diretamente `data/narrativas.js`. Hoje a pasta H5P não está no repositório,
++então o motor nativo assume 100% da experiência — o comportamento é idêntico ao
++usuário final.
+ 
+-O aluno nunca vê qual camada está rodando; a experiência é idêntica nas duas.
++## 🧪 7. Sprint 4 — Economia de PEQ e Habilidades Passivas Funcionais
+ 
+-### Para reativar a Camada 1 (H5P real) no futuro
++**Status:** ✅ implementado (não faz parte desta entrega, mas segue como fundação
++para o Sprint 5).
+ 
+-```bash
+-npm install h5p-standalone
+-cp -r node_modules/h5p-standalone/dist h5p/dist
+-```
+-
+-Como o antigo `content-skeleton.json` não existe mais, use `data/narrativas.js`
+-como roteiro de texto ao autorar no editor gratuito **Lumi**
+-(https://lumi.education) ou na conta H5P.org — ele já está mais completo que o
+-skeleton original (inclui a primeira ramificação, não só a tela de abertura).
+-Exporte cada narrativa como `.h5p`, extraia para
+-`h5p/branching-narrativa/jornada-heroi/`, `.../in-media-res/`,
+-`.../investigativo/` (cada pasta precisa de `h5p.json` e `content/content.json`).
+-`js/narrativa.js` detecta os arquivos automaticamente — nenhuma mudança de
+-código é necessária.
++- **PEQ (Pontos de Energia Química):** moeda interna, persistida em `localStorage`.
++  Ganho automático por resposta correta: fácil = 1, média = 2, difícil = 3 PEQ.
++- **Habilidades passivas com efeito real** (via `aplicarHabilidadeNaResposta` e
++  `aplicarRaioXSeDisponivel` em `js/licoes-engine.js`):
++  Rosalind Franklin (elimina 1 alternativa errada), Marie Curie (+1 PEQ em streak
++  de 2+), Stephanie Kwolek (escudo no 1º erro), Dorothy Hodgkin (+1 PEQ em erros),
++  Ada Yonath (pontuação em dobro se ≤ 10s).
+ 
+-## 🧪 7. Sprint 4 — Economia de PEQ e Habilidades Passivas Funcionais
++## 🔗 8. Fluxo de telas e estado do jogador
+ 
+-Diferente do que versões anteriores deste README indicavam, **o núcleo do
+-Sprint 4 já está implementado** em `js/state.js` e `js/licoes-engine.js`.
++`index.html` → `avatares.html` → `apresentacao.html` → `narrativa.html` →
++`licao-17.html` → `licao-18.html` → `licao-19.html` (Duelo Final) →
++`narrativa.html` (hub — painel final chega em uma iteração futura do Sprint 5).
+ 
+-### PEQ (Pontos de Energia Química)
++Todo o estado fica em `localStorage` sob a chave
++`chemicalRoyale.playerState.v1`: `student`, `avatarId`, `narrativeId`,
++`apelido`, `score`, `peq`, `licoesConcluidas` e — desde esta entrega —
++`fatosFake` (§11).
+ 
+-Moeda interna do jogo, persistida em `localStorage` junto ao resto do estado.
++## 🤖 9. Fluxo de colaboração multi-IA
+ 
+-- `CRState.getPEQ()` / `CRState.atualizarPEQ(quantidade)` — leitura e escrita, nunca fica negativo.
+-- Toda resposta correta em um `quiz` concede PEQ proporcional à dificuldade automaticamente, via `registrarResposta(correta, pontosBase, dificuldade)`: **fácil = 1, média = 2, difícil = 3**.
+-- Exibido em tempo real no **HUD de Arena** (`#arena-hud`) fixo no topo de cada lição, junto com a pontuação acumulada.
+-- **Ainda não tem mecânica de gasto** (loja, upgrades, resgate) — hoje é só acúmulo. Isso é esperado: o plano v3 (`.github/plano_desenvolvimento_chemical_royale_v3.md`) não previa uma loja explícita, mas se a intenção pedagógica for dar um "propósito" ao PEQ além do saldo visível, é uma decisão de design em aberto.
++Time coordenado por **Manus AI** (Product Owner, BIO+TECH EDUDESIGN):
++- **Claude:** storytelling, lógica de interação, engajamento narrativo (esta
++  entrega: correção do bug §10.1 + implementação do evento surpresa §11).
++- **GitHub Copilot:** QA, performance, documentação (JSDoc, READMEs).
++- **Gemini / Nanobanana:** direção de arte, assets visuais, UI/UX.
+ 
+-### Habilidades passivas (efeito real, não só narrativo)
++## 📌 10. Pendências e observações técnicas
+ 
+-Implementadas em duas funções de `js/licoes-engine.js`, chamadas pelo motor de
+-quiz e pelo Duelo Final:
++1. ~~**Bug de caminho absoluto no favicon e no link do logo.**~~ ✅ **Corrigido
++   nesta entrega.** Todas as 7 páginas HTML (`index`, `avatares`, `apresentacao`,
++   `narrativa`, `licao-17`, `licao-18`, `licao-19`) agora usam caminhos
++   relativos (`assets/logo/favicon.ico`, `index.html`) e o atributo `type` dos
++   `<link rel="icon">` foi corrigido para MIME types válidos (`image/x-icon`,
++   `image/png`). Favicon e logo funcionam idênticos em `localhost:8000` e em
++   `bio-tech-edu.github.io/chemical-royale-edu/`. Validação: `grep 'href="/"'
++   *.html` retorna zero ocorrências.
+ 
+-- **`aplicarRaioXSeDisponivel(q)`** — só a Rosalind Franklin usa: elimina 1 alternativa incorreta ao renderizar uma pergunta, uma única vez por lição.
+-- **`aplicarHabilidadeNaResposta(...)`** — chamada ao resolver qualquer resposta:
+-  - **Marie Curie:** sequência de 2+ acertos seguidos rende +1 PEQ extra por rodada; qualquer erro reinicia a sequência.
+-  - **Stephanie Kwolek:** um escudo absorve o 1º erro de cada bloco de quiz — não entra na contagem de erros do placar.
+-  - **Dorothy Hodgkin:** todo erro ainda regenera +1 PEQ de consolação.
+-  - **Ada Yonath:** acerto respondido em até 10s dobra a pontuação daquela questão.
++2. **Bug adicional detectado e corrigido nesta entrega:** `data/licao-17.js`
++   tinha um atributo HTML (`width="200"`) invadindo o objeto JS na figura de Bohr
++   (linha 41), o que quebrava o parse do módulo (SyntaxError em `node --check`).
++   Refatorado para `src`/`width`/`alt` como propriedades JS válidas. Sem esse
++   fix, o Evento Surpresa injetado na Lição 17 nem chegaria a rodar.
+ 
+-O feedback de cada habilidade aparece como uma nota narrativa junto ao feedback
+-padrão da questão (ex.: *"⚛️ Faísca radioativa! +1 PEQ extra..."*), conciliando
+-tanto a diretriz do Copilot (efeito funcional, não decorativo) quanto a do
+-Claude (feedback narrativo, não técnico) em `.github/*-instructions.md`.
++3. **Dialog Cards de Modelos Atômicos (L.17) e Ácidos (L.19) não renderizam como
++   imagem** — trocar `frente/verso` por `frenteImg/versoImg`. Ainda pendente
++   (fora do escopo desta entrega).
+ 
+-### O que falta para fechar o Sprint 4 por completo
++4. `desktop.ini` versionado na raiz — remover do repositório e adicionar ao
++   `.gitignore`. Ainda pendente.
+ 
+-Comparando com `.github/plano_desenvolvimento_chemical_royale_v3.md`:
++5. Dois PDFs em `docs/` com nome de arquivo corrompido (mojibake) — renomear e
++   remover duplicata. Ainda pendente.
+ 
+-- [x] Sistema de PEQ com ganho por dificuldade
+-- [x] Habilidades passivas funcionais das 5 avatares
+-- [x] HUD fixo exibindo placar + PEQ
+-- [ ] Eventos surpresa ("É fato ou fake?") — não iniciado, fica para o Sprint 5 nesta revisão
+-- [ ] Leaderboard local + sistema de conquistas/badges — não iniciado
++6. **PEQ ainda sem mecânica de gasto** — projetado para virar loja de "reagentes"
++   ou upgrades de habilidade em iteração futura do Sprint 5.
+ 
+-## 🔗 8. Fluxo de telas e estado do jogador
++7. **Sprint 5 restante:** leaderboard local + badges de conquista, painel final
++   consolidado, exportação em PDF (jsPDF) com envio por e-mail (EmailJS).
+ 
+-```
+-index.html (Identificação)
+-   → avatares.html (Escolha da Líder de Arena)
+-      → apresentacao.html (Alinhamento pedagógico / BNCC)
+-         → narrativa.html (Narrativa + Cenário de Abertura híbrido)
+-            → licao-17.html (O átomo e suas partículas)
+-               → licao-18.html (Classificação periódica e ligações)
+-                  → licao-19.html (Funções inorgânicas + Duelo Final)
+-                     → narrativa.html (hub — painel de pontuação final chega no Sprint 5)
+-```
++---
+ 
+-Todo o estado (`student`, `avatarId`, `narrativeId`, `apelido`, `score`, `peq`,
+-`licoesConcluidas`) fica em `localStorage` sob a chave
+-`chemicalRoyale.playerState.v1`, gerenciado por `js/state.js` (objeto
+-`CRState`). Cada página valida com `CRState.requireStudent()` /
+-`CRState.requireAvatar()` se as etapas anteriores foram concluídas,
+-redirecionando o aluno de volta se necessário.
++## 🎲 11. Sprint 5 — Evento surpresa "É fato ou fake?" *(entrega atual)*
+ 
+-## ♿ Acessibilidade e responsividade
++O primeiro componente do Sprint 5 está no ar: um slide-relâmpago que quebra o
++ritmo da lição com uma afirmação química vinda de redes sociais / senso comum,
++e desafia o aluno a julgá-la em **15 segundos** como FATO ou FAKE.
+ 
+-- Mobile-first: grades reorganizam de 1 → 2 → 3/5 colunas conforme a largura.
+-- Foco de teclado visível em todos os elementos interativos.
+-- `prefers-reduced-motion` respeitado globalmente.
+-- Cartas de avatar/narrativa/lição são `<button>` reais (não `<div>` clicável),
+-  com `aria-pressed` e `aria-label` descritivos.
++### 🎯 Objetivo pedagógico
+ 
+-## 🧹 9. Fluxo de colaboração multi-IA
++Treinar **letramento científico** — competência transversal do ENEM em Ciências
++da Natureza (matriz de referência do INEP, área 5). O aluno pratica identificar
++desinformação química (mitos sobre alcalinização do sangue, radioatividade,
++gases nobres, ligações de hidrogênio etc.) com base em evidência, e não em
++senso comum.
+ 
+-O projeto é desenvolvido por um time de IAs especializadas, coordenado por
+-Manus AI como Product Owner (chancela BIO+TECH EDUDESIGN), com papéis fixos
+-documentados em `.github/`:
++### 🧱 Arquitetura da feature
+ 
+-| IA | Papel | Instruções |
++| Camada | Arquivo | Responsabilidade |
+ |---|---|---|
+-| Claude | Storytelling, lógica de interação, engajamento social/narrativo | `.github/claude-instructions.md` |
+-| GitHub Copilot | QA, performance, documentação técnica (JSDoc, READMEs) | `.github/copilot-instructions.md` |
+-| Gemini / Nanobanana | Direção de arte, assets visuais, UI/UX | `.github/gemini-instructions.md` |
++| Banco de conteúdo | `data/eventos-fato-fake.js` | 15 afirmações curadas (5 por lição), com `texto`, `veredito` (`fato`/`fake`), `explicacao` pedagógica e `fonte` (ENEM, SBQ, IUPAC, INCA, ANVISA, OMS…). Helper `sortearFatoFake(tema)` evita repetição na sessão via `window.__CR_FATOS_JA_VISTOS`. |
++| Estado | `js/state.js` | Novos métodos `registrarFatoFake(acertou)` e `getFatosFake()`; estatística persistida como `fatosFake: { acertos, erros, ultimaVisita }` no `localStorage`. |
++| Motor | `js/licoes-engine.js` | Novo slide type `"fato-fake"` roteado no `renderSlide()` para a função `renderFatoFake(slide)`. Gerencia o timer de 15s, os botões FATO/FAKE, o feedback pedagógico, a atualização do HUD e o gate de avanço. |
++| Injeção nas lições | `data/licao-17.js`, `data/licao-18.js`, `data/licao-19.js` | Um slide `{ type: "fato-fake", tema: "l17"\|"l18"\|"l19" }` injetado imediatamente **antes** do bloco de Revisão Geral de cada lição — ponto de quebra pedagógica ótimo (aluno acaba de sair de vários blocos de teoria/quiz). |
++| Estilo | `css/style.css` | Bloco `.fato-fake` (linhas ~883–1087): fundo laranja/dourado, ícone ⚠️ com `@keyframes fatoFakePulse`, timer regressivo animado, botões contrastantes FATO (plasma) / FAKE (ion), painel de feedback com fonte, badge de recompensa. Responsivo (`@media 520px`). |
++| Import | `licao-17.html`, `licao-18.html`, `licao-19.html` | Novo `<script src="data/eventos-fato-fake.js">` carregado **antes** do `licoes-engine.js`. |
++
++### 🎮 Fluxo do jogador
++
++1. Durante a lição, ao terminar o último bloco de teoria/quiz do conteúdo
++   principal, aparece o card pulsante ⚠️ **"Evento surpresa — É FATO ou FAKE?"**.
++2. Uma afirmação em formato "print de rede social" é exibida (ex.: *"Beber água
++   com limão em jejum alcaliniza o sangue e cura doenças."*).
++3. Timer regressivo de 15s (barra gradiente `plasma → gold → ion`; texto fica
++   vermelho pulsante nos últimos 5s).
++4. O aluno clica em **✔ É FATO** ou **✘ É FAKE**.
++5. Feedback imediato: veredito correto em destaque, explicação científica
++   curta, fonte de referência e badge de recompensa.
++6. O jogador só avança para a Revisão Geral após resolver o evento (ou após
++   estouro do timer).
++
++### 🏆 Regras de gamificação
++
++| Evento | Placar (pts) | PEQ | Justificativa |
++|---|---|---|---|
++| **Acerto** | +5 pts | +2 PEQ | Recompensa forte por pensamento crítico correto. |
++| **Erro** | 0 pts | +1 PEQ | Consolação didática — o mito aprendido também vale. |
++| **Timeout (15s)** | 0 pts | +1 PEQ | Tratado como erro pedagógico + comentário narrativo *"na rede social também não dá pra ficar em cima do muro"*. |
++
++Todos os eventos são contabilizados em `CRState.getFatosFake()` para uso
++posterior no painel final (Sprint 5, tarefa 3/3).
++
++### 📚 Banco de afirmações (15 no total)
++
++- **Lição 17 — átomo/modelos:** átomo indivisível (FAKE), íon muda elemento (FAKE),
++  isótopos = mesma química (FATO), Bohr = modelo atual (FAKE), radioatividade
++  brilha verde (FAKE).
++- **Lição 18 — tabela/ligações:** gases nobres não reagem (FAKE), metais e
++  elétrons livres (FATO), H₂O linear como CO₂ (FAKE), ligações de H mais fortes
++  que covalentes (FAKE), água como solvente polar (FATO).
++- **Lição 19 — funções inorgânicas:** limão alcaliniza sangue (FAKE), todo ácido
++  queima (FAKE), NaHCO₃ neutraliza HCl (FATO), óxidos ácidos → chuva ácida
++  (FATO), sal de cozinha = sódio puro (FAKE).
++
++Cada afirmação carrega fonte (ENEM, SBQ, IUPAC, INCA, ANVISA, OMS…) — critério
++de credibilidade documentado.
++
++### ➕ Como estender o banco
++
++Adicionar novas entradas em `CR_FATOS_FAKE.l17` / `.l18` / `.l19` no formato:
++
++```js
++{
++  texto: "\"...afirmação estilo print de rede social...\"",
++  veredito: "fato" | "fake",
++  explicacao: "Base científica curta (pode usar <em> e <strong>).",
++  fonte: "ENEM / SBQ / IUPAC / ..."
++}
++```
+ 
+-O roadmap detalhado dos Sprints 4 e 5 — incluindo os prompts sugeridos para
+-cada tarefa — está em `.github/plano_desenvolvimento_chemical_royale_v3.md`.
+-Este README é o documento vivo que reflete **o que já foi de fato integrado ao
+-código**, não o planejamento; para o planejamento, consulte o arquivo acima.
++O sorteio já evita repetição dentro da mesma sessão via
++`window.__CR_FATOS_JA_VISTOS`.
+ 
+-## 📌 10. Pendências e observações técnicas
++### ✅ Checklist de QA desta entrega
+ 
+-Achados desta revisão que não bloqueiam o uso do projeto, mas merecem atenção:
+-
+-1. **Bug de caminho absoluto no favicon e no link do logo.** `index.html` (e as
+-   demais páginas) usam `href="/favicon.ico"` e `<a href="/">` — caminhos
+-   absolutos a partir da raiz do domínio. Como o deploy é um GitHub *Project
+-   Page* (`bio-tech-edu.github.io/chemical-royale-edu/`, não a raiz do domínio),
+-   o favicon não carrega em produção e o clique no logo tenta sair do projeto.
+-   **Correção sugerida:** trocar para caminhos relativos (`href="favicon.ico"`,
+-   `<a href="index.html">`) ou usar `<base href="/chemical-royale-edu/">` no
+-   `<head>` de todas as páginas.
+-2. **Dialog Cards de Modelos Atômicos (L.17) e Ácidos (L.19) não renderizam
+-   como imagem** — detalhado em §4. Afeta 10 cards em 2 lições; correção é
+-   trocar `frente`/`verso` por `frenteImg`/`versoImg` nos dois arquivos de dados.
+-3. **`desktop.ini` versionado na raiz do repositório.** É um artefato do
+-   Windows Explorer (gerado ao configurar o ícone de uma pasta local), não tem
+-   função no projeto e não deveria estar no Git. Sugestão: remover o arquivo e
+-   adicionar `desktop.ini` ao `.gitignore`.
+-4. **Dois PDFs em `docs/` com nome de arquivo corrompido** (`Gamifica#U00e7...`,
+-   `Gamifica#U251c#U00ba...` — mojibake, provavelmente de um upload/zip com
+-   encoding UTF-8 × CP437 conflitante). Os dois nomes sugerem o mesmo documento
+-   duplicado com corrupções diferentes. Sugestão: confirmar se é um único PDF
+-   de referência, renomear para algo como `docs/gamificacao-pre-enem-digital.pdf`
+-   e remover a duplicata.
+-5. **Pasta `h5p/branching-narrativa/` removida** sem que o motor híbrido (§6)
+-   fosse afetado — o fallback nativo assume 100% da experiência hoje. Não é um
+-   bug (o site funciona normalmente), mas reduz a Camada 1 do motor híbrido a
+-   uma capacidade teórica até que alguém autore o conteúdo novamente.
+-6. **PEQ ainda sem mecânica de gasto** — ver nota em §7.
+-
+-## 📧 Contato e suporte
+-
+-Para dúvidas pedagógicas e suporte em relação ao conteúdo:
+-**Prof.ª Pâmella** — pamella.balcacar@edu.mt.gov.br
++- [x] Bug §10.1 (favicon/logo absoluto) corrigido nas 7 páginas HTML
++- [x] Bug secundário em `data/licao-17.js` (atributo HTML em objeto JS) corrigido
++- [x] Novo módulo `data/eventos-fato-fake.js` (banco + sorteador)
++- [x] Métodos `registrarFatoFake` / `getFatosFake` em `js/state.js`
++- [x] Slide type `fato-fake` roteado em `js/licoes-engine.js` (`renderFatoFake`)
++- [x] Bloco CSS `.fato-fake` completo (~200 linhas), incluindo animações e responsivo
++- [x] Slide `fato-fake` injetado nas 3 lições (antes da Revisão Geral)
++- [x] Script `eventos-fato-fake.js` importado nas 3 páginas de lição
++- [x] Validação `node --check` OK nos 6 arquivos JS (`state`, `licoes-engine`,
++      `eventos-fato-fake`, `licao-17`, `licao-18`, `licao-19`)
++- [x] Smoke test local (HTTP 200 em todos os recursos, zero `href="/"` residual)
+ 
+ ---
+ 
+-**Próximos sprints (Sprint 5, conforme `.github/plano_desenvolvimento_chemical_royale_v3.md`):**
+-eventos surpresa ("É fato ou fake?"), leaderboard local + sistema de badges/conquistas,
+-painel de pontuação final consolidado, autoavaliação e geração de PDF por e-mail
+-(jsPDF + EmailJS). Ver §10 para a lista de correções técnicas recomendadas antes
+-ou durante esse próximo sprint.
+-
+ <div align="center">
+   <img src="assets/logo/logo_bio_tech.png" alt="Logo BIO+TECH EDUDESIGN" width="70"/>
++  <p><em>Chemical Royale — BIO+TECH EDUDESIGN · 2026</em></p>
++  <p><em>Sprint 5 · Entrega 1/3 — Bug §10.1 corrigido + Evento Surpresa "É fato ou fake?"</em></p>
+ </div>
+diff --git a/apresentacao.html b/apresentacao.html
+index d786970..2e2db40 100644
+--- a/apresentacao.html
++++ b/apresentacao.html
+@@ -6,13 +6,21 @@
+ <title>Alinhamento Pedagógico | Chemical Royale — BIO+TECH EDUDESIGN</title>
+ <meta name="description" content="Apresentação inicial da aula de Química e alinhamento com a BNCC, BNCC Computação, SAEB e ENEM/INEP.">
+ <link rel="stylesheet" href="css/style.css">
++<!-- Favicon package generated by Favicon.im Generator (paths relativos — §10.1) -->
++<link rel="icon" type="image/x-icon" href="assets/logo/favicon.ico">
++<link rel="icon" type="image/png" sizes="16x16" href="assets/logo/favicon-16x16.png">
++<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32x32.png">
++<link rel="apple-touch-icon" sizes="180x180" href="assets/logo/apple-touch-icon.png">
++<link rel="icon" type="image/png" sizes="192x192" href="assets/logo/android-chrome-192x192.png">
++<link rel="icon" type="image/png" sizes="512x512" href="assets/logo/android-chrome-512x512.png">
++<meta name="theme-color" content="#ffffff">
+ </head>
+ <body>
+ 
+ <header class="site-header">
+   <div class="site-header__inner">
+     <div class="brand">
+-      <a href="/" class="brand-logo-link">
++      <a href="index.html" class="brand-logo-link">
+       <img src="assets/logo/chemical_royale_logo.png" alt="Chemical Royale Logo" class="brand-logo">
+     </a>
+     </div>
+diff --git a/avatares.html b/avatares.html
+index 803c5ba..b8b9dd5 100644
+--- a/avatares.html
++++ b/avatares.html
+@@ -6,13 +6,21 @@
+ <title>Escolha sua Líder de Arena | Chemical Royale — BIO+TECH EDUDESIGN</title>
+ <meta name="description" content="Selecione uma das 5 cientistas históricas como sua Líder de Arena e ative sua habilidade passiva.">
+ <link rel="stylesheet" href="css/style.css">
++<!-- Favicon package generated by Favicon.im Generator (paths relativos — §10.1) -->
++<link rel="icon" type="image/x-icon" href="assets/logo/favicon.ico">
++<link rel="icon" type="image/png" sizes="16x16" href="assets/logo/favicon-16x16.png">
++<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32x32.png">
++<link rel="apple-touch-icon" sizes="180x180" href="assets/logo/apple-touch-icon.png">
++<link rel="icon" type="image/png" sizes="192x192" href="assets/logo/android-chrome-192x192.png">
++<link rel="icon" type="image/png" sizes="512x512" href="assets/logo/android-chrome-512x512.png">
++<meta name="theme-color" content="#ffffff">
+ </head>
+ <body>
+ 
+ <header class="site-header">
+   <div class="site-header__inner">
+     <div class="brand">
+-      <a href="/" class="brand-logo-link">
++      <a href="index.html" class="brand-logo-link">
+       <img src="assets/logo/chemical_royale_logo.png" alt="Chemical Royale Logo" class="brand-logo">
+     </a>
+     </div>
+diff --git a/css/style.css b/css/style.css
+index 937f714..e985e06 100644
+--- a/css/style.css
++++ b/css/style.css
+@@ -880,3 +880,208 @@ footer.site-footer{
+   border: 1px solid rgba(167,139,250,0.3);
+   color: var(--text-primary);
+ }
++
++/* ============================================================
++   Sprint 5 — Evento Surpresa "É FATO ou FAKE?"
++   Interrompe o fluxo da lição com um alerta pulsante inspirado
++   em notificação de rede social / alerta de emergência. Timer
++   visual regressivo (15s), botões contrastantes verde/vermelho
++   e painel de feedback com base científica + fonte.
++   ============================================================ */
++.fato-fake{
++  position: relative;
++  background: linear-gradient(140deg, rgba(255,122,80,0.08), rgba(244,193,92,0.06));
++  border: 1px solid rgba(255,122,80,0.35);
++  border-radius: var(--radius-card);
++  padding: 24px 22px 26px;
++  box-shadow: var(--shadow-glow-ion);
++  animation: fatoFakeEntrada 0.45s ease-out;
++}
++@keyframes fatoFakeEntrada{
++  from{ opacity: 0; transform: translateY(12px) scale(0.98); }
++  to  { opacity: 1; transform: translateY(0)    scale(1);   }
++}
++
++.fato-fake__alerta{
++  display: flex;
++  align-items: center;
++  gap: 10px;
++  font-family: var(--font-display);
++  font-weight: 700;
++  letter-spacing: 0.03em;
++  color: var(--accent-ion);
++  text-transform: uppercase;
++  font-size: 0.95rem;
++  margin-bottom: 14px;
++}
++.fato-fake__pulse{
++  display: inline-block;
++  font-size: 1.4rem;
++  animation: fatoFakePulse 1.1s ease-in-out infinite;
++}
++@keyframes fatoFakePulse{
++  0%,100%{ transform: scale(1);    filter: drop-shadow(0 0 0 rgba(255,122,80,0)); }
++  50%    { transform: scale(1.18); filter: drop-shadow(0 0 8px rgba(255,122,80,0.8)); }
++}
++.fato-fake__titulo{ color: var(--text-primary); }
++
++/* --------- Timer regressivo (15s) --------- */
++.fato-fake__timer{
++  position: relative;
++  height: 8px;
++  background: rgba(255,255,255,0.06);
++  border-radius: 999px;
++  overflow: hidden;
++  margin-bottom: 18px;
++}
++.fato-fake__timer-fill{
++  position: absolute;
++  inset: 0;
++  width: 100%;
++  background: linear-gradient(90deg, var(--accent-plasma), var(--accent-gold), var(--accent-ion));
++  border-radius: 999px;
++  transition: width 15s linear;
++}
++.fato-fake__timer-label{
++  position: absolute;
++  top: -22px;
++  right: 0;
++  font-family: var(--font-mono);
++  font-size: 0.78rem;
++  color: var(--text-muted);
++}
++.fato-fake__timer-label.is-critical{
++  color: var(--accent-ion);
++  font-weight: 700;
++  animation: fatoFakePulse 0.7s ease-in-out infinite;
++}
++
++.fato-fake__contexto{
++  font-size: 0.82rem;
++  color: var(--text-muted);
++  margin: 0 0 8px;
++  font-style: italic;
++}
++.fato-fake__afirmacao{
++  margin: 0 0 22px;
++  padding: 16px 18px;
++  background: rgba(10,14,22,0.55);
++  border-left: 4px solid var(--accent-gold);
++  border-radius: var(--radius-sm);
++  font-family: var(--font-display);
++  font-size: 1.05rem;
++  line-height: 1.5;
++  color: var(--text-primary);
++  quotes: "“" "”";
++}
++
++/* --------- Botões FATO / FAKE --------- */
++.fato-fake__botoes{
++  display: grid;
++  grid-template-columns: 1fr 1fr;
++  gap: 12px;
++  margin-bottom: 18px;
++}
++.btn--fato, .btn--fake{
++  padding: 14px 18px;
++  border-radius: var(--radius-sm);
++  font-family: var(--font-display);
++  font-weight: 700;
++  letter-spacing: 0.05em;
++  text-transform: uppercase;
++  font-size: 0.95rem;
++  cursor: pointer;
++  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
++  border: 2px solid transparent;
++}
++.btn--fato{
++  background: rgba(69,224,200,0.12);
++  color: var(--accent-plasma);
++  border-color: rgba(69,224,200,0.4);
++}
++.btn--fato:hover:not(:disabled){
++  background: rgba(69,224,200,0.22);
++  transform: translateY(-2px);
++  box-shadow: var(--shadow-glow-plasma);
++}
++.btn--fake{
++  background: rgba(255,122,80,0.12);
++  color: var(--accent-ion);
++  border-color: rgba(255,122,80,0.4);
++}
++.btn--fake:hover:not(:disabled){
++  background: rgba(255,122,80,0.22);
++  transform: translateY(-2px);
++  box-shadow: var(--shadow-glow-ion);
++}
++.btn--fato:disabled, .btn--fake:disabled{
++  cursor: not-allowed;
++  opacity: 0.55;
++}
++.btn--fato.is-correct, .btn--fake.is-correct{
++  background: rgba(69,224,200,0.28);
++  border-color: var(--accent-plasma);
++  color: var(--text-primary);
++  opacity: 1;
++  box-shadow: var(--shadow-glow-plasma);
++}
++.btn--fato.is-wrong, .btn--fake.is-wrong{
++  background: rgba(255,80,80,0.22);
++  border-color: #ff5050;
++  color: var(--text-primary);
++  opacity: 1;
++}
++
++/* --------- Feedback pós-resposta --------- */
++.fato-fake__feedback{
++  display: none;
++  padding: 16px 18px;
++  border-radius: var(--radius-sm);
++  border: 1px solid var(--border-hairline);
++  background: rgba(10,14,22,0.55);
++}
++.fato-fake__feedback.is-visible{ display: block; animation: fatoFakeEntrada 0.35s ease-out; }
++.fato-fake__feedback.feedback-correta{ border-color: rgba(69,224,200,0.5); }
++.fato-fake__feedback.feedback-errada { border-color: rgba(255,122,80,0.5); }
++
++.fato-fake__resultado{
++  margin: 0 0 10px;
++  font-family: var(--font-display);
++  font-size: 1rem;
++  color: var(--text-primary);
++}
++.fato-fake__explicacao{
++  margin: 0 0 10px;
++  font-size: 0.92rem;
++  line-height: 1.55;
++  color: var(--text-primary);
++}
++.fato-fake__explicacao em{ color: var(--accent-gold); font-style: normal; font-weight: 600; }
++.fato-fake__explicacao strong{ color: var(--accent-plasma); }
++.fato-fake__fonte{
++  margin: 0 0 12px;
++  font-size: 0.78rem;
++  color: var(--text-muted);
++  font-family: var(--font-mono);
++}
++.fato-fake__ganho{
++  display: inline-block;
++  padding: 6px 12px;
++  border-radius: 999px;
++  font-family: var(--font-mono);
++  font-size: 0.8rem;
++  font-weight: 600;
++  background: rgba(244,193,92,0.15);
++  color: var(--accent-gold);
++  border: 1px solid rgba(244,193,92,0.4);
++}
++.fato-fake__ganho--consolacao{
++  background: rgba(167,139,250,0.12);
++  color: var(--accent-quantum);
++  border-color: rgba(167,139,250,0.35);
++}
++
++@media (max-width: 520px){
++  .fato-fake__botoes{ grid-template-columns: 1fr; }
++  .fato-fake__afirmacao{ font-size: 0.95rem; }
++}
+diff --git a/data/eventos-fato-fake.js b/data/eventos-fato-fake.js
+new file mode 100644
+index 0000000..ed60854
+--- /dev/null
++++ b/data/eventos-fato-fake.js
+@@ -0,0 +1,149 @@
++/* ============================================================
++   data/eventos-fato-fake.js
++   Sprint 5 — Evento Surpresa "É FATO ou FAKE?"
++   -------------------------------------------------------------
++   Banco curado de afirmações químicas que circulam em redes sociais,
++   grupos de WhatsApp e senso comum. O aluno tem um tempo limitado
++   (15s) para julgar cada uma como FATO ou FAKE, treinando pensamento
++   crítico com base científica — competência transversal do ENEM
++   (Ciências da Natureza / letramento científico).
++
++   Cada afirmação carrega:
++     - texto: enunciado curto (máx. 2 linhas), estilo "print de rede social"
++     - veredito: "fato" | "fake"
++     - explicacao: base científica curta (para o feedback pedagógico)
++     - fonte: referência opcional (ENEM, IUPAC, INCA, SBQ, etc.)
++     - tema: alinha o mito ao conteúdo da lição correspondente
++             (l17 = átomo, l18 = tabela/ligações, l19 = funções inorgânicas)
++
++   Recompensa (aplicada pelo motor em licoes-engine.js):
++     - Acerto: +5 pts e +2 PEQ, contabilizados no HUD
++     - Erro:   0 pts, mas ganha +1 PEQ de "consolação didática"
++               (o aprendizado do mito também vale)
++   ============================================================ */
++
++const CR_FATOS_FAKE = {
++
++  // ---------- Afirmações ligadas à Lição 17 (átomo / modelos / partículas) ----------
++  l17: [
++    {
++      texto: "\"O átomo é a menor partícula do universo e não pode ser dividido em nada menor.\"",
++      veredito: "fake",
++      explicacao: "FAKE. O nome ‘átomo’ vem do grego <em>átomos</em> (‘indivisível’), mas a ciência já sabe há mais de um século que ele é composto por prótons, nêutrons e elétrons — e prótons/nêutrons ainda são feitos de quarks.",
++      fonte: "SBQ · Química Nova na Escola"
++    },
++    {
++      texto: "\"Se um átomo perde um elétron, ele deixa de ser o mesmo elemento químico.\"",
++      veredito: "fake",
++      explicacao: "FAKE. O que define o elemento químico é o número de prótons (Z), não de elétrons. Um átomo que perde ou ganha elétrons vira um <em>íon</em>, mas continua sendo o mesmo elemento.",
++      fonte: "IUPAC · Gold Book"
++    },
++    {
++      texto: "\"Isótopos do mesmo elemento têm propriedades químicas praticamente idênticas.\"",
++      veredito: "fato",
++      explicacao: "FATO. Como isótopos têm o mesmo número de prótons e elétrons (só muda a quantidade de nêutrons), sua reatividade química é praticamente a mesma. A diferença marcante aparece na massa e na estabilidade nuclear.",
++      fonte: "ENEM 2019 · Ciências da Natureza"
++    },
++    {
++      texto: "\"O modelo atômico de Bohr é o modelo aceito atualmente pela ciência.\"",
++      veredito: "fake",
++      explicacao: "FAKE. O modelo atual é o <strong>quântico (orbital)</strong>, em que a posição do elétron é uma <em>região de probabilidade</em> (nuvem eletrônica), não uma órbita fixa como propunha Bohr em 1913.",
++      fonte: "BNCC · Ensino Médio, Química"
++    },
++    {
++      texto: "\"Todo material radioativo emite luz visível verde no escuro.\"",
++      veredito: "fake",
++      explicacao: "FAKE — isso é cultura pop de filme. Radioatividade é emissão de radiação (α, β, γ), invisível a olho nu. O brilho verde é atribuído a compostos com <em>fósforo</em> ou tintas com trítio, não à radioatividade em si.",
++      fonte: "CNEN · Comissão Nacional de Energia Nuclear"
++    }
++  ],
++
++  // ---------- Afirmações ligadas à Lição 18 (tabela periódica / ligações) ----------
++  l18: [
++    {
++      texto: "\"Os gases nobres não reagem com nada porque têm a última camada completa.\"",
++      veredito: "fake",
++      explicacao: "FAKE (parcial). Eles são <em>pouco</em> reativos, mas <strong>xenônio, criptônio e radônio</strong> formam compostos reais em laboratório (XeF₂, XeF₄, KrF₂). O senso comum simplifica demais.",
++      fonte: "IUPAC · Periodic Table"
++    },
++    {
++      texto: "\"Metais são bons condutores de eletricidade porque têm elétrons livres na sua estrutura.\"",
++      veredito: "fato",
++      explicacao: "FATO. O modelo do ‘mar de elétrons’ explica exatamente isso: em uma ligação metálica, os elétrons de valência se deslocam livremente entre os cátions, permitindo condução elétrica e térmica.",
++      fonte: "ENEM 2017 · Q. 105"
++    },
++    {
++      texto: "\"A água (H₂O) é uma molécula linear, igualzinha ao CO₂.\"",
++      veredito: "fake",
++      explicacao: "FAKE. A água é <strong>angular</strong> (~104,5°) por causa dos dois pares de elétrons não ligantes do oxigênio. O CO₂ é linear porque o carbono central não tem pares isolados. Geometrias diferentes = polaridades diferentes.",
++      fonte: "ENEM 2021 · Ciências da Natureza"
++    },
++    {
++      texto: "\"Ligações de hidrogênio são o tipo mais forte de ligação química que existe.\"",
++      veredito: "fake",
++      explicacao: "FAKE. Ligações de hidrogênio são um tipo de <em>força intermolecular</em> — mais fracas que ligações covalentes, iônicas ou metálicas. Fortes para forças intermoleculares, sim; mas nem chegam perto de uma ligação química clássica.",
++      fonte: "SBQ · Química Nova na Escola"
++    },
++    {
++      texto: "\"A polaridade da água é o que a torna um solvente universal para compostos iônicos.\"",
++      veredito: "fato",
++      explicacao: "FATO. A água é uma molécula polar (dipolo permanente), o que permite solvatar cátions e ânions com facilidade — daí ela dissolver sal, açúcar e a maioria dos compostos iônicos. ‘Universal’ é um exagero didático, mas o mecanismo está correto.",
++      fonte: "ENEM 2015 · Q. 82"
++    }
++  ],
++
++  // ---------- Afirmações ligadas à Lição 19 (ácidos, bases, sais, óxidos) ----------
++  l19: [
++    {
++      texto: "\"Beber água com limão em jejum ‘alcaliniza’ o sangue e cura doenças.\"",
++      veredito: "fake",
++      explicacao: "FAKE clássica das redes sociais. O sangue tem <strong>pH regulado entre 7,35 e 7,45</strong> por tampões fisiológicos — nenhum alimento altera esse valor. Se alterasse, seria emergência médica (acidose/alcalose).",
++      fonte: "INCA · Instituto Nacional de Câncer"
++    },
++    {
++      texto: "\"Todo ácido é corrosivo e queima a pele.\"",
++      veredito: "fake",
++      explicacao: "FAKE. Depende da <em>concentração</em> e da <em>força do ácido</em>. Ácido acético (vinagre) e ácido cítrico (limão) são ácidos fracos e comestíveis. Já HCl ou H₂SO₄ concentrados são altamente corrosivos.",
++      fonte: "ENEM 2018 · Q. 92"
++    },
++    {
++      texto: "\"Bicarbonato de sódio (NaHCO₃) reage com ácido do estômago e alivia azia.\"",
++      veredito: "fato",
++      explicacao: "FATO. NaHCO₃ + HCl → NaCl + H₂O + CO₂. É uma reação de neutralização real, que reduz temporariamente a acidez estomacal — princípio de vários antiácidos de farmácia. (Uso crônico não é recomendado.)",
++      fonte: "ANVISA · Farmacopeia Brasileira"
++    },
++    {
++      texto: "\"Óxidos ácidos, quando reagem com água, formam ácidos — inclusive na chuva ácida.\"",
++      veredito: "fato",
++      explicacao: "FATO. SO₃ + H₂O → H₂SO₄ e NO₂ + H₂O forma HNO₃/HNO₂. É esse mecanismo que transforma poluentes atmosféricos (do escapamento e da queima de carvão) na chuva ácida que corrói monumentos.",
++      fonte: "ENEM 2020 · Q. 118"
++    },
++    {
++      texto: "\"Todo sal de cozinha é sódio puro — por isso faz mal ao coração.\"",
++      veredito: "fake",
++      explicacao: "FAKE. Sal de cozinha é <strong>cloreto de sódio (NaCl)</strong>, um composto iônico — não sódio metálico (Na), que reage explosivamente com água. O que a OMS recomenda controlar é o <em>íon Na⁺</em>, presente no sal.",
++      fonte: "OMS / Ministério da Saúde"
++    }
++  ]
++};
++
++// Helper: sorteia UMA afirmação do bloco temático da lição (l17 | l18 | l19),
++// evitando repetição na mesma sessão (usa uma memória volátil em window).
++function sortearFatoFake(temaLicao){
++  const banco = CR_FATOS_FAKE[temaLicao] || [];
++  if(banco.length === 0) return null;
++
++  window.__CR_FATOS_JA_VISTOS = window.__CR_FATOS_JA_VISTOS || {};
++  const jaVistos = window.__CR_FATOS_JA_VISTOS[temaLicao] || new Set();
++  const disponiveis = banco.filter(f => !jaVistos.has(f.texto));
++
++  // Se o aluno já viu todos, reinicia o pool (permite revisão).
++  const pool = disponiveis.length > 0 ? disponiveis : banco;
++  const escolhido = pool[Math.floor(Math.random() * pool.length)];
++
++  if(disponiveis.length === 0) jaVistos.clear();
++  jaVistos.add(escolhido.texto);
++  window.__CR_FATOS_JA_VISTOS[temaLicao] = jaVistos;
++
++  return escolhido;
++}
+diff --git a/data/licao-17.js b/data/licao-17.js
+index 55efcb3..1167868 100644
+--- a/data/licao-17.js
++++ b/data/licao-17.js
+@@ -38,7 +38,8 @@ const LICAO_17 = {
+         "<span class='key-term'>Rutherford (1911)</span>, bombardeando uma fina folha de ouro com partículas alfa, percebeu que a maior parte do átomo é espaço vazio, com um núcleo pequeno, denso e positivo. <span class='key-term'>Bohr (1913)</span> completou o modelo dizendo que os elétrons giram em órbitas (níveis) com energia definida ao redor desse núcleo."
+       ],
+       figura: {
+-        src: "https://commons.wikimedia.org/wiki/Special:FilePath/Bohr-atom-PAR.svg" width="200",
++        src: "https://commons.wikimedia.org/wiki/Special:FilePath/Bohr-atom-PAR.svg",
++        width: 200,
+         alt: "Diagrama do modelo atômico de Bohr, com elétrons em órbitas ao redor do núcleo",
+         caption: "Modelo atômico de Bohr — imagem: Wikimedia Commons, licença Creative Commons (CC BY-SA)."
+       }
+@@ -275,6 +276,17 @@ const LICAO_17 = {
+       ]
+     },
+ 
++    // ============================================================
++    // EVENTO SURPRESA (Sprint 5) — quebra de ritmo antes da Revisão Geral (átomo / modelos)
++    // Interrompe o fluxo com uma afirmação química de senso comum;
++    // o aluno tem 15s para julgar como FATO ou FAKE.
++    // Sorteio automático via sortearFatoFake() em data/eventos-fato-fake.js.
++    // ============================================================
++    {
++      type: "fato-fake",
++      tema: "l17"
++    },
++
+     // ============================================================
+     // REVISÃO GERAL DA LIÇÃO
+     // ============================================================
+diff --git a/data/licao-18.js b/data/licao-18.js
+index 88627a6..a03d59d 100644
+--- a/data/licao-18.js
++++ b/data/licao-18.js
+@@ -352,6 +352,17 @@ const LICAO_18 = {
+       ]
+     },
+ 
++    // ============================================================
++    // EVENTO SURPRESA (Sprint 5) — quebra de ritmo antes da Revisão Geral (tabela / ligações)
++    // Interrompe o fluxo com uma afirmação química de senso comum;
++    // o aluno tem 15s para julgar como FATO ou FAKE.
++    // Sorteio automático via sortearFatoFake() em data/eventos-fato-fake.js.
++    // ============================================================
++    {
++      type: "fato-fake",
++      tema: "l18"
++    },
++
+     // ============================================================
+     // REVISÃO GERAL DA LIÇÃO
+     // ============================================================
+diff --git a/data/licao-19.js b/data/licao-19.js
+index 21bdace..64a2c8e 100644
+--- a/data/licao-19.js
++++ b/data/licao-19.js
+@@ -200,6 +200,17 @@ const LICAO_19 = {
+       ]
+     },
+ 
++    // ============================================================
++    // EVENTO SURPRESA (Sprint 5) — quebra de ritmo antes da Revisão Geral (ácidos / bases / sais)
++    // Interrompe o fluxo com uma afirmação química de senso comum;
++    // o aluno tem 15s para julgar como FATO ou FAKE.
++    // Sorteio automático via sortearFatoFake() em data/eventos-fato-fake.js.
++    // ============================================================
++    {
++      type: "fato-fake",
++      tema: "l19"
++    },
++
+     // ============================================================
+     // REVISÃO GERAL DA LIÇÃO
+     // ============================================================
+diff --git a/index.html b/index.html
+index d1a6dbd..310eecd 100644
+--- a/index.html
++++ b/index.html
+@@ -6,13 +6,13 @@
+ <title>Chemical Royale: A Arena dos Elementos | Pré-ENEM Digital — BIO+TECH EDUDESIGN</title>
+ <meta name="description" content="Ambiente autoinstrucional gamificado de preparação para o ENEM (Química), criado pela BIO+TECH EDUDESIGN.">
+ <link rel="stylesheet" href="css/style.css">
+-<!-- Favicon package generated by Favicon.im Generator -->
+-<link rel="icon" type="assets/logo/favicon.ico" href="/favicon.ico">
+-<link rel="icon" type="assets/logo/favicon-16x16.png" sizes="16x16" href="/favicon-16x16.png">
+-<link rel="icon" type="assets/logo/favicon-32x32.png" sizes="32x32" href="/favicon-32x32.png">
++<!-- Favicon package generated by Favicon.im Generator (paths relativos — §10.1) -->
++<link rel="icon" type="image/x-icon" href="assets/logo/favicon.ico">
++<link rel="icon" type="image/png" sizes="16x16" href="assets/logo/favicon-16x16.png">
++<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32x32.png">
+ <link rel="apple-touch-icon" sizes="180x180" href="assets/logo/apple-touch-icon.png">
+-<link rel="icon" type="assets/logo/android-chrome-192x192.png" sizes="192x192" href="/android-chrome-192x192.png">
+-<link rel="icon" type="assets/logo/android-chrome-512x512.png" sizes="512x512" href="/android-chrome-512x512.png">
++<link rel="icon" type="image/png" sizes="192x192" href="assets/logo/android-chrome-192x192.png">
++<link rel="icon" type="image/png" sizes="512x512" href="assets/logo/android-chrome-512x512.png">
+ <meta name="theme-color" content="#ffffff">
+ </head>
+ <body>
+@@ -20,7 +20,7 @@
+ <header class="site-header">
+   <div class="site-header__inner">
+     <div class="brand">
+-      <a href="/" class="brand-logo-link">
++      <a href="index.html" class="brand-logo-link">
+       <img src="assets/logo/chemical_royale_logo.png" alt="Chemical Royale Logo" class="brand-logo">
+     </a>
+     </div>
+diff --git a/js/licoes-engine.js b/js/licoes-engine.js
+index 4b2c334..f376afd 100644
+--- a/js/licoes-engine.js
++++ b/js/licoes-engine.js
+@@ -198,10 +198,151 @@ function CRLessonEngine(rootEl, lessonData){
+     else if(slide.type === "dialog-cards") renderDialogCards(slide);
+     else if(slide.type === "branching") renderBranching(slide);
+     else if(slide.type === "quiz") renderQuiz(slide);
++    else if(slide.type === "fato-fake") renderFatoFake(slide);   // Sprint 5
+     else if(slide.type === "boss-fight") renderBossFight(slide);
+     else if(slide.type === "final-score") renderFinalScore(slide);
+   }
+ 
++  /* ---------------- Slide: É fato ou fake? (Sprint 5) ----------------
++     Evento surpresa que interrompe o fluxo da lição com uma afirmação
++     retirada de circulação em redes sociais / senso comum. O aluno tem
++     15 segundos para julgar como FATO ou FAKE, treinando letramento
++     científico (competência transversal do ENEM em Ciências da Natureza).
++
++     Regras de gamificação (integradas ao HUD e ao placar):
++       - Acerto:  +5 pts e +2 PEQ
++       - Erro:    0 pts, +1 PEQ de "consolação didática"
++                  (o aprendizado do mito também vale)
++       - Timeout: tratado como erro pedagógico (mesma recompensa)
++
++     A afirmação vem de `data/eventos-fato-fake.js` (banco temático por lição).
++     Se o slide já vier com `slide.afirmacao` embutida, o motor usa ela
++     diretamente; caso contrário, sorteia por `slide.tema` (l17|l18|l19).
++  -------------------------------------------------------------- */
++  function renderFatoFake(slide){
++    // Resolve a afirmação: prioriza a embutida; senão sorteia do banco.
++    let afirmacao = slide.afirmacao;
++    if(!afirmacao && typeof sortearFatoFake === "function"){
++      afirmacao = sortearFatoFake(slide.tema || "l17");
++    }
++    if(!afirmacao){
++      // Fallback seguro: se por algum motivo o banco não carregou,
++      // não trava a lição — apenas libera o avanço.
++      elContent.innerHTML = `<div class="theory-block"><p>Evento surpresa indisponível neste momento. Pode seguir!</p></div>`;
++      setGate(false, "");
++      return;
++    }
++
++    setGate(true, "⚠️ Evento surpresa — julgue a afirmação para continuar.");
++
++    const TEMPO_TOTAL_MS = 15000;
++    let tempoRestanteMs = TEMPO_TOTAL_MS;
++    let respondido = false;
++    let intervaloTimer = null;
++
++    elContent.innerHTML = `
++      <div class="fato-fake" data-veredito="">
++        <div class="fato-fake__alerta">
++          <span class="fato-fake__pulse">⚠️</span>
++          <span class="fato-fake__titulo">Evento surpresa — É FATO ou FAKE?</span>
++        </div>
++
++        <div class="fato-fake__timer" title="Você tem 15 segundos para decidir">
++          <div class="fato-fake__timer-fill" id="fatofake-timer-fill"></div>
++          <span class="fato-fake__timer-label" id="fatofake-timer-label">15s</span>
++        </div>
++
++        <p class="fato-fake__contexto">Circulando por aí em grupos e redes sociais:</p>
++        <blockquote class="fato-fake__afirmacao">${afirmacao.texto}</blockquote>
++
++        <div class="fato-fake__botoes">
++          <button type="button" class="btn btn--fato"  data-resposta="fato">✔ É FATO</button>
++          <button type="button" class="btn btn--fake" data-resposta="fake">✘ É FAKE</button>
++        </div>
++
++        <div class="fato-fake__feedback" id="fatofake-feedback"></div>
++      </div>
++    `;
++
++    const elTimerFill  = elContent.querySelector("#fatofake-timer-fill");
++    const elTimerLabel = elContent.querySelector("#fatofake-timer-label");
++    const elFeedback   = elContent.querySelector("#fatofake-feedback");
++
++    // Animação do timer (baseada em CSS transition) + fallback numérico
++    requestAnimationFrame(() => { elTimerFill.style.width = "0%"; });
++    intervaloTimer = setInterval(() => {
++      tempoRestanteMs -= 250;
++      if(tempoRestanteMs <= 0){
++        clearInterval(intervaloTimer);
++        if(!respondido) resolver(null); // timeout
++      }else{
++        elTimerLabel.textContent = Math.ceil(tempoRestanteMs / 1000) + "s";
++        if(tempoRestanteMs <= 5000) elTimerLabel.classList.add("is-critical");
++      }
++    }, 250);
++
++    elContent.querySelectorAll(".fato-fake__botoes button").forEach(btn => {
++      btn.addEventListener("click", () => resolver(btn.dataset.resposta));
++    });
++
++    function resolver(escolha){
++      if(respondido) return;
++      respondido = true;
++      clearInterval(intervaloTimer);
++
++      const timeout = escolha === null;
++      const acertou = !timeout && (escolha === afirmacao.veredito);
++
++      // Estatística global do jogador (para o painel final do Sprint 5)
++      CRState.registrarFatoFake(acertou);
++
++      // Recompensas
++      if(acertou){
++        CRState.registrarResposta(true, 5, null, true); // +5 pts, sem PEQ pela via de dificuldade
++        CRState.atualizarPEQ(2);                        // +2 PEQ pelo acerto no evento
++      }else{
++        CRState.atualizarPEQ(1); // consolação didática (o mito aprendido também vale)
++      }
++      atualizarHUD();
++
++      // Marca visualmente qual botão foi correto/errado
++      elContent.querySelectorAll(".fato-fake__botoes button").forEach(btn => {
++        btn.disabled = true;
++        const r = btn.dataset.resposta;
++        if(r === afirmacao.veredito) btn.classList.add("is-correct");
++        else if(r === escolha)       btn.classList.add("is-wrong");
++      });
++
++      elContent.querySelector(".fato-fake").dataset.veredito = afirmacao.veredito;
++
++      const cabecalho = timeout
++        ? "⏰ Tempo esgotado! Nas redes sociais também não dá pra ficar em cima do muro — desinformação se espalha rápido."
++        : (acertou
++            ? `✔ Você acertou! Essa afirmação é <strong>${afirmacao.veredito.toUpperCase()}</strong>.`
++            : `✘ Essa afirmação é, na verdade, <strong>${afirmacao.veredito.toUpperCase()}</strong>.`);
++
++      const notaRecompensa = acertou
++        ? `<span class="fato-fake__ganho">+5 pts · +2 ⚡ PEQ</span>`
++        : `<span class="fato-fake__ganho fato-fake__ganho--consolacao">+1 ⚡ PEQ (consolação didática)</span>`;
++
++      elFeedback.classList.add("is-visible", acertou ? "feedback-correta" : "feedback-errada");
++      elFeedback.innerHTML = `
++        <p class="fato-fake__resultado">${cabecalho}</p>
++        <p class="fato-fake__explicacao">${afirmacao.explicacao}</p>
++        ${afirmacao.fonte ? `<p class="fato-fake__fonte">Fonte de referência: <em>${afirmacao.fonte}</em></p>` : ""}
++        ${notaRecompensa}
++      `;
++
++      // Botão de continuar
++      const btnSeguir = document.createElement("button");
++      btnSeguir.type = "button";
++      btnSeguir.className = "btn btn--primary mt-24";
++      btnSeguir.textContent = "Voltar à lição →";
++      btnSeguir.addEventListener("click", () => setGate(false, "Evento resolvido — pode avançar."));
++      elContent.querySelector(".fato-fake").appendChild(btnSeguir);
++    }
++  }
++
+   /* ---------------- Slide: diálogo com a Líder de Arena ---------------- */
+   function renderDialogo(slide){
+     const apelidoAtual = CRState.getApelido();
+diff --git a/js/state.js b/js/state.js
+index 304232e..d9465a5 100644
+--- a/js/state.js
++++ b/js/state.js
+@@ -128,6 +128,23 @@ const CRState = {
+     return novo;
+   },
+ 
++  // ---------- Eventos surpresa "É fato ou fake?" (Sprint 5) ----------
++  /**
++   * Registra o resultado de UM evento surpresa "É fato ou fake?".
++   * Guardado como { acertos, erros, ultimaVisita } em fatosFake.
++   * @param {boolean} acertou
++   */
++  registrarFatoFake(acertou){
++    const atual = this._read().fatosFake || { acertos: 0, erros: 0 };
++    if(acertou) atual.acertos += 1;
++    else        atual.erros   += 1;
++    atual.ultimaVisita = new Date().toISOString();
++    return this._write({ fatosFake: atual });
++  },
++  getFatosFake(){
++    return this._read().fatosFake || { acertos: 0, erros: 0 };
++  },
++
+   // ---------- Progresso das lições ----------
+   marcarLicaoConcluida(licaoId){
+     const atual = this._read().licoesConcluidas || {};
+diff --git a/licao-17.html b/licao-17.html
+index b191bf5..acc9493 100644
+--- a/licao-17.html
++++ b/licao-17.html
+@@ -6,13 +6,21 @@
+ <title>Lição 17 — O átomo e suas partículas | Chemical Royale</title>
+ <meta name="description" content="Lição 17 do Pré-ENEM Digital de Química: modelos atômicos, partículas fundamentais, isótopos/isóbaros e configuração eletrônica, com quizzes padrão ENEM.">
+ <link rel="stylesheet" href="css/style.css">
++<!-- Favicon package generated by Favicon.im Generator (paths relativos — §10.1) -->
++<link rel="icon" type="image/x-icon" href="assets/logo/favicon.ico">
++<link rel="icon" type="image/png" sizes="16x16" href="assets/logo/favicon-16x16.png">
++<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32x32.png">
++<link rel="apple-touch-icon" sizes="180x180" href="assets/logo/apple-touch-icon.png">
++<link rel="icon" type="image/png" sizes="192x192" href="assets/logo/android-chrome-192x192.png">
++<link rel="icon" type="image/png" sizes="512x512" href="assets/logo/android-chrome-512x512.png">
++<meta name="theme-color" content="#ffffff">
+ </head>
+ <body>
+ 
+ <header class="site-header">
+   <div class="site-header__inner">
+     <div class="brand">
+-      <a href="/" class="brand-logo-link">
++      <a href="index.html" class="brand-logo-link">
+       <img src="assets/logo/chemical_royale_logo.png" alt="Chemical Royale Logo" class="brand-logo">
+     </a>
+     </div>
+@@ -39,6 +47,7 @@
+ </footer>
+ 
+ <script src="js/state.js"></script>
++<script src="data/eventos-fato-fake.js"></script>
+ <script src="js/licoes-engine.js"></script>
+ <script src="data/licao-17.js"></script>
+ <script>
+diff --git a/licao-18.html b/licao-18.html
+index 353d2ab..503b7f9 100644
+--- a/licao-18.html
++++ b/licao-18.html
+@@ -6,13 +6,21 @@
+ <title>Lição 18 — Classificação periódica e ligações químicas | Chemical Royale</title>
+ <meta name="description" content="Lição 18 do Pré-ENEM Digital de Química: tabela periódica, propriedades periódicas, ligações químicas, geometria molecular e forças intermoleculares, com quizzes padrão ENEM.">
+ <link rel="stylesheet" href="css/style.css">
++<!-- Favicon package generated by Favicon.im Generator (paths relativos — §10.1) -->
++<link rel="icon" type="image/x-icon" href="assets/logo/favicon.ico">
++<link rel="icon" type="image/png" sizes="16x16" href="assets/logo/favicon-16x16.png">
++<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32x32.png">
++<link rel="apple-touch-icon" sizes="180x180" href="assets/logo/apple-touch-icon.png">
++<link rel="icon" type="image/png" sizes="192x192" href="assets/logo/android-chrome-192x192.png">
++<link rel="icon" type="image/png" sizes="512x512" href="assets/logo/android-chrome-512x512.png">
++<meta name="theme-color" content="#ffffff">
+ </head>
+ <body>
+ 
+ <header class="site-header">
+   <div class="site-header__inner">
+     <div class="brand">
+-      <a href="/" class="brand-logo-link">
++      <a href="index.html" class="brand-logo-link">
+       <img src="assets/logo/chemical_royale_logo.png" alt="Chemical Royale Logo" class="brand-logo">
+     </a>
+     </div>
+@@ -39,6 +47,7 @@
+ </footer>
+ 
+ <script src="js/state.js"></script>
++<script src="data/eventos-fato-fake.js"></script>
+ <script src="js/licoes-engine.js"></script>
+ <script src="data/licao-18.js"></script>
+ <script>
+diff --git a/licao-19.html b/licao-19.html
+index a0be666..77aa105 100644
+--- a/licao-19.html
++++ b/licao-19.html
+@@ -6,13 +6,21 @@
+ <title>Lição 19 — Funções inorgânicas | Chemical Royale</title>
+ <meta name="description" content="Lição 19 do Pré-ENEM Digital de Química: ácidos, bases, sais, óxidos e solubilidade, com quizzes padrão ENEM e o Duelo Final contra A Entropia.">
+ <link rel="stylesheet" href="css/style.css">
++<!-- Favicon package generated by Favicon.im Generator (paths relativos — §10.1) -->
++<link rel="icon" type="image/x-icon" href="assets/logo/favicon.ico">
++<link rel="icon" type="image/png" sizes="16x16" href="assets/logo/favicon-16x16.png">
++<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32x32.png">
++<link rel="apple-touch-icon" sizes="180x180" href="assets/logo/apple-touch-icon.png">
++<link rel="icon" type="image/png" sizes="192x192" href="assets/logo/android-chrome-192x192.png">
++<link rel="icon" type="image/png" sizes="512x512" href="assets/logo/android-chrome-512x512.png">
++<meta name="theme-color" content="#ffffff">
+ </head>
+ <body>
+ 
+ <header class="site-header">
+   <div class="site-header__inner">
+     <div class="brand">
+-      <a href="/" class="brand-logo-link">
++      <a href="index.html" class="brand-logo-link">
+       <img src="assets/logo/chemical_royale_logo.png" alt="Chemical Royale Logo" class="brand-logo">
+     </a>
+     </div>
+@@ -39,6 +47,7 @@
+ </footer>
+ 
+ <script src="js/state.js"></script>
++<script src="data/eventos-fato-fake.js"></script>
+ <script src="js/licoes-engine.js"></script>
+ <script src="data/licao-19.js"></script>
+ <script>
+diff --git a/narrativa.html b/narrativa.html
+index 87a4a29..4484aec 100644
+--- a/narrativa.html
++++ b/narrativa.html
+@@ -10,13 +10,21 @@
+      dinamicamente pelo js/narrativa.js, e só quando um pacote .h5p
+      real é encontrado em /h5p/branching-narrativa/<narrativa>/.
+      Sem isso instalado, a tela usa o motor nativo (ver README §6). -->
++<!-- Favicon package generated by Favicon.im Generator (paths relativos — §10.1) -->
++<link rel="icon" type="image/x-icon" href="assets/logo/favicon.ico">
++<link rel="icon" type="image/png" sizes="16x16" href="assets/logo/favicon-16x16.png">
++<link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32x32.png">
++<link rel="apple-touch-icon" sizes="180x180" href="assets/logo/apple-touch-icon.png">
++<link rel="icon" type="image/png" sizes="192x192" href="assets/logo/android-chrome-192x192.png">
++<link rel="icon" type="image/png" sizes="512x512" href="assets/logo/android-chrome-512x512.png">
++<meta name="theme-color" content="#ffffff">
+ </head>
+ <body>
+ 
+ <header class="site-header">
+   <div class="site-header__inner">
+     <div class="brand">
+-      <a href="/" class="brand-logo-link">
++      <a href="index.html" class="brand-logo-link">
+       <img src="assets/logo/chemical_royale_logo.png" alt="Chemical Royale Logo" class="brand-logo">
+     </a>
+     </div>

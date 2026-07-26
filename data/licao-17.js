@@ -38,7 +38,8 @@ const LICAO_17 = {
         "<span class='key-term'>Rutherford (1911)</span>, bombardeando uma fina folha de ouro com partículas alfa, percebeu que a maior parte do átomo é espaço vazio, com um núcleo pequeno, denso e positivo. <span class='key-term'>Bohr (1913)</span> completou o modelo dizendo que os elétrons giram em órbitas (níveis) com energia definida ao redor desse núcleo."
       ],
       figura: {
-        src: "https://commons.wikimedia.org/wiki/Special:FilePath/Bohr-atom-PAR.svg" width="200",
+        src: "https://commons.wikimedia.org/wiki/Special:FilePath/Bohr-atom-PAR.svg",
+        width: 200,
         alt: "Diagrama do modelo atômico de Bohr, com elétrons em órbitas ao redor do núcleo",
         caption: "Modelo atômico de Bohr — imagem: Wikimedia Commons, licença Creative Commons (CC BY-SA)."
       }
@@ -273,6 +274,17 @@ const LICAO_17 = {
           feedbackErrada: "Na ionização, os elétrons são removidos primeiro da camada mais externa (n=4, subnível 4s), mesmo que o 3d tenha sido preenchido depois na ordem de energia."
         }
       ]
+    },
+
+    // ============================================================
+    // EVENTO SURPRESA (Sprint 5) — quebra de ritmo antes da Revisão Geral (átomo / modelos)
+    // Interrompe o fluxo com uma afirmação química de senso comum;
+    // o aluno tem 15s para julgar como FATO ou FAKE.
+    // Sorteio automático via sortearFatoFake() em data/eventos-fato-fake.js.
+    // ============================================================
+    {
+      type: "fato-fake",
+      tema: "l17"
     },
 
     // ============================================================

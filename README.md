@@ -23,29 +23,33 @@ Projeto coordenado pela **Prof.ª Pâmella** sob a chancela educacional da **BIO
 | 5. Lição 17 — O átomo e suas partículas | `licao-17.html` | ⚠️ completo, com bug visual conhecido ([§4](#-4-cartas-de-narrativa-e-ilustrações)) |
 | 6. Lição 18 — Tabela periódica e ligações | `licao-18.html` | ✅ completo |
 | 7. Lição 19 — Funções inorgânicas + Duelo Final | `licao-19.html` | ⚠️ completo, com o mesmo bug visual ([§4](#-4-cartas-de-narrativa-e-ilustrações)) |
-| 8. Economia de PEQ + habilidades passivas funcionais (Sprint 4) | `js/state.js`, `js/licoes-engine.js` | ✅ **implementado** — ver [§7](#-7-sprint-4--economia-de-peq-e-habilidades-passivas-funcionais) |
-| 9. Eventos surpresa, leaderboard, badges (Sprint 5) | — | ⏳ não iniciado |
-| 10. Painel de pontuação final consolidado + PDF por e-mail (Sprint 5) | — | ⏳ não iniciado |
+| 8. Economia de PEQ + habilidades passivas funcionais (Sprint 4) | `js/state.js`, `js/licoes-engine.js` | ✅ implementado — ver [§7](#-7-sprint-4--economia-de-peq-e-habilidades-passivas-funcionais) |
+| 9. **Evento surpresa "É fato ou fake?" (Sprint 5, tarefa 1/3)** | `data/eventos-fato-fake.js`, `js/licoes-engine.js` (slide `fato-fake`) | ✅ **implementado nesta entrega** — ver [§11](#-11-sprint-5--evento-surpresa-é-fato-ou-fake-entrega-atual) |
+| 10. Leaderboard local + badges (Sprint 5, tarefa 2/3) | — | ⏳ não iniciado |
+| 11. Painel de pontuação final consolidado + PDF por e-mail (Sprint 5, tarefa 3/3) | — | ⏳ não iniciado |
 
 O arco completo de conteúdo programático (Lições 17–19) está concluído, incluindo o
-bloco especial **Duelo Final contra "A Entropia"**, que mescla as três lições como
-fechamento narrativo. Desde então, o núcleo de gamificação do **Sprint 4 também foi
-implementado** — PEQ (moeda interna) e as 5 habilidades passivas já alteram o
-comportamento real dos quizzes, não são mais só texto narrativo. O que resta do
-roadmap (Sprint 5: eventos surpresa, leaderboard, badges, PDF por e-mail) segue
-não iniciado — ver [§10](#-10-pendências-e-observações-técnicas).
+bloco especial **Duelo Final contra "A Entropia"**. O **Sprint 4 (economia de PEQ +
+habilidades passivas)** já estava implementado, e nesta entrega o **primeiro
+componente do Sprint 5 — Evento Surpresa "É fato ou fake?" — foi entregue** e
+integrado às 3 lições ([§11](#-11-sprint-5--evento-surpresa-é-fato-ou-fake-entrega-atual)).
+Além disso, o **bug §10.1 (caminhos absolutos de favicon/logo) foi corrigido**
+em todas as 7 páginas, junto de um bug adicional detectado em `data/licao-17.js`
+([§10.1 e §10.2](#-10-pendências-e-observações-técnicas)).
+O que resta do roadmap (leaderboard, badges e PDF por e-mail) segue não iniciado.
 
 ## 🚀 Funcionalidades
 
 - **Identificação de Jogador:** cadastro via e-mail institucional (domínio `@edu.mt.gov.br`), cidade, escola e turma.
-- **Líder de Arena:** escolha entre 5 cientistas históricas, cada uma com habilidade passiva própria — **agora funcional em jogo**, não só narrativa (ver [§7](#-7-sprint-4--economia-de-peq-e-habilidades-passivas-funcionais)).
+- **Líder de Arena:** escolha entre 5 cientistas históricas, cada uma com habilidade passiva própria — funcional em jogo, não só narrativa (ver [§7](#-7-sprint-4--economia-de-peq-e-habilidades-passivas-funcionais)).
 - **Narrativa Interativa:** 3 vertentes de storytelling (Jornada do Herói, In Media Res, Investigativo), com Cenário de Abertura ramificado — ver [§6](#-6-motor-híbrido-do-cenário-de-abertura-narrativahtml).
 - **Conteúdo Gamificado:** 3 lições completas (átomo, tabela periódica/ligações, funções inorgânicas), cada uma intercalando teoria, Dialog Cards, um Branching Scenario e blocos de questões padrão ENEM.
 - **Duelo Final (fight-boss):** ao fim da Lição 19, um confronto especial com barra de vida, mesclando conteúdo das 3 lições.
+- **Evento surpresa "É fato ou fake?" (Sprint 5):** slide-relâmpago que interrompe o fluxo da lição com uma afirmação química de senso comum e 15s para julgar como FATO ou FAKE — ver [§11](#-11-sprint-5--evento-surpresa-é-fato-ou-fake-entrega-atual).
 - **HUD de Arena:** painel fixo no topo de cada lição, mostrando saldo de PEQ e pontuação em tempo real.
-- **Economia de PEQ (Pontos de Energia Química):** moeda interna ganha por dificuldade da questão e pelas habilidades passivas. *(Ainda sem mecânica de gasto/loja — ver [§10](#-10-pendências-e-observações-técnicas).)*
+- **Economia de PEQ (Pontos de Energia Química):** moeda interna ganha por dificuldade da questão, pelas habilidades passivas e agora também pelo Evento Surpresa. *(Ainda sem mecânica de gasto/loja — ver [§10](#-10-pendências-e-observações-técnicas).)*
 - **Placar progressivo:** pontuação por dificuldade (fácil/médio/difícil), acumulada em todas as lições.
-- **Geração de relatório em PDF** (planejada para o Sprint 5): compilado do desempenho e autoavaliação, enviado por e-mail à coordenação.
+- **Geração de relatório em PDF** (planejada para o Sprint 5 — não iniciada): compilado do desempenho e autoavaliação, enviado por e-mail à coordenação.
 
 ## 🧬 Liderança de Arena (Avatares)
 
@@ -72,14 +76,16 @@ Antes de iniciar a jornada, o aluno escolhe uma das 5 mulheres notáveis da hist
 
 Cada lição segue o mesmo roteiro pedagógico documentado em `docs/esboco-conteudo-licao-*.md`
 (teoria → Dialog Cards → questões progressivas fácil/médio/difícil), com um
-Branching Scenario adicional na Lição 18 ("Duelo de Elementos").
+Branching Scenario adicional na Lição 18 ("Duelo de Elementos") e — desde esta
+entrega — um **Evento Surpresa "É fato ou fake?"** injetado antes da Revisão
+Geral de cada lição.
 
 ## 🛠️ Tecnologias Utilizadas
 
 - **Frontend:** HTML5, CSS3, JavaScript puro (sem frameworks, sem build step)
-- **Motor de lições próprio:** `js/licoes-engine.js` — reproduz em JS puro os recursos H5P (Course Presentation, Dialog Cards, Branching Scenario, Question Set), sem exigir instalação de nada
+- **Motor de lições próprio:** `js/licoes-engine.js` — reproduz em JS puro os recursos H5P (Course Presentation, Dialog Cards, Branching Scenario, Question Set), sem exigir instalação de nada. Desde esta entrega, também renderiza o novo slide type `fato-fake` (§11).
 - **Ecossistema H5P (opcional):** suportado via `h5p-standalone`, com fallback automático caso não esteja instalado — ver [§6](#-6-motor-híbrido-do-cenário-de-abertura-narrativahtml)
-- **Persistência:** `localStorage` (estado do jogador, placar e saldo de PEQ), sem backend
+- **Persistência:** `localStorage` (estado do jogador, placar, saldo de PEQ e estatística de Fatos/Fakes), sem backend
 - **Hospedagem:** GitHub Pages
 - **Relatórios (planejado, Sprint 5):** biblioteca JS para geração de PDF (ex.: jsPDF)
 
@@ -88,14 +94,13 @@ Branching Scenario adicional na Lição 18 ("Duelo de Elementos").
 Hospedado via **GitHub Pages**:
 👉 `https://bio-tech-edu.github.io/chemical-royale-edu/` *(ativar em Settings → Pages, branch `main`, pasta `/root` — o `.nojekyll` já está incluído)*
 
-> ⚠️ **Atenção — bug conhecido em produção:** os ícones de favicon e o link do
-> logo no cabeçalho (`<link rel="icon" ... href="/favicon.ico">`, `<a href="/">`)
-> usam caminho **absoluto a partir da raiz do domínio**. Como este é um GitHub
-> Project Page (serve a partir de `/chemical-royale-edu/`, não da raiz de
-> `bio-tech-edu.github.io`), esses caminhos apontam para o lugar errado em
-> produção — o favicon não carrega e o clique no logo tenta ir para
-> `bio-tech-edu.github.io/` em vez de voltar para `index.html` do projeto.
-> Ver [§10](#-10-pendências-e-observações-técnicas) para o detalhe técnico e a correção sugerida.
+> ✅ **Bug de caminho absoluto do favicon/logo — CORRIGIDO nesta entrega.**
+> As referências `<link rel="icon" ... href="/favicon.ico">` e `<a href="/">`,
+> que apontavam para a raiz do domínio, foram substituídas por caminhos
+> **relativos** (`assets/logo/favicon.ico`, `index.html`) em todas as 7 páginas.
+> Agora o favicon carrega e o logo volta corretamente para o `index.html` do
+> projeto tanto em `localhost` quanto em produção
+> (`bio-tech-edu.github.io/chemical-royale-edu/`). Detalhes em [§10](#-10-pendências-e-observações-técnicas).
 
 ## ⚙️ Instalação local
 
@@ -125,35 +130,35 @@ chemical-royale-edu/
 ├── .nojekyll                    → evita que o GitHub Pages ignore pastas iniciadas com "_"
 ├── LICENSE                      → MIT License
 ├── README.md                    → este arquivo (vivo, sempre reflete o estado atual)
-├── README-Sprint3.md            → snapshot congelado do README ao final do Sprint 3 (histórico, não editar)
 ├── index.html                   → Etapa 1: Painel de Identificação do Estudante
 ├── avatares.html                → Etapa 2: Galeria de seleção das 5 Líderes de Arena
 ├── apresentacao.html            → Etapa 3: Alinhamento pedagógico (BNCC, SAEB, ENEM/INEP)
-├── narrativa.html                → Etapa 4: Seleção da vertente narrativa (Cenário de Abertura)
-├── licao-17.html                 → Etapa 5a: Lição 17 — O átomo e suas partículas
-├── licao-18.html                 → Etapa 5b: Lição 18 — Classificação periódica e ligações
-├── licao-19.html                 → Etapa 5c: Lição 19 — Funções inorgânicas + Duelo Final
+├── narrativa.html               → Etapa 4: Seleção da vertente narrativa (Cenário de Abertura)
+├── licao-17.html                → Etapa 5a: Lição 17 — O átomo e suas partículas
+├── licao-18.html                → Etapa 5b: Lição 18 — Classificação periódica e ligações
+├── licao-19.html                → Etapa 5c: Lição 19 — Funções inorgânicas + Duelo Final
 │
 ├── .github/
 │   ├── claude-instructions.md         → papel do Claude no time multi-IA (narrativa/lógica)
 │   ├── copilot-instructions.md        → papel do Copilot (QA, performance, documentação)
 │   ├── gemini-instructions.md         → papel do Gemini/Nanobanana (arte e UI/UX)
-│   └── plano_desenvolvimento_chemical_royale_v3.md → roadmap detalhado dos Sprints 4-5
+│   └── plano_desenvolvimento_chemical_royale_v3.md → roadmap detalhado dos Sprints 4–5
 │
 ├── css/
-│   └── style.css                 → Design system "Elemento de Arena" (inclui HUD, boss-fight, badges de habilidade)
+│   └── style.css                 → Design system "Elemento de Arena" (inclui HUD, boss-fight, badges de habilidade e o bloco "É fato ou fake?" — §11)
 │
 ├── js/
-│   ├── state.js                  → Estado do jogador (localStorage), catálogos de Avatares/Narrativas, PEQ
+│   ├── state.js                  → Estado do jogador (localStorage), catálogos de Avatares/Narrativas, PEQ, estatística de Fatos/Fakes (§11)
 │   ├── main.js                   → Lógica do formulário e da galeria de avatares (Sprint 1)
 │   ├── narrativa.js              → Seleção de narrativa + motor híbrido do Cenário de Abertura (Sprint 2/3)
-│   └── licoes-engine.js          → Motor genérico de lições (diálogo, teoria, dialog cards, branching, quiz, boss-fight, HUD, habilidades passivas, placar)
+│   └── licoes-engine.js          → Motor genérico de lições (diálogo, teoria, dialog cards, branching, quiz, fato-fake §11, boss-fight, HUD, habilidades passivas, placar)
 │
 ├── data/
 │   ├── narrativas.js             → Textos das 3 vertentes narrativas + rotas das lições, para o motor nativo
-│   ├── licao-17.js               → Conteúdo estruturado da Lição 17 (slides do licoes-engine.js)
-│   ├── licao-18.js               → Conteúdo estruturado da Lição 18
-│   └── licao-19.js               → Conteúdo estruturado da Lição 19 + bloco Duelo Final
+│   ├── licao-17.js               → Conteúdo estruturado da Lição 17 (agora com slide fato-fake antes da Revisão Geral)
+│   ├── licao-18.js               → Conteúdo estruturado da Lição 18 (idem)
+│   ├── licao-19.js               → Conteúdo estruturado da Lição 19 + bloco Duelo Final (idem)
+│   └── eventos-fato-fake.js      → Banco temático de afirmações + helper sortearFatoFake() — §11
 │
 ├── docs/
 │   ├── esboco-conteudo-licao-17.md   → Roteirização pedagógica completa da Lição 17
@@ -171,12 +176,6 @@ chemical-royale-edu/
     └── dist/                     → Build do h5p-standalone (opcional — ver §6). Vazio por padrão.
 ```
 
-> A pasta `h5p/branching-narrativa/` (com `content-skeleton.json`) que existia em
-> versões anteriores **não está mais no repositório**. Isso não quebra nada — o
-> motor híbrido de `narrativa.html` já lida bem com a ausência desses arquivos,
-> caindo no fallback nativo — mas significa que, hoje, `data/narrativas.js` é a
-> **única** fonte de verdade para os textos das narrativas (ver §6).
-
 ## 🚀 1. Configurar o repositório e o GitHub Pages
 
 1. Clone o repositório `Bio-Tech-Edu/chemical-royale-edu`.
@@ -189,9 +188,9 @@ chemical-royale-edu/
 ## 🎨 2. Identidade visual BIO+TECH EDUDESIGN
 
 O cabeçalho de todas as páginas usa a arte oficial em `assets/logo/`:
-- `chemical_royale_logo.png` — logo principal, com link de volta para a Home (ver bug de caminho absoluto em §10)
+- `chemical_royale_logo.png` — logo principal, com link relativo para `index.html` (bug de caminho absoluto **corrigido** nesta entrega — §10.1)
 - `header_adaptation.png` — selo BIO+TECH EDUDESIGN, no canto do cabeçalho
-- Ícones de favicon (`favicon.ico`, `apple-touch-icon.png`, `android-chrome-*.png`) já incluídos, mas com o mesmo bug de caminho absoluto (§10)
+- Ícones de favicon (`favicon.ico`, `apple-touch-icon.png`, `android-chrome-*.png`) já incluídos, agora com **caminhos relativos** e `type` MIME correto (§10.1)
 - `logo_bio_tech.png` / `logo_bio_tech.jpeg` — arte de referência da marca-mãe BIO+TECH, mantida na pasta mas **não referenciada em nenhuma página** hoje (uso apenas decorativo neste README)
 
 As variáveis de cor da marca ficam no topo de `css/style.css` (`--accent-plasma`,
@@ -200,238 +199,210 @@ manual de marca com paleta fixa.
 
 ## 🧑‍🚀 3. Imagens dos avatares
 
-As 5 fotos já estão em `assets/avatares/`, com os nomes referenciados em `js/state.js`
-(`marie-curie.png`, `rosalind-franklin.png`, `dorothy-hodgkin.png`, `stephanie-kwolek.png`,
-`ada-yonath.png`). Se uma imagem faltar, a carta cai automaticamente no ícone ⚛️ — a
-página não quebra.
+As 5 fotos já estão em `assets/avatares/`, com os nomes referenciados em `js/state.js`.
+Se uma imagem faltar, a carta cai automaticamente no ícone ⚛️ — a página não quebra.
 
 ## 🧩 4. Cartas de narrativa e ilustrações
 
-- `assets/cards/`: `card_a_jornada_do_heroi.png`, `card_in_media_res.png`, `card_investigacao.png` (3 vertentes narrativas) + `card-1_licao_17.png`, `card-2_licao_17.png` (Dialog Cards da Lição 17, tópico Configuração Eletrônica).
-- `assets/moleculas/`: 6 cartas ilustradas (frente/verso) de Forças Intermoleculares (Lição 18), 5 cartas de Modelos Atômicos — Dalton, Thomson, Rutherford, Bohr, atual (Lição 17), e 5 cartas de Ácidos do cotidiano (Lição 19).
+- `assets/cards/`: 3 vertentes narrativas + Dialog Cards da Lição 17 (Configuração Eletrônica).
+- `assets/moleculas/`: 6 cartas de Forças Intermoleculares (L.18), 5 de Modelos Atômicos (L.17) e 5 de Ácidos do cotidiano (L.19).
 
-> ⚠️ **Bug encontrado nesta revisão — cartas de Modelos Atômicos e Ácidos não
-> renderizam como imagem.** `data/licao-17.js` e `data/licao-19.js` referenciam
-> os 10 arquivos acima usando as chaves `frente:` / `verso:` (formato de texto
-> puro), mas `renderDialogCards()` em `js/licoes-engine.js` só trata um card
-> como ilustrado quando ele usa as chaves `frenteImg:` / `versoImg:` — exatamente
-> como já é feito, corretamente, nas 6 cartas de Forças Intermoleculares da
-> Lição 18. Resultado prático: em vez de mostrar a imagem do modelo atômico ou
-> do ácido, a carta exibe o **caminho do arquivo como texto literal**
-> (ex.: a carta do Dalton mostra a string `assets/moleculas/card-mod-dalton.png`
-> em vez do desenho). Nenhuma questão ou avanço de lição é bloqueado por isso —
-> é puramente visual — mas afeta 10 cards em 2 lições.
-> **Correção:** trocar `frente:`/`verso:` por `frenteImg:`/`versoImg:` (+ um
-> `frenteAlt` descritivo) nesses 10 objetos, seguindo o padrão já usado em
-> `data/licao-18.js` (linhas ~285-301).
+> ⚠️ **Bug pendente (não corrigido nesta entrega, mas documentado):** Dialog Cards
+> de Modelos Atômicos (L.17) e Ácidos (L.19) usam as chaves `frente:`/`verso:`,
+> quando o motor só renderiza imagens com `frenteImg:`/`versoImg:`. Ficará para a
+> próxima entrega, conforme escopo desta iteração (foco: bug do favicon + evento
+> surpresa).
 
 ## 🎮 5. Motor de lições
 
-`js/licoes-engine.js` é um motor de "Course Presentation" caseiro, 100% JavaScript
-puro (sem dependências externas), que renderiza qualquer lição a partir de um
-objeto de dados (`data/licao-17.js`, `data/licao-18.js`, `data/licao-19.js`).
-Implementa os 6 tipos de recurso descritos nos esboços pedagógicos
-(`docs/esboco-conteudo-licao-*.md`):
+`js/licoes-engine.js` renderiza qualquer lição a partir de um objeto de dados
+(`data/licao-*.js`), reproduzindo os recursos H5P em JS puro. Slides suportados:
 
-| Tipo de slide | O que faz |
-|---|---|
-| `dialogo` | Fala da Líder de Arena escolhida; no slide de abertura da Lição 17, captura o apelido do aluno |
-| `teoria` | Bloco teórico com texto + 1 ou mais figuras |
-| `dialog-cards` | Flashcards de autorregulação (texto ou imagem, viram ao clicar) — ver bug em §4 |
-| `branching` | Cenário ramificado em nós de decisão, com feedback por alternativa |
-| `quiz` | Bloco de questões progressivas (fácil → médio → difícil), com pontuação, PEQ e habilidades passivas (§7) |
-| `boss-fight` | Duelo Final com barra de vida do chefão — cada questão respondida desfere um "golpe" (25% de HP), certa ou errada; usado só no encerramento da Lição 19 |
-| `final-score` | Placar da lição + mensagem personalizada da avatar |
+| Slide type       | Uso                                                                 |
+|------------------|---------------------------------------------------------------------|
+| `dialogo`        | Balão de fala da Líder de Arena (opcionalmente pergunta o apelido). |
+| `teoria`         | Bloco de explicação com título, parágrafos e figura opcional.       |
+| `dialog-cards`   | Flashcards frente/verso (texto ou imagem).                          |
+| `branching`      | Cenário ramificado com nós de decisão.                              |
+| `quiz`           | Bloco de 3 questões F/M/D com feedback rico.                        |
+| **`fato-fake`**  | **NOVO (Sprint 5):** evento surpresa cronometrado — §11.            |
+| `boss-fight`     | Duelo Final com barra de vida do chefão.                            |
+| `final-score`    | Painel de pontuação/PEQ ao fim da lição.                            |
 
-Regra de gamificação: o aluno só avança de slide se concluir a interação
-obrigatória do slide atual (`setGate()` controla esse bloqueio). A única exceção
-proposital é o `boss-fight`: nele, toda resposta — certa ou errada — conta como
-um golpe válido, para que o arco de 3 lições sempre termine em celebração.
+## 🌐 6. Motor híbrido do Cenário de Abertura (`narrativa.html`)
 
-Cada lição HTML (`licao-17.html`, `licao-18.html`, `licao-19.html`) segue sempre
-o mesmo padrão mínimo:
-
-```html
-<script src="js/state.js"></script>
-<script src="js/licoes-engine.js"></script>
-<script src="data/licao-XX.js"></script>
-<script>
-  CRState.requireStudent("index.html");
-  CRState.requireAvatar("avatares.html");
-  if(!CRState.getNarrative()){ window.location.href = "narrativa.html"; }
-  new CRLessonEngine(document.getElementById("lesson-root"), LICAO_XX);
-</script>
-```
-
-## 🧵 6. Motor híbrido do Cenário de Abertura (`narrativa.html`)
-
-`narrativa.html` usa um **motor híbrido de duas camadas** para o Cenário de
-Abertura que aparece depois que o aluno escolhe sua vertente narrativa:
-
-1. **Camada H5P (opcional, "de verdade"):** se `h5p/dist/main.bundle.js` existir
-   *e* um pacote `h5p/branching-narrativa/<narrativeId>/h5p.json` também existir,
-   `js/narrativa.js` carrega o player h5p-standalone dinamicamente e monta o
-   Branching Scenario autorado no editor. **Hoje nenhum dos dois existe no
-   repositório** (a pasta `h5p/branching-narrativa/` foi removida — ver nota na
-   estrutura de pastas acima), então esta camada nunca é acionada em produção;
-   ela só existe como capacidade futura, caso a equipe queira portabilidade para
-   outro LMS compatível com H5P.
-2. **Camada nativa (é o que roda hoje, sempre):** como a Camada 1 nunca está
-   disponível no estado atual do repositório, `js/narrativa.js` sempre renderiza
-   a cena pelo motor nativo — **o mesmo padrão visual do `renderBranching()`**
-   (bolha de diálogo da Líder de Arena + bloco de decisão com opções e
-   feedback), com os textos de `data/narrativas.js`. Não depende de npm, CDN
-   nem autoria externa.
-
-O aluno nunca vê qual camada está rodando; a experiência é idêntica nas duas.
-
-### Para reativar a Camada 1 (H5P real) no futuro
-
-```bash
-npm install h5p-standalone
-cp -r node_modules/h5p-standalone/dist h5p/dist
-```
-
-Como o antigo `content-skeleton.json` não existe mais, use `data/narrativas.js`
-como roteiro de texto ao autorar no editor gratuito **Lumi**
-(https://lumi.education) ou na conta H5P.org — ele já está mais completo que o
-skeleton original (inclui a primeira ramificação, não só a tela de abertura).
-Exporte cada narrativa como `.h5p`, extraia para
-`h5p/branching-narrativa/jornada-heroi/`, `.../in-media-res/`,
-`.../investigativo/` (cada pasta precisa de `h5p.json` e `content/content.json`).
-`js/narrativa.js` detecta os arquivos automaticamente — nenhuma mudança de
-código é necessária.
+O motor de `narrativa.js` primeiro tenta carregar um pacote H5P real
+(`h5p/branching-narrativa/`); se não existir, cai no fallback nativo em JS puro,
+lendo diretamente `data/narrativas.js`. Hoje a pasta H5P não está no repositório,
+então o motor nativo assume 100% da experiência — o comportamento é idêntico ao
+usuário final.
 
 ## 🧪 7. Sprint 4 — Economia de PEQ e Habilidades Passivas Funcionais
 
-Diferente do que versões anteriores deste README indicavam, **o núcleo do
-Sprint 4 já está implementado** em `js/state.js` e `js/licoes-engine.js`.
+**Status:** ✅ implementado (não faz parte desta entrega, mas segue como fundação
+para o Sprint 5).
 
-### PEQ (Pontos de Energia Química)
-
-Moeda interna do jogo, persistida em `localStorage` junto ao resto do estado.
-
-- `CRState.getPEQ()` / `CRState.atualizarPEQ(quantidade)` — leitura e escrita, nunca fica negativo.
-- Toda resposta correta em um `quiz` concede PEQ proporcional à dificuldade automaticamente, via `registrarResposta(correta, pontosBase, dificuldade)`: **fácil = 1, média = 2, difícil = 3**.
-- Exibido em tempo real no **HUD de Arena** (`#arena-hud`) fixo no topo de cada lição, junto com a pontuação acumulada.
-- **Ainda não tem mecânica de gasto** (loja, upgrades, resgate) — hoje é só acúmulo. Isso é esperado: o plano v3 (`.github/plano_desenvolvimento_chemical_royale_v3.md`) não previa uma loja explícita, mas se a intenção pedagógica for dar um "propósito" ao PEQ além do saldo visível, é uma decisão de design em aberto.
-
-### Habilidades passivas (efeito real, não só narrativo)
-
-Implementadas em duas funções de `js/licoes-engine.js`, chamadas pelo motor de
-quiz e pelo Duelo Final:
-
-- **`aplicarRaioXSeDisponivel(q)`** — só a Rosalind Franklin usa: elimina 1 alternativa incorreta ao renderizar uma pergunta, uma única vez por lição.
-- **`aplicarHabilidadeNaResposta(...)`** — chamada ao resolver qualquer resposta:
-  - **Marie Curie:** sequência de 2+ acertos seguidos rende +1 PEQ extra por rodada; qualquer erro reinicia a sequência.
-  - **Stephanie Kwolek:** um escudo absorve o 1º erro de cada bloco de quiz — não entra na contagem de erros do placar.
-  - **Dorothy Hodgkin:** todo erro ainda regenera +1 PEQ de consolação.
-  - **Ada Yonath:** acerto respondido em até 10s dobra a pontuação daquela questão.
-
-O feedback de cada habilidade aparece como uma nota narrativa junto ao feedback
-padrão da questão (ex.: *"⚛️ Faísca radioativa! +1 PEQ extra..."*), conciliando
-tanto a diretriz do Copilot (efeito funcional, não decorativo) quanto a do
-Claude (feedback narrativo, não técnico) em `.github/*-instructions.md`.
-
-### O que falta para fechar o Sprint 4 por completo
-
-Comparando com `.github/plano_desenvolvimento_chemical_royale_v3.md`:
-
-- [x] Sistema de PEQ com ganho por dificuldade
-- [x] Habilidades passivas funcionais das 5 avatares
-- [x] HUD fixo exibindo placar + PEQ
-- [ ] Eventos surpresa ("É fato ou fake?") — não iniciado, fica para o Sprint 5 nesta revisão
-- [ ] Leaderboard local + sistema de conquistas/badges — não iniciado
+- **PEQ (Pontos de Energia Química):** moeda interna, persistida em `localStorage`.
+  Ganho automático por resposta correta: fácil = 1, média = 2, difícil = 3 PEQ.
+- **Habilidades passivas com efeito real** (via `aplicarHabilidadeNaResposta` e
+  `aplicarRaioXSeDisponivel` em `js/licoes-engine.js`):
+  Rosalind Franklin (elimina 1 alternativa errada), Marie Curie (+1 PEQ em streak
+  de 2+), Stephanie Kwolek (escudo no 1º erro), Dorothy Hodgkin (+1 PEQ em erros),
+  Ada Yonath (pontuação em dobro se ≤ 10s).
 
 ## 🔗 8. Fluxo de telas e estado do jogador
 
-```
-index.html (Identificação)
-   → avatares.html (Escolha da Líder de Arena)
-      → apresentacao.html (Alinhamento pedagógico / BNCC)
-         → narrativa.html (Narrativa + Cenário de Abertura híbrido)
-            → licao-17.html (O átomo e suas partículas)
-               → licao-18.html (Classificação periódica e ligações)
-                  → licao-19.html (Funções inorgânicas + Duelo Final)
-                     → narrativa.html (hub — painel de pontuação final chega no Sprint 5)
-```
+`index.html` → `avatares.html` → `apresentacao.html` → `narrativa.html` →
+`licao-17.html` → `licao-18.html` → `licao-19.html` (Duelo Final) →
+`narrativa.html` (hub — painel final chega em uma iteração futura do Sprint 5).
 
-Todo o estado (`student`, `avatarId`, `narrativeId`, `apelido`, `score`, `peq`,
-`licoesConcluidas`) fica em `localStorage` sob a chave
-`chemicalRoyale.playerState.v1`, gerenciado por `js/state.js` (objeto
-`CRState`). Cada página valida com `CRState.requireStudent()` /
-`CRState.requireAvatar()` se as etapas anteriores foram concluídas,
-redirecionando o aluno de volta se necessário.
+Todo o estado fica em `localStorage` sob a chave
+`chemicalRoyale.playerState.v1`: `student`, `avatarId`, `narrativeId`,
+`apelido`, `score`, `peq`, `licoesConcluidas` e — desde esta entrega —
+`fatosFake` (§11).
 
-## ♿ Acessibilidade e responsividade
+## 🤖 9. Fluxo de colaboração multi-IA
 
-- Mobile-first: grades reorganizam de 1 → 2 → 3/5 colunas conforme a largura.
-- Foco de teclado visível em todos os elementos interativos.
-- `prefers-reduced-motion` respeitado globalmente.
-- Cartas de avatar/narrativa/lição são `<button>` reais (não `<div>` clicável),
-  com `aria-pressed` e `aria-label` descritivos.
-
-## 🧹 9. Fluxo de colaboração multi-IA
-
-O projeto é desenvolvido por um time de IAs especializadas, coordenado por
-Manus AI como Product Owner (chancela BIO+TECH EDUDESIGN), com papéis fixos
-documentados em `.github/`:
-
-| IA | Papel | Instruções |
-|---|---|---|
-| Claude | Storytelling, lógica de interação, engajamento social/narrativo | `.github/claude-instructions.md` |
-| GitHub Copilot | QA, performance, documentação técnica (JSDoc, READMEs) | `.github/copilot-instructions.md` |
-| Gemini / Nanobanana | Direção de arte, assets visuais, UI/UX | `.github/gemini-instructions.md` |
-
-O roadmap detalhado dos Sprints 4 e 5 — incluindo os prompts sugeridos para
-cada tarefa — está em `.github/plano_desenvolvimento_chemical_royale_v3.md`.
-Este README é o documento vivo que reflete **o que já foi de fato integrado ao
-código**, não o planejamento; para o planejamento, consulte o arquivo acima.
+Time coordenado por **Manus AI** (Product Owner, BIO+TECH EDUDESIGN):
+- **Claude:** storytelling, lógica de interação, engajamento narrativo (esta
+  entrega: correção do bug §10.1 + implementação do evento surpresa §11).
+- **GitHub Copilot:** QA, performance, documentação (JSDoc, READMEs).
+- **Gemini / Nanobanana:** direção de arte, assets visuais, UI/UX.
 
 ## 📌 10. Pendências e observações técnicas
 
-Achados desta revisão que não bloqueiam o uso do projeto, mas merecem atenção:
+1. ~~**Bug de caminho absoluto no favicon e no link do logo.**~~ ✅ **Corrigido
+   nesta entrega.** Todas as 7 páginas HTML (`index`, `avatares`, `apresentacao`,
+   `narrativa`, `licao-17`, `licao-18`, `licao-19`) agora usam caminhos
+   relativos (`assets/logo/favicon.ico`, `index.html`) e o atributo `type` dos
+   `<link rel="icon">` foi corrigido para MIME types válidos (`image/x-icon`,
+   `image/png`). Favicon e logo funcionam idênticos em `localhost:8000` e em
+   `bio-tech-edu.github.io/chemical-royale-edu/`. Validação: `grep 'href="/"'
+   *.html` retorna zero ocorrências.
 
-1. **Bug de caminho absoluto no favicon e no link do logo.** `index.html` (e as
-   demais páginas) usam `href="/favicon.ico"` e `<a href="/">` — caminhos
-   absolutos a partir da raiz do domínio. Como o deploy é um GitHub *Project
-   Page* (`bio-tech-edu.github.io/chemical-royale-edu/`, não a raiz do domínio),
-   o favicon não carrega em produção e o clique no logo tenta sair do projeto.
-   **Correção sugerida:** trocar para caminhos relativos (`href="favicon.ico"`,
-   `<a href="index.html">`) ou usar `<base href="/chemical-royale-edu/">` no
-   `<head>` de todas as páginas.
-2. **Dialog Cards de Modelos Atômicos (L.17) e Ácidos (L.19) não renderizam
-   como imagem** — detalhado em §4. Afeta 10 cards em 2 lições; correção é
-   trocar `frente`/`verso` por `frenteImg`/`versoImg` nos dois arquivos de dados.
-3. **`desktop.ini` versionado na raiz do repositório.** É um artefato do
-   Windows Explorer (gerado ao configurar o ícone de uma pasta local), não tem
-   função no projeto e não deveria estar no Git. Sugestão: remover o arquivo e
-   adicionar `desktop.ini` ao `.gitignore`.
-4. **Dois PDFs em `docs/` com nome de arquivo corrompido** (`Gamifica#U00e7...`,
-   `Gamifica#U251c#U00ba...` — mojibake, provavelmente de um upload/zip com
-   encoding UTF-8 × CP437 conflitante). Os dois nomes sugerem o mesmo documento
-   duplicado com corrupções diferentes. Sugestão: confirmar se é um único PDF
-   de referência, renomear para algo como `docs/gamificacao-pre-enem-digital.pdf`
-   e remover a duplicata.
-5. **Pasta `h5p/branching-narrativa/` removida** sem que o motor híbrido (§6)
-   fosse afetado — o fallback nativo assume 100% da experiência hoje. Não é um
-   bug (o site funciona normalmente), mas reduz a Camada 1 do motor híbrido a
-   uma capacidade teórica até que alguém autore o conteúdo novamente.
-6. **PEQ ainda sem mecânica de gasto** — ver nota em §7.
+2. **Bug adicional detectado e corrigido nesta entrega:** `data/licao-17.js`
+   tinha um atributo HTML (`width="200"`) invadindo o objeto JS na figura de Bohr
+   (linha 41), o que quebrava o parse do módulo (SyntaxError em `node --check`).
+   Refatorado para `src`/`width`/`alt` como propriedades JS válidas. Sem esse
+   fix, o Evento Surpresa injetado na Lição 17 nem chegaria a rodar.
 
-## 📧 Contato e suporte
+3. **Dialog Cards de Modelos Atômicos (L.17) e Ácidos (L.19) não renderizam como
+   imagem** — trocar `frente/verso` por `frenteImg/versoImg`. Ainda pendente
+   (fora do escopo desta entrega).
 
-Para dúvidas pedagógicas e suporte em relação ao conteúdo:
-**Prof.ª Pâmella** — pamella.balcacar@edu.mt.gov.br
+4. `desktop.ini` versionado na raiz — remover do repositório e adicionar ao
+   `.gitignore`. Ainda pendente.
+
+5. Dois PDFs em `docs/` com nome de arquivo corrompido (mojibake) — renomear e
+   remover duplicata. Ainda pendente.
+
+6. **PEQ ainda sem mecânica de gasto** — projetado para virar loja de "reagentes"
+   ou upgrades de habilidade em iteração futura do Sprint 5.
+
+7. **Sprint 5 restante:** leaderboard local + badges de conquista, painel final
+   consolidado, exportação em PDF (jsPDF) com envio por e-mail (EmailJS).
 
 ---
 
-**Próximos sprints (Sprint 5, conforme `.github/plano_desenvolvimento_chemical_royale_v3.md`):**
-eventos surpresa ("É fato ou fake?"), leaderboard local + sistema de badges/conquistas,
-painel de pontuação final consolidado, autoavaliação e geração de PDF por e-mail
-(jsPDF + EmailJS). Ver §10 para a lista de correções técnicas recomendadas antes
-ou durante esse próximo sprint.
+## 🎲 11. Sprint 5 — Evento surpresa "É fato ou fake?" *(entrega atual)*
+
+O primeiro componente do Sprint 5 está no ar: um slide-relâmpago que quebra o
+ritmo da lição com uma afirmação química vinda de redes sociais / senso comum,
+e desafia o aluno a julgá-la em **15 segundos** como FATO ou FAKE.
+
+### 🎯 Objetivo pedagógico
+
+Treinar **letramento científico** — competência transversal do ENEM em Ciências
+da Natureza (matriz de referência do INEP, área 5). O aluno pratica identificar
+desinformação química (mitos sobre alcalinização do sangue, radioatividade,
+gases nobres, ligações de hidrogênio etc.) com base em evidência, e não em
+senso comum.
+
+### 🧱 Arquitetura da feature
+
+| Camada | Arquivo | Responsabilidade |
+|---|---|---|
+| Banco de conteúdo | `data/eventos-fato-fake.js` | 15 afirmações curadas (5 por lição), com `texto`, `veredito` (`fato`/`fake`), `explicacao` pedagógica e `fonte` (ENEM, SBQ, IUPAC, INCA, ANVISA, OMS…). Helper `sortearFatoFake(tema)` evita repetição na sessão via `window.__CR_FATOS_JA_VISTOS`. |
+| Estado | `js/state.js` | Novos métodos `registrarFatoFake(acertou)` e `getFatosFake()`; estatística persistida como `fatosFake: { acertos, erros, ultimaVisita }` no `localStorage`. |
+| Motor | `js/licoes-engine.js` | Novo slide type `"fato-fake"` roteado no `renderSlide()` para a função `renderFatoFake(slide)`. Gerencia o timer de 15s, os botões FATO/FAKE, o feedback pedagógico, a atualização do HUD e o gate de avanço. |
+| Injeção nas lições | `data/licao-17.js`, `data/licao-18.js`, `data/licao-19.js` | Um slide `{ type: "fato-fake", tema: "l17"\|"l18"\|"l19" }` injetado imediatamente **antes** do bloco de Revisão Geral de cada lição — ponto de quebra pedagógica ótimo (aluno acaba de sair de vários blocos de teoria/quiz). |
+| Estilo | `css/style.css` | Bloco `.fato-fake` (linhas ~883–1087): fundo laranja/dourado, ícone ⚠️ com `@keyframes fatoFakePulse`, timer regressivo animado, botões contrastantes FATO (plasma) / FAKE (ion), painel de feedback com fonte, badge de recompensa. Responsivo (`@media 520px`). |
+| Import | `licao-17.html`, `licao-18.html`, `licao-19.html` | Novo `<script src="data/eventos-fato-fake.js">` carregado **antes** do `licoes-engine.js`. |
+
+### 🎮 Fluxo do jogador
+
+1. Durante a lição, ao terminar o último bloco de teoria/quiz do conteúdo
+   principal, aparece o card pulsante ⚠️ **"Evento surpresa — É FATO ou FAKE?"**.
+2. Uma afirmação em formato "print de rede social" é exibida (ex.: *"Beber água
+   com limão em jejum alcaliniza o sangue e cura doenças."*).
+3. Timer regressivo de 15s (barra gradiente `plasma → gold → ion`; texto fica
+   vermelho pulsante nos últimos 5s).
+4. O aluno clica em **✔ É FATO** ou **✘ É FAKE**.
+5. Feedback imediato: veredito correto em destaque, explicação científica
+   curta, fonte de referência e badge de recompensa.
+6. O jogador só avança para a Revisão Geral após resolver o evento (ou após
+   estouro do timer).
+
+### 🏆 Regras de gamificação
+
+| Evento | Placar (pts) | PEQ | Justificativa |
+|---|---|---|---|
+| **Acerto** | +5 pts | +2 PEQ | Recompensa forte por pensamento crítico correto. |
+| **Erro** | 0 pts | +1 PEQ | Consolação didática — o mito aprendido também vale. |
+| **Timeout (15s)** | 0 pts | +1 PEQ | Tratado como erro pedagógico + comentário narrativo *"na rede social também não dá pra ficar em cima do muro"*. |
+
+Todos os eventos são contabilizados em `CRState.getFatosFake()` para uso
+posterior no painel final (Sprint 5, tarefa 3/3).
+
+### 📚 Banco de afirmações (15 no total)
+
+- **Lição 17 — átomo/modelos:** átomo indivisível (FAKE), íon muda elemento (FAKE),
+  isótopos = mesma química (FATO), Bohr = modelo atual (FAKE), radioatividade
+  brilha verde (FAKE).
+- **Lição 18 — tabela/ligações:** gases nobres não reagem (FAKE), metais e
+  elétrons livres (FATO), H₂O linear como CO₂ (FAKE), ligações de H mais fortes
+  que covalentes (FAKE), água como solvente polar (FATO).
+- **Lição 19 — funções inorgânicas:** limão alcaliniza sangue (FAKE), todo ácido
+  queima (FAKE), NaHCO₃ neutraliza HCl (FATO), óxidos ácidos → chuva ácida
+  (FATO), sal de cozinha = sódio puro (FAKE).
+
+Cada afirmação carrega fonte (ENEM, SBQ, IUPAC, INCA, ANVISA, OMS…) — critério
+de credibilidade documentado.
+
+### ➕ Como estender o banco
+
+Adicionar novas entradas em `CR_FATOS_FAKE.l17` / `.l18` / `.l19` no formato:
+
+```js
+{
+  texto: "\"...afirmação estilo print de rede social...\"",
+  veredito: "fato" | "fake",
+  explicacao: "Base científica curta (pode usar <em> e <strong>).",
+  fonte: "ENEM / SBQ / IUPAC / ..."
+}
+```
+
+O sorteio já evita repetição dentro da mesma sessão via
+`window.__CR_FATOS_JA_VISTOS`.
+
+### ✅ Checklist de QA desta entrega
+
+- [x] Bug §10.1 (favicon/logo absoluto) corrigido nas 7 páginas HTML
+- [x] Bug secundário em `data/licao-17.js` (atributo HTML em objeto JS) corrigido
+- [x] Novo módulo `data/eventos-fato-fake.js` (banco + sorteador)
+- [x] Métodos `registrarFatoFake` / `getFatosFake` em `js/state.js`
+- [x] Slide type `fato-fake` roteado em `js/licoes-engine.js` (`renderFatoFake`)
+- [x] Bloco CSS `.fato-fake` completo (~200 linhas), incluindo animações e responsivo
+- [x] Slide `fato-fake` injetado nas 3 lições (antes da Revisão Geral)
+- [x] Script `eventos-fato-fake.js` importado nas 3 páginas de lição
+- [x] Validação `node --check` OK nos 6 arquivos JS (`state`, `licoes-engine`,
+      `eventos-fato-fake`, `licao-17`, `licao-18`, `licao-19`)
+- [x] Smoke test local (HTTP 200 em todos os recursos, zero `href="/"` residual)
+
+---
 
 <div align="center">
   <img src="assets/logo/logo_bio_tech.png" alt="Logo BIO+TECH EDUDESIGN" width="70"/>
+  <p><em>Chemical Royale — BIO+TECH EDUDESIGN · 2026</em></p>
+  <p><em>Sprint 5 · Entrega 1/3 — Bug §10.1 corrigido + Evento Surpresa "É fato ou fake?"</em></p>
 </div>

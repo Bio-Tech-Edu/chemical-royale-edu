@@ -880,3 +880,208 @@ footer.site-footer{
   border: 1px solid rgba(167,139,250,0.3);
   color: var(--text-primary);
 }
+
+/* ============================================================
+   Sprint 5 — Evento Surpresa "É FATO ou FAKE?"
+   Interrompe o fluxo da lição com um alerta pulsante inspirado
+   em notificação de rede social / alerta de emergência. Timer
+   visual regressivo (15s), botões contrastantes verde/vermelho
+   e painel de feedback com base científica + fonte.
+   ============================================================ */
+.fato-fake{
+  position: relative;
+  background: linear-gradient(140deg, rgba(255,122,80,0.08), rgba(244,193,92,0.06));
+  border: 1px solid rgba(255,122,80,0.35);
+  border-radius: var(--radius-card);
+  padding: 24px 22px 26px;
+  box-shadow: var(--shadow-glow-ion);
+  animation: fatoFakeEntrada 0.45s ease-out;
+}
+@keyframes fatoFakeEntrada{
+  from{ opacity: 0; transform: translateY(12px) scale(0.98); }
+  to  { opacity: 1; transform: translateY(0)    scale(1);   }
+}
+
+.fato-fake__alerta{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--accent-ion);
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  margin-bottom: 14px;
+}
+.fato-fake__pulse{
+  display: inline-block;
+  font-size: 1.4rem;
+  animation: fatoFakePulse 1.1s ease-in-out infinite;
+}
+@keyframes fatoFakePulse{
+  0%,100%{ transform: scale(1);    filter: drop-shadow(0 0 0 rgba(255,122,80,0)); }
+  50%    { transform: scale(1.18); filter: drop-shadow(0 0 8px rgba(255,122,80,0.8)); }
+}
+.fato-fake__titulo{ color: var(--text-primary); }
+
+/* --------- Timer regressivo (15s) --------- */
+.fato-fake__timer{
+  position: relative;
+  height: 8px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+.fato-fake__timer-fill{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  background: linear-gradient(90deg, var(--accent-plasma), var(--accent-gold), var(--accent-ion));
+  border-radius: 999px;
+  transition: width 15s linear;
+}
+.fato-fake__timer-label{
+  position: absolute;
+  top: -22px;
+  right: 0;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.fato-fake__timer-label.is-critical{
+  color: var(--accent-ion);
+  font-weight: 700;
+  animation: fatoFakePulse 0.7s ease-in-out infinite;
+}
+
+.fato-fake__contexto{
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 0 0 8px;
+  font-style: italic;
+}
+.fato-fake__afirmacao{
+  margin: 0 0 22px;
+  padding: 16px 18px;
+  background: rgba(10,14,22,0.55);
+  border-left: 4px solid var(--accent-gold);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--text-primary);
+  quotes: "“" "”";
+}
+
+/* --------- Botões FATO / FAKE --------- */
+.fato-fake__botoes{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.btn--fato, .btn--fake{
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  border: 2px solid transparent;
+}
+.btn--fato{
+  background: rgba(69,224,200,0.12);
+  color: var(--accent-plasma);
+  border-color: rgba(69,224,200,0.4);
+}
+.btn--fato:hover:not(:disabled){
+  background: rgba(69,224,200,0.22);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-plasma);
+}
+.btn--fake{
+  background: rgba(255,122,80,0.12);
+  color: var(--accent-ion);
+  border-color: rgba(255,122,80,0.4);
+}
+.btn--fake:hover:not(:disabled){
+  background: rgba(255,122,80,0.22);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-ion);
+}
+.btn--fato:disabled, .btn--fake:disabled{
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.btn--fato.is-correct, .btn--fake.is-correct{
+  background: rgba(69,224,200,0.28);
+  border-color: var(--accent-plasma);
+  color: var(--text-primary);
+  opacity: 1;
+  box-shadow: var(--shadow-glow-plasma);
+}
+.btn--fato.is-wrong, .btn--fake.is-wrong{
+  background: rgba(255,80,80,0.22);
+  border-color: #ff5050;
+  color: var(--text-primary);
+  opacity: 1;
+}
+
+/* --------- Feedback pós-resposta --------- */
+.fato-fake__feedback{
+  display: none;
+  padding: 16px 18px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-hairline);
+  background: rgba(10,14,22,0.55);
+}
+.fato-fake__feedback.is-visible{ display: block; animation: fatoFakeEntrada 0.35s ease-out; }
+.fato-fake__feedback.feedback-correta{ border-color: rgba(69,224,200,0.5); }
+.fato-fake__feedback.feedback-errada { border-color: rgba(255,122,80,0.5); }
+
+.fato-fake__resultado{
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+.fato-fake__explicacao{
+  margin: 0 0 10px;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--text-primary);
+}
+.fato-fake__explicacao em{ color: var(--accent-gold); font-style: normal; font-weight: 600; }
+.fato-fake__explicacao strong{ color: var(--accent-plasma); }
+.fato-fake__fonte{
+  margin: 0 0 12px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+.fato-fake__ganho{
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: rgba(244,193,92,0.15);
+  color: var(--accent-gold);
+  border: 1px solid rgba(244,193,92,0.4);
+}
+.fato-fake__ganho--consolacao{
+  background: rgba(167,139,250,0.12);
+  color: var(--accent-quantum);
+  border-color: rgba(167,139,250,0.35);
+}
+
+@media (max-width: 520px){
+  .fato-fake__botoes{ grid-template-columns: 1fr; }
+  .fato-fake__afirmacao{ font-size: 0.95rem; }
+}

@@ -128,6 +128,23 @@ const CRState = {
     return novo;
   },
 
+  // ---------- Eventos surpresa "É fato ou fake?" (Sprint 5) ----------
+  /**
+   * Registra o resultado de UM evento surpresa "É fato ou fake?".
+   * Guardado como { acertos, erros, ultimaVisita } em fatosFake.
+   * @param {boolean} acertou
+   */
+  registrarFatoFake(acertou){
+    const atual = this._read().fatosFake || { acertos: 0, erros: 0 };
+    if(acertou) atual.acertos += 1;
+    else        atual.erros   += 1;
+    atual.ultimaVisita = new Date().toISOString();
+    return this._write({ fatosFake: atual });
+  },
+  getFatosFake(){
+    return this._read().fatosFake || { acertos: 0, erros: 0 };
+  },
+
   // ---------- Progresso das lições ----------
   marcarLicaoConcluida(licaoId){
     const atual = this._read().licoesConcluidas || {};

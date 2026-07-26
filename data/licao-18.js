@@ -353,6 +353,17 @@ const LICAO_18 = {
     },
 
     // ============================================================
+    // EVENTO SURPRESA (Sprint 5) — quebra de ritmo antes da Revisão Geral (tabela / ligações)
+    // Interrompe o fluxo com uma afirmação química de senso comum;
+    // o aluno tem 15s para julgar como FATO ou FAKE.
+    // Sorteio automático via sortearFatoFake() em data/eventos-fato-fake.js.
+    // ============================================================
+    {
+      type: "fato-fake",
+      tema: "l18"
+    },
+
+    // ============================================================
     // REVISÃO GERAL DA LIÇÃO
     // ============================================================
     {

@@ -198,8 +198,149 @@ function CRLessonEngine(rootEl, lessonData){
     else if(slide.type === "dialog-cards") renderDialogCards(slide);
     else if(slide.type === "branching") renderBranching(slide);
     else if(slide.type === "quiz") renderQuiz(slide);
+    else if(slide.type === "fato-fake") renderFatoFake(slide);   // Sprint 5
     else if(slide.type === "boss-fight") renderBossFight(slide);
     else if(slide.type === "final-score") renderFinalScore(slide);
+  }
+
+  /* ---------------- Slide: É fato ou fake? (Sprint 5) ----------------
+     Evento surpresa que interrompe o fluxo da lição com uma afirmação
+     retirada de circulação em redes sociais / senso comum. O aluno tem
+     15 segundos para julgar como FATO ou FAKE, treinando letramento
+     científico (competência transversal do ENEM em Ciências da Natureza).
+
+     Regras de gamificação (integradas ao HUD e ao placar):
+       - Acerto:  +5 pts e +2 PEQ
+       - Erro:    0 pts, +1 PEQ de "consolação didática"
+                  (o aprendizado do mito também vale)
+       - Timeout: tratado como erro pedagógico (mesma recompensa)
+
+     A afirmação vem de `data/eventos-fato-fake.js` (banco temático por lição).
+     Se o slide já vier com `slide.afirmacao` embutida, o motor usa ela
+     diretamente; caso contrário, sorteia por `slide.tema` (l17|l18|l19).
+  -------------------------------------------------------------- */
+  function renderFatoFake(slide){
+    // Resolve a afirmação: prioriza a embutida; senão sorteia do banco.
+    let afirmacao = slide.afirmacao;
+    if(!afirmacao && typeof sortearFatoFake === "function"){
+      afirmacao = sortearFatoFake(slide.tema || "l17");
+    }
+    if(!afirmacao){
+      // Fallback seguro: se por algum motivo o banco não carregou,
+      // não trava a lição — apenas libera o avanço.
+      elContent.innerHTML = `<div class="theory-block"><p>Evento surpresa indisponível neste momento. Pode seguir!</p></div>`;
+      setGate(false, "");
+      return;
+    }
+
+    setGate(true, "⚠️ Evento surpresa — julgue a afirmação para continuar.");
+
+    const TEMPO_TOTAL_MS = 15000;
+    let tempoRestanteMs = TEMPO_TOTAL_MS;
+    let respondido = false;
+    let intervaloTimer = null;
+
+    elContent.innerHTML = `
+      <div class="fato-fake" data-veredito="">
+        <div class="fato-fake__alerta">
+          <span class="fato-fake__pulse">⚠️</span>
+          <span class="fato-fake__titulo">Evento surpresa — É FATO ou FAKE?</span>
+        </div>
+
+        <div class="fato-fake__timer" title="Você tem 15 segundos para decidir">
+          <div class="fato-fake__timer-fill" id="fatofake-timer-fill"></div>
+          <span class="fato-fake__timer-label" id="fatofake-timer-label">15s</span>
+        </div>
+
+        <p class="fato-fake__contexto">Circulando por aí em grupos e redes sociais:</p>
+        <blockquote class="fato-fake__afirmacao">${afirmacao.texto}</blockquote>
+
+        <div class="fato-fake__botoes">
+          <button type="button" class="btn btn--fato"  data-resposta="fato">✔ É FATO</button>
+          <button type="button" class="btn btn--fake" data-resposta="fake">✘ É FAKE</button>
+        </div>
+
+        <div class="fato-fake__feedback" id="fatofake-feedback"></div>
+      </div>
+    `;
+
+    const elTimerFill  = elContent.querySelector("#fatofake-timer-fill");
+    const elTimerLabel = elContent.querySelector("#fatofake-timer-label");
+    const elFeedback   = elContent.querySelector("#fatofake-feedback");
+
+    // Animação do timer (baseada em CSS transition) + fallback numérico
+    requestAnimationFrame(() => { elTimerFill.style.width = "0%"; });
+    intervaloTimer = setInterval(() => {
+      tempoRestanteMs -= 250;
+      if(tempoRestanteMs <= 0){
+        clearInterval(intervaloTimer);
+        if(!respondido) resolver(null); // timeout
+      }else{
+        elTimerLabel.textContent = Math.ceil(tempoRestanteMs / 1000) + "s";
+        if(tempoRestanteMs <= 5000) elTimerLabel.classList.add("is-critical");
+      }
+    }, 250);
+
+    elContent.querySelectorAll(".fato-fake__botoes button").forEach(btn => {
+      btn.addEventListener("click", () => resolver(btn.dataset.resposta));
+    });
+
+    function resolver(escolha){
+      if(respondido) return;
+      respondido = true;
+      clearInterval(intervaloTimer);
+
+      const timeout = escolha === null;
+      const acertou = !timeout && (escolha === afirmacao.veredito);
+
+      // Estatística global do jogador (para o painel final do Sprint 5)
+      CRState.registrarFatoFake(acertou);
+
+      // Recompensas
+      if(acertou){
+        CRState.registrarResposta(true, 5, null, true); // +5 pts, sem PEQ pela via de dificuldade
+        CRState.atualizarPEQ(2);                        // +2 PEQ pelo acerto no evento
+      }else{
+        CRState.atualizarPEQ(1); // consolação didática (o mito aprendido também vale)
+      }
+      atualizarHUD();
+
+      // Marca visualmente qual botão foi correto/errado
+      elContent.querySelectorAll(".fato-fake__botoes button").forEach(btn => {
+        btn.disabled = true;
+        const r = btn.dataset.resposta;
+        if(r === afirmacao.veredito) btn.classList.add("is-correct");
+        else if(r === escolha)       btn.classList.add("is-wrong");
+      });
+
+      elContent.querySelector(".fato-fake").dataset.veredito = afirmacao.veredito;
+
+      const cabecalho = timeout
+        ? "⏰ Tempo esgotado! Nas redes sociais também não dá pra ficar em cima do muro — desinformação se espalha rápido."
+        : (acertou
+            ? `✔ Você acertou! Essa afirmação é <strong>${afirmacao.veredito.toUpperCase()}</strong>.`
+            : `✘ Essa afirmação é, na verdade, <strong>${afirmacao.veredito.toUpperCase()}</strong>.`);
+
+      const notaRecompensa = acertou
+        ? `<span class="fato-fake__ganho">+5 pts · +2 ⚡ PEQ</span>`
+        : `<span class="fato-fake__ganho fato-fake__ganho--consolacao">+1 ⚡ PEQ (consolação didática)</span>`;
+
+      elFeedback.classList.add("is-visible", acertou ? "feedback-correta" : "feedback-errada");
+      elFeedback.innerHTML = `
+        <p class="fato-fake__resultado">${cabecalho}</p>
+        <p class="fato-fake__explicacao">${afirmacao.explicacao}</p>
+        ${afirmacao.fonte ? `<p class="fato-fake__fonte">Fonte de referência: <em>${afirmacao.fonte}</em></p>` : ""}
+        ${notaRecompensa}
+      `;
+
+      // Botão de continuar
+      const btnSeguir = document.createElement("button");
+      btnSeguir.type = "button";
+      btnSeguir.className = "btn btn--primary mt-24";
+      btnSeguir.textContent = "Voltar à lição →";
+      btnSeguir.addEventListener("click", () => setGate(false, "Evento resolvido — pode avançar."));
+      elContent.querySelector(".fato-fake").appendChild(btnSeguir);
+    }
   }
 
   /* ---------------- Slide: diálogo com a Líder de Arena ---------------- */
