@@ -46,11 +46,11 @@ const LICAO_19 = {
       titulo: "Ácidos comuns no dia a dia",
       instrucao: "Toque em cada carta para conferir onde esse ácido aparece fora do laboratório.",
       cards: [
-        { frente: "assets/moleculas/card-acido-um.png", verso: "Ácido clorídrico — presente no suco gástrico, auxilia a digestão." },
-        { frente: "assets/moleculas/card-acido-dois.png", verso: "Ácido sulfúrico — usado em baterias automotivas; altamente corrosivo." },
-        { frente: "assets/moleculas/card-acido-tres.png", verso: "Ácido ascórbico (vitamina C) — presente em frutas cítricas." },
-        { frente: "assets/moleculas/card-acido-quarto.png", verso: "Ácido acético — o principal componente do vinagre." },
-        { frente: "assets/moleculas/card-acido-cinco.png", verso: "Ácido fosfórico — usado como acidulante em refrigerantes tipo cola." }
+        { frenteImg: "assets/moleculas/card-acido-um.png", frenteAlt: "Cartão do ácido clorídrico", verso: "Ácido clorídrico — presente no suco gástrico, auxilia a digestão." },
+        { frenteImg: "assets/moleculas/card-acido-dois.png", frenteAlt: "Cartão do ácido sulfúrico", verso: "Ácido sulfúrico — usado em baterias automotivas; altamente corrosivo." },
+        { frenteImg: "assets/moleculas/card-acido-tres.png", frenteAlt: "Cartão do ácido ascórbico (vitamina C)", verso: "Ácido ascórbico (vitamina C) — presente em frutas cítricas." },
+        { frenteImg: "assets/moleculas/card-acido-quarto.png", frenteAlt: "Cartão do ácido acético", verso: "Ácido acético — o principal componente do vinagre." },
+        { frenteImg: "assets/moleculas/card-acido-cinco.png", frenteAlt: "Cartão do ácido fosfórico", verso: "Ácido fosfórico — usado como acidulante em refrigerantes tipo cola." }
       ]
     },
     {
@@ -198,17 +198,6 @@ const LICAO_19 = {
           feedbackErrada: "O precipitado é o BaSO₄, exceção clássica à regra de que sulfatos são solúveis."
         }
       ]
-    },
-
-    // ============================================================
-    // EVENTO SURPRESA (Sprint 5) — quebra de ritmo antes da Revisão Geral (ácidos / bases / sais)
-    // Interrompe o fluxo com uma afirmação química de senso comum;
-    // o aluno tem 15s para julgar como FATO ou FAKE.
-    // Sorteio automático via sortearFatoFake() em data/eventos-fato-fake.js.
-    // ============================================================
-    {
-      type: "fato-fake",
-      tema: "l19"
     },
 
     // ============================================================

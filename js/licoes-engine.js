@@ -27,6 +27,13 @@
        aplicarHabilidadeNaResposta e o bloco "Visão de Raio-X" em
        renderQuiz/renderBossFight). Cada efeito está documentado
        inline, junto ao trecho de código que o implementa.
+
+   Sprint 5 — Eventos Surpresa ("É fato ou fake?"):
+     - A cada 3 acertos seguidos em blocos de quiz (qualquer avatar),
+       um desafio rápido interrompe a lição com uma afirmação sobre
+       Química que pode ser real ou um mito comum — banco de conteúdo
+       em data/eventos-surpresa.js. Ver dispararEventoSurpresa e
+       mostrarEventoSurpresa, logo após aplicarHabilidadeNaResposta.
    ============================================================ */
 
 function CRLessonEngine(rootEl, lessonData){
@@ -42,6 +49,15 @@ function CRLessonEngine(rootEl, lessonData){
   const habilidadePassiva = {
     raioXUsadoNaLicao: false, // Rosalind Franklin: 1 alternativa errada eliminada, 1x por lição
     streakCurie: 0            // Marie Curie: sequência de acertos consecutivos (dano contínuo)
+  };
+
+  // ---------- Sprint 5: estado dos Eventos Surpresa ("É fato ou fake?") ----------
+  // Independente da habilidade passiva da Marie Curie: qualquer avatar pode
+  // disparar um evento surpresa. Reseta a cada lição (mesmo padrão acima).
+  const eventoSurpresa = {
+    streakGeral: 0,       // acertos seguidos em blocos de quiz, de qualquer avatar
+    disparadosNaLicao: 0, // quantos eventos já apareceram nesta lição
+    maxPorLicao: 2         // limite para não tornar a lição cansativa
   };
 
   rootEl.innerHTML = `
@@ -188,6 +204,138 @@ function CRLessonEngine(rootEl, lessonData){
     return { pontosBase, contarComoErro, nota: nota.trim() };
   }
 
+  /* ---------------- Sprint 5: Eventos Surpresa ("É fato ou fake?") ----------------
+     Gatilho: a cada 3 acertos seguidos em blocos de quiz (qualquer avatar), um
+     desafio rápido interrompe a lição de forma orgânica — uma afirmação sobre
+     Química que pode ser um fato real ou um mito/desinformação comum, alinhado
+     ao combate à desinformação e ao negacionismo científico (plano v3, Sprint 5).
+     Limitado a `eventoSurpresa.maxPorLicao` por lição para não quebrar o ritmo.
+  -------------------------------------------------------------------------------- */
+  function registrarAcertoParaEventoSurpresa(){
+    eventoSurpresa.streakGeral++;
+    if(eventoSurpresa.streakGeral % 3 === 0 && eventoSurpresa.disparadosNaLicao < eventoSurpresa.maxPorLicao){
+      dispararEventoSurpresa();
+    }
+  }
+  function reiniciarStreakEventoSurpresa(){
+    eventoSurpresa.streakGeral = 0;
+  }
+
+  function dispararEventoSurpresa(){
+    if(typeof EVENTOS_SURPRESA === "undefined" || !EVENTOS_SURPRESA.length) return;
+    const vistos = CRState.getEventosSurpresaVistos();
+    const inedito = EVENTOS_SURPRESA.filter(ev => !vistos.includes(ev.id));
+    const pool = inedito.length ? inedito : EVENTOS_SURPRESA; // esgotado o banco, permite repetir
+    const evento = pool[Math.floor(Math.random() * pool.length)];
+    eventoSurpresa.disparadosNaLicao++;
+    mostrarEventoSurpresa(evento);
+  }
+
+  function mostrarEventoSurpresa(evento){
+    const narrativeId = CRState.getNarrative() || "jornada-heroi";
+    const apelido = CRState.getApelido();
+    const impacto = (evento.impacto[narrativeId] || evento.impacto["jornada-heroi"]).replace(/\{\{apelido\}\}/g, apelido);
+    const elementoAnteriorComFoco = document.activeElement;
+
+    const overlay = document.createElement("div");
+    overlay.className = "evento-surpresa-overlay";
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-modal", "true");
+    overlay.setAttribute("aria-label", "Evento surpresa: É fato ou fake?");
+    overlay.innerHTML = `
+      <div class="evento-surpresa-modal">
+        <div class="evento-surpresa-modal__header">
+          <img src="${avatar.foto}" alt="${avatar.nome}" class="evento-surpresa-modal__avatar" onerror="this.style.display='none'">
+          <div>
+            <span class="evento-surpresa-modal__tag">⚡ Evento Surpresa</span>
+            <p class="evento-surpresa-modal__impacto">${impacto}</p>
+          </div>
+        </div>
+        <div class="evento-surpresa-modal__pergunta">
+          <span class="evento-surpresa-modal__titulo">É fato ou fake?</span>
+          <p class="evento-surpresa-modal__afirmacao">${evento.afirmacao}</p>
+        </div>
+        <div class="evento-surpresa-timer">
+          <div class="evento-surpresa-timer__fill" id="efk-timer-fill"></div>
+        </div>
+        <div class="evento-surpresa-modal__opcoes">
+          <button type="button" class="btn btn--efk btn--efk-fato" data-resposta="fato">✅ É um Fato</button>
+          <button type="button" class="btn btn--efk btn--efk-fake" data-resposta="fake">❌ É Fake</button>
+        </div>
+        <div class="evento-surpresa-modal__feedback" id="efk-feedback"></div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    document.body.classList.add("no-scroll");
+
+    const btnFato = overlay.querySelector('[data-resposta="fato"]');
+    const btnFake = overlay.querySelector('[data-resposta="fake"]');
+    const timerFill = overlay.querySelector("#efk-timer-fill");
+    btnFato.focus();
+
+    let tempoRestante = evento.tempoLimiteSegundos || 10;
+    timerFill.style.transitionDuration = tempoRestante + "s";
+    // Um frame depois, zera a largura — a transição CSS cria a barra regressiva.
+    requestAnimationFrame(() => { timerFill.style.width = "0%"; });
+
+    let resolvido = false;
+    const intervalo = setInterval(() => {
+      tempoRestante--;
+      if(tempoRestante <= 0){
+        clearInterval(intervalo);
+        if(!resolvido) resolver(null); // tempo esgotado = não conta como acerto
+      }
+    }, 1000);
+
+    [btnFato, btnFake].forEach(btn => {
+      btn.addEventListener("click", () => resolver(btn.dataset.resposta));
+    });
+
+    function resolver(escolha){
+      if(resolvido) return;
+      resolvido = true;
+      clearInterval(intervalo);
+      btnFato.disabled = true;
+      btnFake.disabled = true;
+
+      const acertou = escolha === evento.correta;
+      if(escolha){
+        const btnEscolhido = escolha === "fato" ? btnFato : btnFake;
+        btnEscolhido.classList.add(acertou ? "is-correct" : "is-wrong");
+      }
+      if(!acertou){
+        const btnCorreto = evento.correta === "fato" ? btnFato : btnFake;
+        btnCorreto.classList.add("is-correct");
+      }
+
+      if(acertou){
+        CRState.atualizarPEQ(evento.recompensaPEQ || 5);
+        atualizarHUD();
+      }
+      CRState.marcarEventoSurpresaVisto(evento.id);
+
+      const feedback = overlay.querySelector("#efk-feedback");
+      feedback.classList.add("is-visible", acertou ? "feedback-correta" : "feedback-errada");
+      const cabecalho = escolha === null
+        ? "⏱ Tempo esgotado!"
+        : (acertou ? "✔ Isso mesmo!" : "✘ Quase — essa é uma pegadinha comum.");
+      feedback.innerHTML = `
+        <p class="evento-surpresa-modal__resultado">${cabecalho}</p>
+        <p>${evento.explicacao}</p>
+        <button type="button" class="btn btn--primary mt-24" id="efk-continuar">Continuar →</button>
+      `;
+      feedback.querySelector("#efk-continuar").addEventListener("click", fechar);
+    }
+
+    function fechar(){
+      overlay.remove();
+      document.body.classList.remove("no-scroll");
+      if(elementoAnteriorComFoco && typeof elementoAnteriorComFoco.focus === "function"){
+        elementoAnteriorComFoco.focus();
+      }
+    }
+  }
+
   function renderSlide(){
     const slide = lessonData.slides[slideIndex];
     btnPrev.style.visibility = slideIndex === 0 ? "hidden" : "visible";
@@ -198,149 +346,8 @@ function CRLessonEngine(rootEl, lessonData){
     else if(slide.type === "dialog-cards") renderDialogCards(slide);
     else if(slide.type === "branching") renderBranching(slide);
     else if(slide.type === "quiz") renderQuiz(slide);
-    else if(slide.type === "fato-fake") renderFatoFake(slide);   // Sprint 5
     else if(slide.type === "boss-fight") renderBossFight(slide);
     else if(slide.type === "final-score") renderFinalScore(slide);
-  }
-
-  /* ---------------- Slide: É fato ou fake? (Sprint 5) ----------------
-     Evento surpresa que interrompe o fluxo da lição com uma afirmação
-     retirada de circulação em redes sociais / senso comum. O aluno tem
-     15 segundos para julgar como FATO ou FAKE, treinando letramento
-     científico (competência transversal do ENEM em Ciências da Natureza).
-
-     Regras de gamificação (integradas ao HUD e ao placar):
-       - Acerto:  +5 pts e +2 PEQ
-       - Erro:    0 pts, +1 PEQ de "consolação didática"
-                  (o aprendizado do mito também vale)
-       - Timeout: tratado como erro pedagógico (mesma recompensa)
-
-     A afirmação vem de `data/eventos-fato-fake.js` (banco temático por lição).
-     Se o slide já vier com `slide.afirmacao` embutida, o motor usa ela
-     diretamente; caso contrário, sorteia por `slide.tema` (l17|l18|l19).
-  -------------------------------------------------------------- */
-  function renderFatoFake(slide){
-    // Resolve a afirmação: prioriza a embutida; senão sorteia do banco.
-    let afirmacao = slide.afirmacao;
-    if(!afirmacao && typeof sortearFatoFake === "function"){
-      afirmacao = sortearFatoFake(slide.tema || "l17");
-    }
-    if(!afirmacao){
-      // Fallback seguro: se por algum motivo o banco não carregou,
-      // não trava a lição — apenas libera o avanço.
-      elContent.innerHTML = `<div class="theory-block"><p>Evento surpresa indisponível neste momento. Pode seguir!</p></div>`;
-      setGate(false, "");
-      return;
-    }
-
-    setGate(true, "⚠️ Evento surpresa — julgue a afirmação para continuar.");
-
-    const TEMPO_TOTAL_MS = 15000;
-    let tempoRestanteMs = TEMPO_TOTAL_MS;
-    let respondido = false;
-    let intervaloTimer = null;
-
-    elContent.innerHTML = `
-      <div class="fato-fake" data-veredito="">
-        <div class="fato-fake__alerta">
-          <span class="fato-fake__pulse">⚠️</span>
-          <span class="fato-fake__titulo">Evento surpresa — É FATO ou FAKE?</span>
-        </div>
-
-        <div class="fato-fake__timer" title="Você tem 15 segundos para decidir">
-          <div class="fato-fake__timer-fill" id="fatofake-timer-fill"></div>
-          <span class="fato-fake__timer-label" id="fatofake-timer-label">15s</span>
-        </div>
-
-        <p class="fato-fake__contexto">Circulando por aí em grupos e redes sociais:</p>
-        <blockquote class="fato-fake__afirmacao">${afirmacao.texto}</blockquote>
-
-        <div class="fato-fake__botoes">
-          <button type="button" class="btn btn--fato"  data-resposta="fato">✔ É FATO</button>
-          <button type="button" class="btn btn--fake" data-resposta="fake">✘ É FAKE</button>
-        </div>
-
-        <div class="fato-fake__feedback" id="fatofake-feedback"></div>
-      </div>
-    `;
-
-    const elTimerFill  = elContent.querySelector("#fatofake-timer-fill");
-    const elTimerLabel = elContent.querySelector("#fatofake-timer-label");
-    const elFeedback   = elContent.querySelector("#fatofake-feedback");
-
-    // Animação do timer (baseada em CSS transition) + fallback numérico
-    requestAnimationFrame(() => { elTimerFill.style.width = "0%"; });
-    intervaloTimer = setInterval(() => {
-      tempoRestanteMs -= 250;
-      if(tempoRestanteMs <= 0){
-        clearInterval(intervaloTimer);
-        if(!respondido) resolver(null); // timeout
-      }else{
-        elTimerLabel.textContent = Math.ceil(tempoRestanteMs / 1000) + "s";
-        if(tempoRestanteMs <= 5000) elTimerLabel.classList.add("is-critical");
-      }
-    }, 250);
-
-    elContent.querySelectorAll(".fato-fake__botoes button").forEach(btn => {
-      btn.addEventListener("click", () => resolver(btn.dataset.resposta));
-    });
-
-    function resolver(escolha){
-      if(respondido) return;
-      respondido = true;
-      clearInterval(intervaloTimer);
-
-      const timeout = escolha === null;
-      const acertou = !timeout && (escolha === afirmacao.veredito);
-
-      // Estatística global do jogador (para o painel final do Sprint 5)
-      CRState.registrarFatoFake(acertou);
-
-      // Recompensas
-      if(acertou){
-        CRState.registrarResposta(true, 5, null, true); // +5 pts, sem PEQ pela via de dificuldade
-        CRState.atualizarPEQ(2);                        // +2 PEQ pelo acerto no evento
-      }else{
-        CRState.atualizarPEQ(1); // consolação didática (o mito aprendido também vale)
-      }
-      atualizarHUD();
-
-      // Marca visualmente qual botão foi correto/errado
-      elContent.querySelectorAll(".fato-fake__botoes button").forEach(btn => {
-        btn.disabled = true;
-        const r = btn.dataset.resposta;
-        if(r === afirmacao.veredito) btn.classList.add("is-correct");
-        else if(r === escolha)       btn.classList.add("is-wrong");
-      });
-
-      elContent.querySelector(".fato-fake").dataset.veredito = afirmacao.veredito;
-
-      const cabecalho = timeout
-        ? "⏰ Tempo esgotado! Nas redes sociais também não dá pra ficar em cima do muro — desinformação se espalha rápido."
-        : (acertou
-            ? `✔ Você acertou! Essa afirmação é <strong>${afirmacao.veredito.toUpperCase()}</strong>.`
-            : `✘ Essa afirmação é, na verdade, <strong>${afirmacao.veredito.toUpperCase()}</strong>.`);
-
-      const notaRecompensa = acertou
-        ? `<span class="fato-fake__ganho">+5 pts · +2 ⚡ PEQ</span>`
-        : `<span class="fato-fake__ganho fato-fake__ganho--consolacao">+1 ⚡ PEQ (consolação didática)</span>`;
-
-      elFeedback.classList.add("is-visible", acertou ? "feedback-correta" : "feedback-errada");
-      elFeedback.innerHTML = `
-        <p class="fato-fake__resultado">${cabecalho}</p>
-        <p class="fato-fake__explicacao">${afirmacao.explicacao}</p>
-        ${afirmacao.fonte ? `<p class="fato-fake__fonte">Fonte de referência: <em>${afirmacao.fonte}</em></p>` : ""}
-        ${notaRecompensa}
-      `;
-
-      // Botão de continuar
-      const btnSeguir = document.createElement("button");
-      btnSeguir.type = "button";
-      btnSeguir.className = "btn btn--primary mt-24";
-      btnSeguir.textContent = "Voltar à lição →";
-      btnSeguir.addEventListener("click", () => setGate(false, "Evento resolvido — pode avançar."));
-      elContent.querySelector(".fato-fake").appendChild(btnSeguir);
-    }
   }
 
   /* ---------------- Slide: diálogo com a Líder de Arena ---------------- */
@@ -406,10 +413,12 @@ function CRLessonEngine(rootEl, lessonData){
 
   /* ---------------- Slide: Dialog Cards ---------------- */
   function renderDialogCards(slide){
-    // Detecta se este é um conjunto ilustrado (cartas com imagem própria de
-    // frente/verso, ex.: Forças Intermoleculares da Lição 18) para aplicar
-    // um tamanho de carta maior — texto pequeno em card de 150px ficaria ilegível.
-    const ilustrado = slide.cards.some(c => c.frenteImg);
+    // Detecta se este é um conjunto ilustrado (ao menos uma face com imagem
+    // própria, ex.: Forças Intermoleculares da Lição 18, com frente E verso
+    // ilustrados, ou Modelos Atômicos/Ácidos das Lições 17 e 19, só com a
+    // frente ilustrada e o verso em texto) para aplicar um tamanho de carta
+    // maior — texto pequeno em card de 150px ficaria ilegível.
+    const ilustrado = slide.cards.some(c => c.frenteImg || c.versoImg);
 
     elContent.innerHTML = `
       <div class="theory-block">
@@ -421,11 +430,16 @@ function CRLessonEngine(rootEl, lessonData){
     const grid = elContent.querySelector(".dialog-cards");
 
     slide.cards.forEach(card => {
-      const temImagem = !!card.frenteImg;
-      const frenteConteudo = temImagem
+      // Frente e verso são avaliados de forma independente: uma carta pode
+      // ter só a frente ilustrada (imagem + verso em texto explicativo,
+      // caso das Lições 17 e 19) ou as duas faces ilustradas (caso da
+      // Lição 18, que tem imagem própria de frente e de verso).
+      const temImagemFrente = !!card.frenteImg;
+      const temImagemVerso = !!card.versoImg;
+      const frenteConteudo = temImagemFrente
         ? `<img src="${card.frenteImg}" alt="${card.frenteAlt || slide.titulo}" loading="lazy">`
         : card.frente;
-      const versoConteudo = temImagem
+      const versoConteudo = temImagemVerso
         ? `<img src="${card.versoImg}" alt="${card.versoAlt || (card.frenteAlt || slide.titulo) + ' — verso'}" loading="lazy">`
         : card.verso;
 
@@ -433,8 +447,8 @@ function CRLessonEngine(rootEl, lessonData){
       el.className = "dialog-card" + (ilustrado ? " dialog-card--large" : "");
       el.innerHTML = `
         <div class="dialog-card__inner">
-          <div class="dialog-card__face dialog-card__face--front${temImagem ? " dialog-card__face--media" : ""}">${frenteConteudo}</div>
-          <div class="dialog-card__face dialog-card__face--back${temImagem ? " dialog-card__face--media" : ""}">${versoConteudo}</div>
+          <div class="dialog-card__face dialog-card__face--front${temImagemFrente ? " dialog-card__face--media" : ""}">${frenteConteudo}</div>
+          <div class="dialog-card__face dialog-card__face--back${temImagemVerso ? " dialog-card__face--media" : ""}">${versoConteudo}</div>
         </div>
       `;
       el.addEventListener("click", () => el.classList.toggle("is-flipped"));
@@ -582,6 +596,11 @@ function CRLessonEngine(rootEl, lessonData){
 
       CRState.registrarResposta(correta, pontosBase, q.dificuldade, contarComoErro);
       atualizarHUD();
+
+      // Sprint 5 — Eventos Surpresa: a cada 3 acertos seguidos (qualquer
+      // avatar), um evento "É fato ou fake?" pode interromper a lição.
+      if(correta) registrarAcertoParaEventoSurpresa();
+      else reiniciarStreakEventoSurpresa();
 
       const feedback = elContent.querySelector("#quiz-feedback");
       const classeFeedback = correta ? "feedback-correta" : (contarComoErro ? "feedback-errada" : "feedback-escudo");

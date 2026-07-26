@@ -8,6 +8,9 @@
    Sprint 2: acrescenta a Narrativa escolhida.
    Sprint 4: acrescenta PEQ (Pontos de Energia Química), a moeda
    interna do jogo, e o suporte a habilidades passivas dos avatares.
+   Sprint 5: acrescenta o registro dos Eventos Surpresa ("É fato ou
+   fake?") já vistos pelo jogador, para não repetir a mesma
+   afirmação ao longo da jornada completa (Lições 17 → 18 → 19).
    ============================================================ */
 
 const CR_STORAGE_KEY = "chemicalRoyale.playerState.v1";
@@ -22,6 +25,7 @@ const CR_STORAGE_KEY = "chemicalRoyale.playerState.v1";
  *   score: { pontos, acertos, erros },
  *   peq: number,  // Pontos de Energia Química — moeda interna (Sprint 4)
  *   licoesConcluidas: { licao17: bool, licao18: bool, licao19: bool },
+ *   eventosSurpresaVistos: ["efk-01-...", ...],  // IDs já exibidos (Sprint 5)
  *   updatedAt: ISOString
  * }
  */
@@ -128,21 +132,19 @@ const CRState = {
     return novo;
   },
 
-  // ---------- Eventos surpresa "É fato ou fake?" (Sprint 5) ----------
+  // ---------- Eventos Surpresa: "É fato ou fake?" (Sprint 5) ----------
   /**
-   * Registra o resultado de UM evento surpresa "É fato ou fake?".
-   * Guardado como { acertos, erros, ultimaVisita } em fatosFake.
-   * @param {boolean} acertou
+   * IDs dos eventos surpresa já exibidos ao jogador, persistidos entre as
+   * 3 lições (mesmo "save file"), para reduzir a chance de repetição da
+   * mesma afirmação durante uma única jornada completa (17 → 18 → 19).
    */
-  registrarFatoFake(acertou){
-    const atual = this._read().fatosFake || { acertos: 0, erros: 0 };
-    if(acertou) atual.acertos += 1;
-    else        atual.erros   += 1;
-    atual.ultimaVisita = new Date().toISOString();
-    return this._write({ fatosFake: atual });
+  getEventosSurpresaVistos(){
+    return this._read().eventosSurpresaVistos || [];
   },
-  getFatosFake(){
-    return this._read().fatosFake || { acertos: 0, erros: 0 };
+  marcarEventoSurpresaVisto(eventoId){
+    const vistos = this.getEventosSurpresaVistos();
+    if(!vistos.includes(eventoId)) vistos.push(eventoId);
+    return this._write({ eventosSurpresaVistos: vistos });
   },
 
   // ---------- Progresso das lições ----------

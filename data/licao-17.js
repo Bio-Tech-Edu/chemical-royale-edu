@@ -39,7 +39,6 @@ const LICAO_17 = {
       ],
       figura: {
         src: "https://commons.wikimedia.org/wiki/Special:FilePath/Bohr-atom-PAR.svg",
-        width: 200,
         alt: "Diagrama do modelo atômico de Bohr, com elétrons em órbitas ao redor do núcleo",
         caption: "Modelo atômico de Bohr — imagem: Wikimedia Commons, licença Creative Commons (CC BY-SA)."
       }
@@ -49,11 +48,11 @@ const LICAO_17 = {
       titulo: "Recapitulando: um cartão para cada modelo",
       instrucao: "Toque em cada carta para revirar e conferir a ideia central de cada cientista.",
       cards: [
-        { frente: "assets/moleculas/card-mod-dalton.png", verso: "Átomo = esfera maciça, indivisível e indestrutível. Ainda não se conhecia próton, nêutron ou elétron." },
-        { frente: "assets/moleculas/card-mod-thomson.png", verso: "Modelo \"pudim de passas\": massa positiva com elétrons (negativos) distribuídos dentro dela. Primeira partícula subatômica identificada." },
-        { frente: "assets/moleculas/card-mod-rutherford.png", verso: "Núcleo pequeno, denso e positivo; eletrosfera é, em sua maior parte, espaço vazio. Descoberto pelo experimento da folha de ouro." },
-        { frente: "assets/moleculas/card-mod-bohr.png", verso: "Elétrons giram em órbitas (níveis de energia) definidas ao redor do núcleo, sem perder energia enquanto permanecem nelas." },
-        { frente: "assets/moleculas/card-mod-atual.png", verso: "Modelo quântico (orbital): a posição do elétron é descrita por uma região de probabilidade — a \"nuvem eletrônica\" — e não por uma órbita fixa." }
+        { frenteImg: "assets/moleculas/card-mod-dalton.png", frenteAlt: "Cartão do modelo atômico de Dalton", verso: "Átomo = esfera maciça, indivisível e indestrutível. Ainda não se conhecia próton, nêutron ou elétron." },
+        { frenteImg: "assets/moleculas/card-mod-thomson.png", frenteAlt: "Cartão do modelo atômico de Thomson", verso: "Modelo \"pudim de passas\": massa positiva com elétrons (negativos) distribuídos dentro dela. Primeira partícula subatômica identificada." },
+        { frenteImg: "assets/moleculas/card-mod-rutherford.png", frenteAlt: "Cartão do modelo atômico de Rutherford", verso: "Núcleo pequeno, denso e positivo; eletrosfera é, em sua maior parte, espaço vazio. Descoberto pelo experimento da folha de ouro." },
+        { frenteImg: "assets/moleculas/card-mod-bohr.png", frenteAlt: "Cartão do modelo atômico de Bohr", verso: "Elétrons giram em órbitas (níveis de energia) definidas ao redor do núcleo, sem perder energia enquanto permanecem nelas." },
+        { frenteImg: "assets/moleculas/card-mod-atual.png", frenteAlt: "Cartão do modelo atômico atual (quântico)", verso: "Modelo quântico (orbital): a posição do elétron é descrita por uma região de probabilidade — a \"nuvem eletrônica\" — e não por uma órbita fixa." }
       ]
     },
     {
@@ -274,17 +273,6 @@ const LICAO_17 = {
           feedbackErrada: "Na ionização, os elétrons são removidos primeiro da camada mais externa (n=4, subnível 4s), mesmo que o 3d tenha sido preenchido depois na ordem de energia."
         }
       ]
-    },
-
-    // ============================================================
-    // EVENTO SURPRESA (Sprint 5) — quebra de ritmo antes da Revisão Geral (átomo / modelos)
-    // Interrompe o fluxo com uma afirmação química de senso comum;
-    // o aluno tem 15s para julgar como FATO ou FAKE.
-    // Sorteio automático via sortearFatoFake() em data/eventos-fato-fake.js.
-    // ============================================================
-    {
-      type: "fato-fake",
-      tema: "l17"
     },
 
     // ============================================================
