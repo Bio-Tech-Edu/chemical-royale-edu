@@ -39,7 +39,7 @@ Criação de conteúdo dinâmico e eventos baseados no storytelling.
 *   **Tarefa 1: Gerador de Eventos Surpresa**
     *   **Descrição:** Criar pequenos scripts de eventos que interrompem a lição com desafios rápidos denominado "É fato ou fake?" relacionando aos fatos reais e científicos, na perspectiva de colaborar com o combate à desinformação e ao negacionismo científico.
     *   **Prompt Sugerido:** 
-        > "Atue como um Game Designer. Com base nas 3 vertentes narrativas do Chemical Royale (Jornada do Herói, In Media Res, Investigativo), escreva 5 'Eventos Surpresa' curtos em formato JSON. Cada evento deve ter um 'gatilho' (ex: após 3 acertos seguidos), um texto de impacto da Líder de Arena e um desafio rápido (ex: 'A Entropia está instabilizando este átomo! Identifique o número de prótons em 10 segundos para ganhar 5 PEQ extras')."
+        > "Atue como um Game Designer. Com base nas 3 vertentes narrativas do Chemical Royale (Jornada do Herói, In Media Res, Investigativo), escreva 5 'Eventos Surpresa' curtos em formato JSON. Cada evento deve ter um 'gatilho' (ex: após 3 acertos seguidos), um texto de impacto da Líder de Arena e um desafio rápido (ex: 'A Entropia está instabilizando este átomo! Identifique o número de prótons em 30 segundos para ganhar 5 PEQ extras'). Criar um sistema de loja para gastar o PEQ acumulado por habilidades ou itens de ajuda que poderão ser utilizadas no percurso."
 
 ### 5.2. Gamificação Social e Relatórios (IA Especialista: ChatGPT-4o)
 Implementação do Leaderboard e automação de relatórios em PDF.
@@ -47,23 +47,30 @@ Implementação do Leaderboard e automação de relatórios em PDF.
 *   **Tarefa 2: Leaderboard Local e Medalhas**
     *   **Descrição:** Criar a visualização dos melhores jogadores e o sistema de badges.
     *   **Prompt Sugerido:** 
-        > "Crie um componente HTML/CSS/JS para um 'Hall da Fama' (Leaderboard). Ele deve ler o ranking do `localStorage` e exibir os 10 melhores scores com um design de 'Arena'. Além disso, crie uma função `verificarConquistas()` que desbloqueie medalhas como 'Mestre dos Ácidos' (completar Lição 19 sem erros) e salve uma lista de IDs de conquistas no perfil do jogador."
+        > "Crie um componente HTML/CSS/JS para um 'Hall da Fama' (Leaderboard) que utilize o background `assets/badges/background_leaderboard.png`. Ele deve ler o ranking do `localStorage` e exibir os 10 melhores scores com um design de 'Arena'. Além disso, crie uma função `verificarConquistas()` que desbloqueie a(s) conquista(s) descrita(s) no arquivo `docs/modelo-conceitual-de-badges.md` como 'Mentor das Soluções' (completar a Lição 19 sem erros) e salve uma lista de IDs de conquistas no perfil do jogador."
 
 *   **Tarefa 3: Automação de PDF e E-mail (EmailJS / jsPDF)**
     *   **Descrição:** Finalizar o script que envia o desempenho do aluno para a coordenação.
     *   **Prompt Sugerido:** 
-        > "Escreva um script JavaScript usando as bibliotecas jsPDF e EmailJS. O script deve: 1. Capturar todos os dados do `CRState` (nome, escola, score final, conquistas). 2. Gerar um certificado em PDF elegante com o logo da BIO+TECH EDUDESIGN. 3. Enviar esse PDF automaticamente para o e-mail 'pamella.balcacar@edu.mt.gov.br' assim que o aluno clicar em 'Concluir Jornada'."
+        > "Escreva um script JavaScript usando as bibliotecas jsPDF e EmailJS. O script deve: 1. Capturar todos os dados do `CRState` (nome, escola, score final, conquistas). 2. Gerar um certificado em PDF elegante com o logo centralizado do Chemical Royale e ao canto superior o logo da BIO+TECH EDUDESIGN. 3 contendo as bagdes e o compilado das informações de identificação do estudante e de sua jornada percorrida. Enviar esse PDF automaticamente para o e-mail 'pamella.balcacar@edu.mt.gov.br' assim que o aluno clicar em 'Concluir a Jornada'."
 
+
+*   **Tarefa 4: Documentação técnica, acadêmica e pedagógica**
+    *   **Descrição:** Criar e gerar documentação para armazenado no repositório.
+    *   **Prompt Sugerido:** 
+        > "Atue como um Product Owner. Preciso expandir os arquivos de documentação na raiz da pasta `docs/` do projeto Chemical Royale para incluir:  Guia Dev `guia_dev.md` (contendo todo o processo de desenvolvimento: cada sprint e suas tarefas, os bugs detectados, os corrijidos e as sugestões de implementação futura); Tutorial de usuário-aluno `tutorial_usuario.md` (tutorial de sistema de jogo - ex: como usar algum recurso) e Relatório IA `report_ia` (as boas práticas de IA responsável no projeto educacional, Human-in-the-loop e transparência recomendadas por UNESCO, OCDE e marcos regulatórios emergentes). Atualize o arquivo README.md transformando em um arquivo clean contendo as informações essenciais e os referências dos demais documentos que estarão na pasta `docs/`."
+        > "Atue como um Designer instrucional. Preciso expandir os arquivos da documentação na raiz da pasta `docs/` do projeto Chemical Royale para incluir:  Guia pedagógico `guia_pedagogico.md` (Apresentação do produto educacional; Paradigma educacional e as teorias de aprendizagem; Alinhamento a BNCC e outros marcos legais: competências gerais  BNCC, as competências da BNCC de área da Ciência da Natureza e suas tecnológias, as habilidades específicas da BNCC para química, BNCC computação ensino médio, descritores do SAEB, habilidades do INEP/ENEM; orientações de uso deste REA aos docentes; sugestões pedagógicas); Revisão de Literatura `esboço_artigo.md` (Elementos Pré-Textuais: Título: Nome claro e direto do estudo. Autoria: Nome completo dos autores e dados em nota de rodapé. Resumo: Síntese de até 250 palavras com objetivos, método e resultados. Palavras-chave: Termos que definem o tema para buscas. Elementos Textuais (O Corpo do Texto): Introdução; Metodologia; Resultados e Discussão;  Conclusão (ou Considerações Finais); Elementos Pós-Textuais: Referências; Apêndices ou Anexos)."
 ---
 
 ## 🛠️ Guia de Integração de IA por Especialidade
 
 | Especialidade | IA Recomendada | Papel no Projeto |
 | :--- | :--- | :--- |
-| **Desenvolvedor Full-Stack** | GitHub Copilot / ChatGPT-4o | Lógica complexa de JS, manipulação de DOM e LocalStorage. |
-| **Designer de UI/UX** | Gemini / Nanobanana | Geração de assets, ícones de habilidades e mockups de interface. |
-| **Especialista Pedagógico** | Claude 3.5 Sonnet | Revisão de questões padrão ENEM e alinhamento com a BNCC. |
+| **Desenvolvedor Full-Stack** | GitHub Copilot / Claude | Lógica complexa de JS, manipulação de DOM e LocalStorage. |
+| **Designer de UI/UX** | Gemini / Nanobanana | Geração de assets, ícones de habilidades, bagdes, background de Leaderboard e mockups de interface. |
+| **Designer instrucional** | Perplexity | Revisão de questões padrão ENEM, alinhamento com a BNCC, a produção da documentação pedagógica e acadêmica. |
 | **Game Designer** | Claude / ChatGPT | Criação de eventos surpresa, balanceamento de PEQ e storytelling. |
+| **Product Owner** | Manus | Coordenação e revisão do projeto, produção da documentação técnica. | 
 
 ---
 

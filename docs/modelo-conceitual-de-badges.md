@@ -11,7 +11,7 @@ Esse modelo conceitual de badges encontra-se dividido em três pilares essenciai
 * **Sinergia com as Líderes**:
 <img src="assets/bagdes/conquistas_de_sinergia_lider_arena.png"/>
 
-Cada card genérico destes pilares deverá ser exibido na seção apresentação, arquivo `apresentacao.html`, no bloco denominado 'Como funciona a arena' e seguidos pela contextualização de cada pilar.
+Cada card genérico destes pilares deverá ser exibido na seção apresentação, arquivo `apresentacao.html`, no bloco denominado 'Como funciona a arena' e seguidos de uma breve descrição de cada pilar.
 
 A proposta estruturada para o sistema de conquistas do Chemical Royale:
 
@@ -76,3 +76,5 @@ Para aumentar a rejogabilidade e o apego ao avatar escolhido, o sistema deve pre
   * <img src="assets/bagdes/sinergia_lider_sintese_acelerada.png" alt="Emblema Síntese Acelerada: Ada Yonath" width="70"/>
 
 Desta forma, os badges contam a história do percurso do estudante, valorizando tanto o conhecimento técnico de química quanto o estilo de jogo dele na Arena.  
+
+Para o 'Hall da Fama' (Leaderboard), definido pelo background `assets/bagdes/background_leaderboard.png`, será necessário gerar o sistema de sobreposição das informações armazenado `localStorage`.
