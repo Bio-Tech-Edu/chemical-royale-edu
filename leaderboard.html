@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Hall da Fama — Chemical Royale</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/leaderboard.css">
+</head>
+<body>
+  <main class="leaderboard-page">
+    <header class="leaderboard-header">
+      <h1>Hall da Fama — Chemical Royale</h1>
+      <p class="muted">Ranking local (salvo no seu navegador). Futuramente poderá sincronizar com servidor / Google Sheets.</p>
+    </header>
+
+    <section class="leaderboard-panel">
+      <div class="leaderboard-actions">
+        <form id="lb-save-form">
+          <input id="lb-name" placeholder="Nome (visível no ranking)" required>
+          <input id="lb-school" placeholder="Escola (opcional)">
+          <input id="lb-email" placeholder="E-mail (opcional, só para export)" type="email">
+          <button type="submit" class="btn btn--primary">Salvar no ranking local</button>
+        </form>
+
+        <div class="lb-buttons">
+          <button id="btn-export-json" class="btn">Exportar JSON</button>
+          <button id="btn-export-csv" class="btn">Exportar CSV</button>
+          <input id="file-import" type="file" accept="application/json" style="display:none">
+          <button id="btn-import" class="btn">Importar JSON</button>
+          <button id="btn-clear" class="btn btn--danger">Limpar ranking local</button>
+          <button id="btn-sync-remote" class="btn">Enviar ao servidor (stub)</button>
+        </div>
+      </div>
+
+      <div class="leaderboard-list-wrap">
+        <div class="leaderboard-background"></div>
+        <ol id="leaderboard-list" class="leaderboard-list" aria-live="polite"></ol>
+      </div>
+    </section>
+
+    <section class="leaderboard-info">
+      <h2>Notas sobre sincronização remota</h2>
+      <p>Para sincronizar com Google Sheets/servidor, há duas opções recomendadas:</p>
+      <ol>
+        <li>Deploy de um <strong>Google Apps Script</strong> (Web App) vinculado à conta pamella.balcacar@edu.mt.gov.br que receba POST JSON e escreva no Sheets. (Mais simples para começo; não exige credenciais client-side.)</li>
+        <li>Usar <strong>Google Sheets API</strong> com OAuth2 (ou conta de serviço com delegação de domínio) para escrita direta. Requer configuração de credenciais e backend para manter segredo das chaves.</li>
+      </ol>
+      <p>Mais abaixo há instruções e um payload exemplo para integrar no Apps Script.</p>
+
+      <h3>Payload de exemplo (JSON)</h3>
+      <pre id="payload-example" class="code"></pre>
+
+      <h3>Instruções rápidas (Apps Script)</h3>
+      <ol>
+        <li>Criar uma Planilha Google e um Apps Script associado.</li>
+        <li>Colar um doPost(e) que parseie JSON e appendRow() na planilha (ver README técnico).</li>
+        <li>Deploy → New > Web app → Execute as: <em>me (pamella.balcacar@...)</em> → Who has access: Anyone (ou dentro da organização).</li>
+        <li>Copiar URL e colar no campo de configuração do servidor (ou usar botão "Enviar ao servidor" para apontar a URL).</li>
+      </ol>
+
+      <p><em>OBS:</em> Não incluí acessos nem credenciais neste repositório. A integração remota exige que a conta pamella.balcacar@edu.mt.gov.br realize o deploy do Apps Script e compartilhe a URL/segredos.</p>
+    </section>
+  </main>
+
+  <script src="js/state.js"></script>
+  <script src="js/leaderboard.js"></script>
+</body>
+</html>
