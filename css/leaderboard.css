@@ -1,0 +1,46 @@
+/* name=css/leaderboard.css
+   Design simples para o Hall da Fama. Usa background em assets/badges/background_leaderboard.png */
+:root{
+  --max-width:1100px;
+  --muted:#6b7280;
+  --card-bg: rgba(255,255,255,0.92);
+  --accent:#0066cc;
+}
+body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:0; padding:0; color:#111; background:#f5f7fb; }
+.leaderboard-page{ max-width:var(--max-width); margin:28px auto; padding:18px; position:relative; }
+.leaderboard-header h1{ margin:0 0 6px; font-size:1.6rem; }
+.muted{ color:var(--muted); margin:0 0 12px; }
+
+/* panel */
+.leaderboard-panel{ display:grid; grid-template-columns: 360px 1fr; gap:18px; align-items:start; position:relative; }
+.leaderboard-actions{ background:var(--card-bg); padding:14px; border-radius:10px; box-shadow:0 6px 18px rgba(15,23,42,0.06); }
+.leaderboard-actions form{ display:flex; flex-direction:column; gap:8px; }
+.leaderboard-actions input{ padding:8px 10px; border:1px solid #e6e9ef; border-radius:6px; font-size:0.95rem; }
+.leaderboard-actions .btn{ padding:8px 10px; border-radius:6px; cursor:pointer; border:1px solid transparent; background:#fff; }
+.btn--primary{ background:var(--accent); color:white; border-color:transparent; }
+.btn--danger{ background:#ef4444; color:white; border-color:transparent; }
+
+.lb-buttons{ margin-top:8px; display:flex; flex-direction:column; gap:8px; }
+.lb-buttons .btn{ text-align:left; }
+
+/* list area with decorative background */
+.leaderboard-list-wrap{ position:relative; overflow:hidden; min-height:320px; border-radius:10px; }
+.leaderboard-background{
+  position:absolute; inset:0; background-image:url('../assets/badges/background_leaderboard.png');
+  background-size:cover; background-position:center; opacity:0.08; filter:grayscale(50%); transform:scale(1.06);
+  pointer-events:none;
+}
+.leaderboard-list{ position:relative; list-style:none; margin:0; padding:20px; display:flex; flex-direction:column; gap:10px; z-index:1; }
+.leaderboard-item{ display:flex; align-items:center; gap:12px; padding:12px; background:rgba(255,255,255,0.85); border-radius:8px; box-shadow:0 6px 14px rgba(2,6,23,0.04); }
+.leaderboard-rank{ width:44px; height:44px; display:flex; align-items:center; justify-content:center; font-weight:700; border-radius:8px; background:linear-gradient(180deg,#fff,#f3f6fb); color:var(--accent); border:1px solid #e6eefc; }
+.leaderboard-meta{ flex:1; min-width:0; }
+.leaderboard-name{ font-weight:600; font-size:1rem; margin-bottom:3px; }
+.leaderboard-sub{ color:var(--muted); font-size:0.9rem; }
+.leaderboard-score{ font-weight:700; color:#0f172a; }
+
+/* small screens */
+@media (max-width:880px){
+  .leaderboard-panel{ grid-template-columns: 1fr; }
+  .leaderboard-actions{ order:2; }
+  .leaderboard-list-wrap{ order:1; }
+}
