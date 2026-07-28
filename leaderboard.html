@@ -29,8 +29,19 @@
           <input id="file-import" type="file" accept="application/json" style="display:none">
           <button id="btn-import" class="btn">Importar JSON</button>
           <button id="btn-clear" class="btn btn--danger">Limpar ranking local</button>
-          <button id="btn-sync-remote" class="btn">Enviar ao servidor (stub)</button>
+          <button id="btn-sync-remote" class="btn">Configurar sincronização remota</button>
         </div>
+
+        <hr>
+        <div class="lb-remote-config">
+          <label for="lb-remote-url">URL do Web App (Apps Script)</label>
+          <input id="lb-remote-url" placeholder="Cole a URL do Web App aqui">
+          <label><input type="checkbox" id="lb-auto-send"> Envio automático ao salvar (desabilitado por padrão)</label>
+          <label for="lb-remote-token">Token secreto (opcional; não comite este valor)</label>
+          <input id="lb-remote-token" placeholder="Token secreto para validação no Apps Script">
+          <button id="btn-save-remote-config" class="btn">Salvar configuração remota</button>
+        </div>
+
       </div>
 
       <div class="leaderboard-list-wrap">
@@ -55,8 +66,8 @@
       <ol>
         <li>Criar uma Planilha Google e um Apps Script associado.</li>
         <li>Colar um doPost(e) que parseie JSON e appendRow() na planilha (ver README técnico).</li>
-        <li>Deploy → New > Web app → Execute as: <em>me (pamella.balcacar@...)</em> → Who has access: Anyone (ou dentro da organização).</li>
-        <li>Copiar URL e colar no campo de configuração do servidor (ou usar botão "Enviar ao servidor" para apontar a URL).</li>
+        <li>Deploy → New &gt; Web app → Execute as: <em>me (pamella.balcacar@...)</em> → Who has access: Anyone (ou dentro da organização).</li>
+        <li>Copiar URL e colar no campo de configuração do servidor (ou usar botão "Configurar sincronização remota").</li>
       </ol>
 
       <p><em>OBS:</em> Não incluí acessos nem credenciais neste repositório. A integração remota exige que a conta pamella.balcacar@edu.mt.gov.br realize o deploy do Apps Script e compartilhe a URL/segredos.</p>
